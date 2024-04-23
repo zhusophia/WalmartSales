@@ -8,11 +8,36 @@ site: distill::distill_website
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
-# Learn more about creating websites with Distill at:
-# https://rstudio.github.io/distill/website.html
-
-# Learn more about publishing to GitHub Pages at:
-# https://rstudio.github.io/distill/publish_website.html#github-pages
+library(tidyverse)
+library(dplyr)
+library(plotly)
+library(ggplot2)
+library(distill)
 
 ```
+
+
+We started with [fake news](https://zhusophia.github.io/Fake_Fake_News/), only to end up at phishing. That's just how the world works! 
+
+Taking raw data from [this dataset](https://www.kaggle.com/datasets/danielfernandon/web-page-phishing-dataset?resource=download), I'm attempting to explore the URLs of phishing websites! 
+
+Taking a look at the raw data: 
+
+DISPLAY RAW DATA 
+- grab a first 4 columns + phishing column (move phsidhing column tot he front)
+
+
+```{r, echo=TRUE}
+library(rmarkdown)
+paged_table(mtcars)
+```
+
+
+``` 
+If you'd rather not
+indent your code block by four spaces, you can use 
+triple back-ticks on separate lines.
+```
+
+
 

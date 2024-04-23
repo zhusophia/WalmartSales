@@ -6,15 +6,15 @@
       "description": "Some additional details about the website",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-04-22T20:25:36-04:00"
+      "last_modified": "2024-04-22T21:18:57-04:00"
     },
     {
       "path": "index.html",
       "title": "Phishing with SQL",
       "description": "Welcome to the website. I hope you enjoy it!\n",
       "author": [],
-      "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-04-22T20:25:36-04:00"
+      "contents": "\r\nWe started with fake news, only to end up at phishing. That’s just how the world works!\r\nTaking raw data from this dataset, I’m attempting to explore the URLs of phishing websites!\r\nTaking a look at the raw data:\r\nDISPLAY RAW DATA\r\n- grab a first 4 columns + phishing column (move phsidhing column tot he front)\r\n\r\n\r\nlibrary(rmarkdown)\r\npaged_table(mtcars)\r\n\r\n\r\n\r\n\r\nIf you'd rather not\r\nindent your code block by four spaces, you can use \r\ntriple back-ticks on separate lines.\r\n\r\n\r\n\r\n",
+      "last_modified": "2024-04-22T21:18:57-04:00"
     }
   ],
   "collections": []
