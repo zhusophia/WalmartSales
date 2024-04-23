@@ -33,11 +33,33 @@ paged_table(mtcars)
 ```
 
 
-``` 
-If you'd rather not
-indent your code block by four spaces, you can use 
-triple back-ticks on separate lines.
+- make the links open to a blank page 
+
+```{sql test, eval=FALSE, echo=T} 
+can you display just this as something
 ```
 
 
+- general talk about teh data 
+-> how many were fishing? how many weren't? -> pie chart 
 
+correlation 
+- build tables (take the head of x)
+- explain the pearson correlation, how can we get info out 
+- cast bigint and basically couldn twork, so had to build a table (you can build it using R)
+create table 
+
+
+url length 
+- out of phishing, plot density graph, 
+--> url lenght vs amount of urls -> phishing vs no phishing 
+
+same thing with redirections 
+
+- end
+
+this shoudl be pretty quick and simple it hink
+
+https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0
+
+https://docs.google.com/document/d/1M9kvGEJ1_db81M5g6J8DtF0kAFnCCAPlnuUMzAmVUOA/edit
