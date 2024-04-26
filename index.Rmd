@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 library(tidyverse)
 library(dplyr)
+library(rmarkdown)
 library(plotly)
 library(ggplot2)
 library(distill)
@@ -27,12 +28,105 @@ DISPLAY RAW DATA
 - grab a first 4 columns + phishing column (move phsidhing column tot he front)
 
 
-```{r, echo=TRUE}
-library(rmarkdown)
-paged_table(mtcars)
+```{r load data}
+data <- read.csv("web-page-phishing.csv")
+```
+
+```{r general data}
+
+
+data <- data %>% 
+  select(phishing, everything())
+
+paged_table(head(data))
+
+```
+<!-- ggplot(phishingpie, aes(x="", y=occurances, fill=phishing)) +
+  geom_col() +
+  coord_polar(theta="y")+
+  theme_void()
+
+
+-->
+
+```{r phishing pie chart}
+
+phishingpie <- data %>%
+  select(phishing) %>%
+  group_by(phishing) %>% 
+  summarise(occurances = n()) %>%
+  mutate(phishing = recode(phishing, '1'='Phishing link', '0'="Non-phishing link"))
+
+phishingagg <- plot_ly(phishingpie, labels = ~phishing, values = ~occurances, type = 'pie',marker = list(colors = c('MidnightBlue', 'MediumPurple')),
+        textposition = 'inside',
+        textinfo = 'label+percent',
+        insidetextfont = list(color = '#FFFFFF'),
+        hoverinfo = 'text',
+        text = ~paste(occurances, 'links')) %>% 
+  layout(title="Phishing V.S. Non-Phishing Links", 
+         legend = list(x = 100, y = 0.5, title=list(text='<b> Types of Websites </b>')))
+
+phishingagg
+
 ```
 
 
+<!--
+
+
+
+
+ggplot(urldata, aes(x=url_length, color=phishing)) + 
+  geom_density()
+---> 
+```{r url_length m_and_sd}
+
+pmean <- data %>% 
+  select( phishing, url_length) %>%
+  filter(phishing==1) %>%
+  summarise(mean_p = mean(url_length))
+
+psd <- data %>% 
+  select( phishing, url_length) %>%
+  filter(phishing==1) %>%
+  summarise(sd_p = sd(url_length))
+
+npmean <- data %>% 
+  select( phishing, url_length) %>%
+  filter(phishing==0) %>%
+  summarise(mean_np = mean(url_length))
+
+npsd <- data %>% 
+  select( phishing, url_length) %>%
+  filter(phishing==0) %>%
+  summarise(sd_np = sd(url_length))
+
+data.frame(pmean, psd, npmean, npsd)
+
+
+```
+```{r urldensity}
+
+urldensity <- data.frame(
+  phishingurl=factor(rep(c("P", "NP"), each=300)),
+  weight=round(c(rnorm(300, mean=66.49112, sd=68.59874),
+                 rnorm(300, mean=23.58997	, sd=16.13607)))
+  )
+
+df <- data %>% 
+  select( phishing, url_length)
+
+
+p <- ggplot(urldensity, aes(x=weight, color=phishingurl)) +
+  geom_density() +
+  geom_vline(aes(xintercept=66.49112),
+             linetype="dashed", color='blue') +
+  geom_vline(aes(xintercept=23.58997),
+             linetype="dashed", color='blue') 
+  p + scale_x_continuous(expand = c(0, 0), limits = c(0, NA)) + 
+  scale_y_continuous(expand = c(0, 0), limits = c(0, NA)) 
+
+```
 - make the links open to a blank page 
 
 ```{sql test, eval=FALSE, echo=T} 

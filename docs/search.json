@@ -6,15 +6,15 @@
       "description": "Some additional details about the website",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-04-22T21:28:12-04:00"
+      "last_modified": "2024-04-25T22:45:16-04:00"
     },
     {
       "path": "index.html",
       "title": "Phishing with SQL",
       "description": "Welcome to the website. I hope you enjoy it!\n",
       "author": [],
-      "contents": "\r\nWe started with fake news, only to end up at phishing. That’s just how the world works!\r\nTaking raw data from this dataset, I’m attempting to explore the URLs of phishing websites!\r\nTaking a look at the raw data:\r\nDISPLAY RAW DATA\r\n- grab a first 4 columns + phishing column (move phsidhing column tot he front)\r\n\r\n\r\nlibrary(rmarkdown)\r\npaged_table(mtcars)\r\n\r\n\r\n\r\n\r\nmake the links open to a blank page\r\n\r\ncan you display just this as something\r\n\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-04-22T21:28:12-04:00"
+      "contents": "\r\nWe started with fake news, only to end up at phishing. That’s just how the world works!\r\nTaking raw data from this dataset, I’m attempting to explore the URLs of phishing websites!\r\nTaking a look at the raw data:\r\nDISPLAY RAW DATA\r\n- grab a first 4 columns + phishing column (move phsidhing column tot he front)\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nphishingpie <- data %>%\r\n  select(phishing) %>%\r\n  group_by(phishing) %>% \r\n  summarise(occurances = n()) %>%\r\n  mutate(phishing = recode(phishing, '1'='Phishing link', '0'=\"Non-phishing link\"))\r\n\r\nphishingagg <- plot_ly(phishingpie, labels = ~phishing, values = ~occurances, type = 'pie',marker = list(colors = c('MidnightBlue', 'MediumPurple')),\r\n        textposition = 'inside',\r\n        textinfo = 'label+percent',\r\n        insidetextfont = list(color = '#FFFFFF'),\r\n        hoverinfo = 'text',\r\n        text = ~paste(occurances, 'links')) %>% \r\n  layout(title=\"Phishing V.S. Non-Phishing Links\", \r\n         legend = list(x = 100, y = 0.5, title=list(text='<b> Types of Websites <\/b>')))\r\n\r\nphishingagg\r\n\r\n\r\n\r\n\r\n\r\n\r\nmake the links open to a blank page\r\n\r\ncan you display just this as something\r\n\r\ngeneral talk about teh data\r\n-> how many were fishing? how many weren’t? -> pie chart\r\ncorrelation\r\n- build tables (take the head of x)\r\n- explain the pearson correlation, how can we get info out\r\n- cast bigint and basically couldn twork, so had to build a table (you can build it using R)\r\ncreate table\r\nurl length\r\n- out of phishing, plot density graph,\r\n–> url lenght vs amount of urls -> phishing vs no phishing\r\nsame thing with redirections\r\nend\r\nthis shoudl be pretty quick and simple it hink\r\nhttps://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0\r\nhttps://docs.google.com/document/d/1M9kvGEJ1_db81M5g6J8DtF0kAFnCCAPlnuUMzAmVUOA/edit\r\n\r\n\r\n\r\n",
+      "last_modified": "2024-04-25T22:45:14-04:00"
     }
   ],
   "collections": []
