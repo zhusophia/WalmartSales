@@ -57,7 +57,7 @@ phishingpie <- data %>%
   summarise(occurances = n()) %>%
   mutate(phishing = recode(phishing, '1'='Phishing link', '0'="Non-phishing link"))
 
-phishingagg <- plot_ly(phishingpie, labels = ~phishing, values = ~occurances, type = 'pie',marker = list(colors = c('MidnightBlue', 'MediumPurple')),
+phishingagg <- plot_ly(phishingpie, labels = ~phishing, values = ~occurances, type = 'pie',marker = list(colors = c('#CC6666', '#9999CC')),
         textposition = 'inside',
         textinfo = 'label+percent',
         insidetextfont = list(color = '#FFFFFF'),
@@ -68,6 +68,23 @@ phishingagg <- plot_ly(phishingpie, labels = ~phishing, values = ~occurances, ty
 
 phishingagg
 
+```
+
+
+We've got a smattering of data! Now, I want to analyze the data further: What is the correlation between phishing and each column? Employing the use of SQL: 
+
+I'm going to be calcualting Pearson's correlation. It is 
+
+
+explain topics: 
+- standard deviation -> measure of how dispersed the data is in relation to the mean
+- varianece -> 
+- correlation
+- hypothesis testing? 
+
+
+```{sql test, eval=FALSE, echo=T} 
+can you display just this as something
 ```
 
 
@@ -108,13 +125,10 @@ data.frame(pmean, psd, npmean, npsd)
 ```{r urldensity}
 
 urldensity <- data.frame(
-  phishingurl=factor(rep(c("P", "NP"), each=300)),
+  phishingurl=factor(rep(c("Phishing", "Not Phishing"), each=300)),
   weight=round(c(rnorm(300, mean=66.49112, sd=68.59874),
                  rnorm(300, mean=23.58997	, sd=16.13607)))
   )
-
-df <- data %>% 
-  select( phishing, url_length)
 
 
 p <- ggplot(urldensity, aes(x=weight, color=phishingurl)) +
@@ -124,15 +138,28 @@ p <- ggplot(urldensity, aes(x=weight, color=phishingurl)) +
   geom_vline(aes(xintercept=23.58997),
              linetype="dashed", color='blue') 
   p + scale_x_continuous(expand = c(0, 0), limits = c(0, NA)) + 
-  scale_y_continuous(expand = c(0, 0), limits = c(0, NA)) 
+  scale_y_continuous(expand = c(0, 0), limits = c(0, NA), labels = scales::percent) +
+    scale_color_manual(values=c("#CC6666", "#9999CC")) +
+    labs(title = "URL Character Distribution", 
+         subtitle = "Phishing URLs typically have more characters\n", 
+         x = "\n Number of characters", 
+         y = "Density \n", 
+         color = "Types of URLs")
 
 ```
 - make the links open to a blank page 
 
-```{sql test, eval=FALSE, echo=T} 
-can you display just this as something
-```
 
+i can make a density plot for n_slash, n_urllength, n_redirections 
+--> Histogram, Box plots, scatterplot
+- t test 
+- linear regression
+- think i can also use the average measure to rpove 
+- conduct hypothesis testing on all three? 
+- descriptive statistics 
+- r^2 and r? regresison analysis 
+
+https://www.youtube.com/watch?v=VK-rnA3-41c
 
 - general talk about teh data 
 -> how many were fishing? how many weren't? -> pie chart 

@@ -110,7 +110,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","output"]}},"value":[{"type":"character","attributes":{},"value":["Phishing with SQL"]},{"type":"character","attributes":{},"value":["Welcome to the website. I hope you enjoy it!\n"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["html_document","code_folding"]}},"value":[{"type":"NULL"},{"type":"character","attributes":{},"value":["show"]}]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site"]}},"value":[{"type":"character","attributes":{},"value":["Phishing with SQL"]},{"type":"character","attributes":{},"value":["Welcome to the website. I hope you enjoy it!\n"]},{"type":"character","attributes":{},"value":["distill::distill_website"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2157,36 +2157,29 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 -->
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span></span>
-<span><span class='va'>phishingpie</span> <span class='op'>&lt;-</span> <span class='va'>data</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>phishing</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>phishing</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>occurances <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>phishing <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/recode.html'>recode</a></span><span class='op'>(</span><span class='va'>phishing</span>, <span class='st'>'1'</span><span class='op'>=</span><span class='st'>'Phishing link'</span>, <span class='st'>'0'</span><span class='op'>=</span><span class='st'>"Non-phishing link"</span><span class='op'>)</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='va'>phishingagg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plotly/man/plot_ly.html'>plot_ly</a></span><span class='op'>(</span><span class='va'>phishingpie</span>, labels <span class='op'>=</span> <span class='op'>~</span><span class='va'>phishing</span>, values <span class='op'>=</span> <span class='op'>~</span><span class='va'>occurances</span>, type <span class='op'>=</span> <span class='st'>'pie'</span>,marker <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>colors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'MidnightBlue'</span>, <span class='st'>'MediumPurple'</span><span class='op'>)</span><span class='op'>)</span>,</span>
-<span>        textposition <span class='op'>=</span> <span class='st'>'inside'</span>,</span>
-<span>        textinfo <span class='op'>=</span> <span class='st'>'label+percent'</span>,</span>
-<span>        insidetextfont <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>'#FFFFFF'</span><span class='op'>)</span>,</span>
-<span>        hoverinfo <span class='op'>=</span> <span class='st'>'text'</span>,</span>
-<span>        text <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>occurances</span>, <span class='st'>'links'</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
-<span>  <span class='fu'>layout</span><span class='op'>(</span>title<span class='op'>=</span><span class='st'>"Phishing V.S. Non-Phishing Links"</span>, </span>
-<span>         legend <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fl'>100</span>, y <span class='op'>=</span> <span class='fl'>0.5</span>, title<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>text<span class='op'>=</span><span class='st'>'&lt;b&gt; Types of Websites &lt;/b&gt;'</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='va'>phishingagg</span></span></code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1ad666fb002e15a90efe" style="width:624px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-1ad666fb002e15a90efe">{"x":{"visdat":{"16e4739928f3":["function () ","plotlyVisDat"]},"cur_data":"16e4739928f3","attrs":{"16e4739928f3":{"labels":{},"values":{},"marker":{"colors":["MidnightBlue","MediumPurple"]},"textposition":"inside","textinfo":"label+percent","insidetextfont":{"color":"#FFFFFF"},"hoverinfo":"text","text":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Phishing V.S. Non-Phishing Links","legend":{"x":100,"y":0.5,"title":{"text":"<b> Types of Websites <\/b>"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["Non-phishing link","Phishing link"],"values":[63715,36362],"marker":{"color":"rgba(31,119,180,1)","colors":["MidnightBlue","MediumPurple"],"line":{"color":"rgba(255,255,255,1)"}},"textposition":["inside","inside"],"textinfo":"label+percent","insidetextfont":{"color":"#FFFFFF"},"hoverinfo":["text","text"],"text":["63715 links","36362 links"],"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
-<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-2c5ae9b1c1fcce851be6" style="width:624px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-2c5ae9b1c1fcce851be6">{"x":{"visdat":{"2d1c19bb2e37":["function () ","plotlyVisDat"]},"cur_data":"2d1c19bb2e37","attrs":{"2d1c19bb2e37":{"labels":{},"values":{},"marker":{"colors":["MidnightBlue","MediumPurple"]},"textposition":"inside","textinfo":"label+percent","insidetextfont":{"color":"#FFFFFF"},"hoverinfo":"text","text":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Phishing V.S. Non-Phishing Links","legend":{"x":100,"y":0.5,"title":{"text":"<b> Types of Websites <\/b>"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["Non-phishing link","Phishing link"],"values":[63715,36362],"marker":{"color":"rgba(31,119,180,1)","colors":["MidnightBlue","MediumPurple"],"line":{"color":"rgba(255,255,255,1)"}},"textposition":["inside","inside"],"textinfo":"label+percent","insidetextfont":{"color":"#FFFFFF"},"hoverinfo":["text","text"],"text":["63715 links","36362 links"],"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<!--
+
+
+
+
+ggplot(urldata, aes(x=url_length, color=phishing)) + 
+  geom_density()
+--->
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>    mean_p     sd_p  mean_np    sd_np
+1 66.49112 68.59874 23.58997 16.13607</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-
+<p><img src="index_files/figure-html5/urldensity-1.png" width="624" /></p>
 </div>
 <ul>
 <li>make the links open to a blank page</li>
 </ul>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb1"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>can you display just this <span class="kw">as</span> something</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>can you display just this <span class="kw">as</span> something</span></code></pre></div>
 </div>
 <ul>
 <li>general talk about teh data
@@ -2207,7 +2200,7 @@ create table</p>
 <p>this shoudl be pretty quick and simple it hink</p>
 <p><a href="https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0" class="uri">https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0</a></p>
 <p><a href="https://docs.google.com/document/d/1M9kvGEJ1_db81M5g6J8DtF0kAFnCCAPlnuUMzAmVUOA/edit" class="uri">https://docs.google.com/document/d/1M9kvGEJ1_db81M5g6J8DtF0kAFnCCAPlnuUMzAmVUOA/edit</a></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
