@@ -24,9 +24,6 @@ Taking raw data from [this dataset](https://www.kaggle.com/datasets/danielfernan
 
 Taking a look at the raw data: 
 
-DISPLAY RAW DATA 
-- grab a first 4 columns + phishing column (move phsidhing column tot he front)
-
 
 ```{r load data}
 data <- read.csv("web-page-phishing.csv")
@@ -41,13 +38,6 @@ data <- data %>%
 paged_table(head(data))
 
 ```
-<!-- ggplot(phishingpie, aes(x="", y=occurances, fill=phishing)) +
-  geom_col() +
-  coord_polar(theta="y")+
-  theme_void()
-
-
--->
 
 ```{r phishing pie chart}
 
@@ -73,25 +63,63 @@ phishingagg
 
 We've got a smattering of data! Now, I want to analyze the data further: What is the correlation between phishing and each column? Employing the use of SQL: 
 
-I'm going to be calcualting Pearson's correlation. It is 
-
-
-explain topics: 
-- standard deviation -> measure of how dispersed the data is in relation to the mean
-- varianece -> 
-- correlation
-- hypothesis testing? 
-
+I'm going to be calcualting Pearson's correlation. it measures how strong the linear relationship between two variabels are. 
 
 ```{sql test, eval=FALSE, echo=T} 
-can you display just this as something
+SELECT n_redirection, phishing, n_redirection*phishing AS xy, n_redirection*n_redirection AS xsquared, phishing*phishing AS ysquared
+FROM pdata
 ```
 
 
+```{sql test, eval=FALSE, echo=T} 
+SELECT sum(n_redirection) over() AS sumx, sum(phishing) over() AS sumy, sum(xy) over() AS sumxy, sum(xsquared) over() AS sumxsquared, sum(ysquared) over() AS sumysquared, count(*) over() as n
+FROM rawdata
+```
+
+```{sql test, eval=FALSE, echo=T} 
+-- Removing duplicates
+processedsumdata as (
+SELECT *
+FROM sumdata
+GROUP BY sumx, sumy, sumxy, sumxsquared, sumysquared, n
+HAVING count(*) > 1
+)
+```
+
+```{sql test, eval=FALSE, echo=T} 
+denomdata as (
+SELECT  (n*cast(sumxy as bigint) - sumx*cast(sumy as bigint)) AS numerator, (n*cast(sumxsquared as bigint) - cast(sumx as bigint)*cast(sumx as bigint)) AS denomleft, cast(n*cast(sumysquared as bigint) - cast(sumy as bigint)*cast(sumy as bigint) as bigint) AS denomright
+FROM processedsumdata
+)
+```
+
+
+the results are as so: 
+
+```{r, rawptable}
+
+
+rawptable <- data.frame('Column' = c("n_slash", 'url_length', 'n_equal', 'n_and', 'n_dots', 'n_underline', 'n_questionmark', 'n_hypens', 'n_at', 'n_tilde', 'n_exclamation', 'n_comma', 'n_percent', 'n_dollar', 'n_asterisk', 'n_space', 'n_hastag', 'n_plus', 'n_redirection'), 
+
+            'Numerator' = c(5385854242, 99393582580, 1204211637, 832565359, 1099592885, 586959775, 135012530, 931371980, 140992286, 18761519, 11625765, 10160320, 213278891, 12105850, 26123150, 10276904, 2867175, 3328057, -189847349),  
+           'Denominator Left' = c(33486230402, 23048204106158, 9226297758, 8360440556, 15775508972, 5249714246, 281963048, 16549495946, 721448210, 61716542, 67684008, 63392174, 28785321710, 95037050, 808053752, 209323094, 33723924, 109122998, 6023076644), 
+           'Denominator Right' = c(2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830, 2316804830), 
+           "R Value" = c(0.6114722329, 0.4301253848, 0.2604619943, 0.1891729474, 0.1818844228, 0.1683045211, 0.1670449121, 0.150413237, 0.109055619, 0.04961608357, 0.02935849448, 0.02651214329, 0.02611665819, 0.02579907232, 0.01909240743, 0.01475737122, 0.01025747401, 0.006618931497, -0.05082186723))
+
+colnames(rawptable) <- str_replace_all(colnames(rawptable), "[.]", " ")
+
+paged_table(rawptable)
+
+
+```
+
+but! you might be asking! how does that work! supposed to be normalized data! 
+
+well, you're right that pearson's correlation tells us nothing! we need to use the Point-Biserial Correlation.
+
+briefly mention Kendall rank and Spearman coefficient
+
 <!--
-
-
-
 
 ggplot(urldata, aes(x=url_length, color=phishing)) + 
   geom_density()
@@ -122,6 +150,8 @@ data.frame(pmean, psd, npmean, npsd)
 
 
 ```
+- explain standard viation and mean and variance idk
+
 ```{r urldensity}
 
 urldensity <- data.frame(
