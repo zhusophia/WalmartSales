@@ -2077,14 +2077,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
   <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
   <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-  <script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
-  <script src="site_libs/plotly-binding-4.10.2/plotly.js"></script>
-  <script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
-  <script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
-  <link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-  <script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
-  <link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
-  <script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2135,71 +2127,50 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <div class="d-article">
 <p>We started with <a href="https://zhusophia.github.io/Fake_Fake_News/">fake news</a>, only to end up at phishing. That’s just how the world works!</p>
-<p>Taking raw data from <a href="https://www.kaggle.com/datasets/danielfernandon/web-page-phishing-dataset?resource=download">this dataset</a>, I’m attempting to explore the URLs of phishing websites!</p>
+<p>Taking raw data from <a href="https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download">this dataset</a>, I’m looking at sales trends for the year</p>
 <p>Taking a look at the raw data:</p>
-<p>DISPLAY RAW DATA
-- grab a first 4 columns + phishing column (move phsidhing column tot he front)</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["phishing"],"name":[1],"type":["int"],"align":["right"]},{"label":["url_length"],"name":[2],"type":["int"],"align":["right"]},{"label":["n_dots"],"name":[3],"type":["int"],"align":["right"]},{"label":["n_hypens"],"name":[4],"type":["int"],"align":["right"]},{"label":["n_underline"],"name":[5],"type":["int"],"align":["right"]},{"label":["n_slash"],"name":[6],"type":["int"],"align":["right"]},{"label":["n_questionmark"],"name":[7],"type":["int"],"align":["right"]},{"label":["n_equal"],"name":[8],"type":["int"],"align":["right"]},{"label":["n_at"],"name":[9],"type":["int"],"align":["right"]},{"label":["n_and"],"name":[10],"type":["int"],"align":["right"]},{"label":["n_exclamation"],"name":[11],"type":["int"],"align":["right"]},{"label":["n_space"],"name":[12],"type":["int"],"align":["right"]},{"label":["n_tilde"],"name":[13],"type":["int"],"align":["right"]},{"label":["n_comma"],"name":[14],"type":["int"],"align":["right"]},{"label":["n_plus"],"name":[15],"type":["int"],"align":["right"]},{"label":["n_asterisk"],"name":[16],"type":["int"],"align":["right"]},{"label":["n_hastag"],"name":[17],"type":["int"],"align":["right"]},{"label":["n_dollar"],"name":[18],"type":["int"],"align":["right"]},{"label":["n_percent"],"name":[19],"type":["int"],"align":["right"]},{"label":["n_redirection"],"name":[20],"type":["int"],"align":["right"]}],"data":[{"1":"0","2":"37","3":"3","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0","12":"0","13":"0","14":"0","15":"0","16":"0","17":"0","18":"0","19":"0","20":"0","_rn_":"1"},{"1":"1","2":"77","3":"1","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0","12":"0","13":"0","14":"0","15":"0","16":"0","17":"0","18":"0","19":"0","20":"1","_rn_":"2"},{"1":"1","2":"126","3":"4","4":"1","5":"2","6":"0","7":"1","8":"3","9":"0","10":"2","11":"0","12":"0","13":"0","14":"0","15":"0","16":"0","17":"0","18":"0","19":"0","20":"1","_rn_":"3"},{"1":"0","2":"18","3":"2","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0","12":"0","13":"0","14":"0","15":"0","16":"0","17":"0","18":"0","19":"0","20":"1","_rn_":"4"},{"1":"0","2":"55","3":"2","4":"2","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0","12":"0","13":"0","14":"0","15":"0","16":"0","17":"0","18":"0","19":"0","20":"1","_rn_":"5"},{"1":"1","2":"32","3":"3","4":"1","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0","12":"0","13":"0","14":"0","15":"0","16":"0","17":"0","18":"0","19":"0","20":"1","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Store"],"name":[1],"type":["int"],"align":["right"]},{"label":["Date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Weekly_Sales"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Holiday_Flag"],"name":[4],"type":["int"],"align":["right"]},{"label":["Temperature"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Fuel_Price"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["CPI"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Unemployment"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"05-02-2010","3":"1643691","4":"0","5":"42.31","6":"2.572","7":"211.0964","8":"8.106","_rn_":"1"},{"1":"1","2":"12-02-2010","3":"1641957","4":"1","5":"38.51","6":"2.548","7":"211.2422","8":"8.106","_rn_":"2"},{"1":"1","2":"19-02-2010","3":"1611968","4":"0","5":"39.93","6":"2.514","7":"211.2891","8":"8.106","_rn_":"3"},{"1":"1","2":"26-02-2010","3":"1409728","4":"0","5":"46.63","6":"2.561","7":"211.3196","8":"8.106","_rn_":"4"},{"1":"1","2":"05-03-2010","3":"1554807","4":"0","5":"46.50","6":"2.625","7":"211.3501","8":"8.106","_rn_":"5"},{"1":"1","2":"12-03-2010","3":"1439542","4":"0","5":"57.79","6":"2.667","7":"211.3806","8":"8.106","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
-<!-- ggplot(phishingpie, aes(x="", y=occurances, fill=phishing)) +
-  geom_col() +
-  coord_polar(theta="y")+
-  theme_void()
-
-
--->
+<p>Spanning just under two yeras, this dataset keeps tracks of the weekly sales of certain Walmart stores. there are 45 stores and 10 holidays. it also takes general indicators of the wellbeing of economy and enviormnet - temprarture, CPI, unemployement, and fuel prices.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1ad666fb002e15a90efe" style="width:624px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-1ad666fb002e15a90efe">{"x":{"visdat":{"16e4739928f3":["function () ","plotlyVisDat"]},"cur_data":"16e4739928f3","attrs":{"16e4739928f3":{"labels":{},"values":{},"marker":{"colors":["MidnightBlue","MediumPurple"]},"textposition":"inside","textinfo":"label+percent","insidetextfont":{"color":"#FFFFFF"},"hoverinfo":"text","text":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Phishing V.S. Non-Phishing Links","legend":{"x":100,"y":0.5,"title":{"text":"<b> Types of Websites <\/b>"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["Non-phishing link","Phishing link"],"values":[63715,36362],"marker":{"color":"rgba(31,119,180,1)","colors":["MidnightBlue","MediumPurple"],"line":{"color":"rgba(255,255,255,1)"}},"textposition":["inside","inside"],"textinfo":"label+percent","insidetextfont":{"color":"#FFFFFF"},"hoverinfo":["text","text"],"text":["63715 links","36362 links"],"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-</div>
-<!--
-
-
-
-
-ggplot(urldata, aes(x=url_length, color=phishing)) + 
-  geom_density()
---->
-<div class="layout-chunk" data-layout="l-body">
-<pre><code>    mean_p     sd_p  mean_np    sd_np
-1 66.49112 68.59874 23.58997 16.13607</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&#39;Walmart_sales.csv&#39;</span>, parse_dates<span class="op">=</span>[<span class="st">&#39;Date&#39;</span>], dayfirst<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="index_files/figure-html5/urldensity-1.png" width="624" /></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sort by store number and then date</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df.sort_values(by<span class="op">=</span>[<span class="st">&#39;Store&#39;</span>, <span class="st">&#39;Date&#39;</span>])</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#standarize dates to mm-dd-yyyy</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&#39;Date&#39;</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">&#39;Date&#39;</span>], <span class="bu">format</span><span class="op">=</span><span class="st">&#39;</span><span class="sc">%d</span><span class="st">-%m-%Y&#39;</span>).dt.strftime(<span class="st">&#39;%m-</span><span class="sc">%d</span><span class="st">-%Y&#39;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#rounding data </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">round</span>({<span class="st">&#39;Weekly_Sales&#39;</span>:<span class="dv">2</span>, <span class="st">&#39;Temperature&#39;</span>:<span class="dv">0</span>, <span class="st">&#39;Fuel_Price&#39;</span>:<span class="dv">2</span>, <span class="st">&#39;CPI&#39;</span>:<span class="dv">3</span>, <span class="st">&#39;Unemployment&#39;</span>:<span class="dv">3</span>})</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#removing missing values</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>df.dropna</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#create cleaned csv</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">&#39;./WalmartSalesClean.csv&#39;</span>)</span></code></pre></div>
 </div>
-<ul>
-<li>make the links open to a blank page</li>
-</ul>
+<p>after cleaning, the information appears as so:</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>can you display just this <span class="kw">as</span> something</span></code></pre></div>
+
 </div>
-<ul>
-<li>general talk about teh data
--&gt; how many were fishing? how many weren’t? -&gt; pie chart</li>
-</ul>
-<p>correlation
-- build tables (take the head of x)
-- explain the pearson correlation, how can we get info out
-- cast bigint and basically couldn twork, so had to build a table (you can build it using R)
-create table</p>
-<p>url length
-- out of phishing, plot density graph,
-–&gt; url lenght vs amount of urls -&gt; phishing vs no phishing</p>
-<p>same thing with redirections</p>
-<ul>
-<li>end</li>
-</ul>
-<p>this shoudl be pretty quick and simple it hink</p>
-<p><a href="https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0" class="uri">https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0</a></p>
-<p><a href="https://docs.google.com/document/d/1M9kvGEJ1_db81M5g6J8DtF0kAFnCCAPlnuUMzAmVUOA/edit" class="uri">https://docs.google.com/document/d/1M9kvGEJ1_db81M5g6J8DtF0kAFnCCAPlnuUMzAmVUOA/edit</a></p>
+<div class="layout-chunk" data-layout="l-body">
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["X"],"name":[1],"type":["int"],"align":["right"]},{"label":["Store"],"name":[2],"type":["int"],"align":["right"]},{"label":["Date"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Weekly_Sales"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Holiday_Flag"],"name":[5],"type":["int"],"align":["right"]},{"label":["Temperature"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Fuel_Price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["CPI"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Unemployment"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"0","2":"1","3":"02-05-2010","4":"1643691","5":"0","6":"42.31","7":"2.572","8":"211.0964","9":"8.106","_rn_":"1"},{"1":"1","2":"1","3":"02-12-2010","4":"1641957","5":"1","6":"38.51","7":"2.548","8":"211.2422","9":"8.106","_rn_":"2"},{"1":"2","2":"1","3":"02-19-2010","4":"1611968","5":"0","6":"39.93","7":"2.514","8":"211.2891","9":"8.106","_rn_":"3"},{"1":"3","2":"1","3":"02-26-2010","4":"1409728","5":"0","6":"46.63","7":"2.561","8":"211.3196","9":"8.106","_rn_":"4"},{"1":"4","2":"1","3":"03-05-2010","4":"1554807","5":"0","6":"46.50","7":"2.625","8":"211.3501","9":"8.106","_rn_":"5"},{"1":"5","2":"1","3":"03-12-2010","4":"1439542","5":"0","6":"57.79","7":"2.667","8":"211.3806","9":"8.106","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

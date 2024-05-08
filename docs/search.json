@@ -6,15 +6,15 @@
       "description": "Some additional details about the website",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-04-26T22:08:06-04:00"
+      "last_modified": "2024-05-07T22:57:05-04:00"
     },
     {
       "path": "index.html",
       "title": "Phishing with SQL",
       "description": "Welcome to the website. I hope you enjoy it!\n",
       "author": [],
-      "contents": "\r\nWe started with fake news, only to end up at phishing. That’s just how the world works!\r\nTaking raw data from this dataset, I’m attempting to explore the URLs of phishing websites!\r\nTaking a look at the raw data:\r\nDISPLAY RAW DATA\r\n- grab a first 4 columns + phishing column (move phsidhing column tot he front)\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    mean_p     sd_p  mean_np    sd_np\r\n1 66.49112 68.59874 23.58997 16.13607\r\n\r\n\r\n\r\n\r\nmake the links open to a blank page\r\n\r\ncan you display just this as something\r\n\r\ngeneral talk about teh data\r\n-> how many were fishing? how many weren’t? -> pie chart\r\ncorrelation\r\n- build tables (take the head of x)\r\n- explain the pearson correlation, how can we get info out\r\n- cast bigint and basically couldn twork, so had to build a table (you can build it using R)\r\ncreate table\r\nurl length\r\n- out of phishing, plot density graph,\r\n–> url lenght vs amount of urls -> phishing vs no phishing\r\nsame thing with redirections\r\nend\r\nthis shoudl be pretty quick and simple it hink\r\nhttps://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0\r\nhttps://docs.google.com/document/d/1M9kvGEJ1_db81M5g6J8DtF0kAFnCCAPlnuUMzAmVUOA/edit\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-04-26T22:08:06-04:00"
+      "contents": "\r\nWe started with fake news, only to end up at phishing. That’s just how the world works!\r\nTaking raw data from this dataset, I’m looking at sales trends for the year\r\nTaking a look at the raw data:\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nSpanning just under two yeras, this dataset keeps tracks of the weekly sales of certain Walmart stores. there are 45 stores and 10 holidays. it also takes general indicators of the wellbeing of economy and enviormnet - temprarture, CPI, unemployement, and fuel prices.\r\n\r\nimport pandas as pd\r\ndf = pd.read_csv('Walmart_sales.csv', parse_dates=['Date'], dayfirst=False)\r\n\r\n\r\n#sort by store number and then date\r\ndf.sort_values(by=['Store', 'Date'])\r\n\r\n#standarize dates to mm-dd-yyyy\r\ndf['Date'] = pd.to_datetime(df['Date'], format='%d-%m-%Y').dt.strftime('%m-%d-%Y')\r\n\r\n#rounding data \r\ndf.round({'Weekly_Sales':2, 'Temperature':0, 'Fuel_Price':2, 'CPI':3, 'Unemployment':3})\r\n\r\n#removing missing values\r\ndf.dropna\r\n\r\n#create cleaned csv\r\ndf.to_csv('./WalmartSalesClean.csv')\r\n\r\nafter cleaning, the information appears as so:\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+      "last_modified": "2024-05-07T22:57:05-04:00"
     }
   ],
   "collections": []
