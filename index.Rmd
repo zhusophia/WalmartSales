@@ -22,18 +22,6 @@ We started with [fake news](https://zhusophia.github.io/Fake_Fake_News/), only t
 
 Taking raw data from [this dataset](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download), I'm looking at sales trends for the year  
 
-Taking a look at the raw data: 
-
-```{r load data}
-data1 <- read.csv("Walmart_sales.csv")
-```
-
-```{r general data}
-
-paged_table(head(data1))
-
-```
-
 Spanning just under two yeras, this dataset keeps tracks of the weekly sales of certain Walmart stores. there are 45 stores and 10 holidays. it also takes general indicators of the wellbeing of economy and enviormnet - temprarture, CPI, unemployement, and fuel prices.
 
 ```{python import, eval=FALSE, echo=T}
@@ -61,7 +49,6 @@ df.to_csv('./WalmartSalesClean.csv')
 ```
 
 
-
 after cleaning, the information appears as so: 
 
 
@@ -74,9 +61,88 @@ paged_table(head(data))
 
 ```
 
+Let's answer a few questions about the data. We'll be using SQL to clean and manipulate the data. 
 
-```{sql test, eval=FALSE, echo=T}
+
+1. Which holidays affect weekly sales the most?
+
+
+```{sql test1, eval=FALSE, echo=T}
+ALTER TABLE WalmartSalesClean
+ALTER COLUMN Holiday_Flag Int;
+
+SELECT Date, SUM(CAST(Weekly_Sales AS FLOAT)) AS Weekly_Sales
+FROM WalmartSalesClean 
+WHERE Holiday_Flag='1'
+GROUP BY Date
+ORDER BY Weekly_Sales DESC;
+
+SELECT Holiday_Flag = '1', Date, SUM(CAST(Weekly_Sales AS FLOAT)) AS Weekly_Sales
+FROM WalmartSalesClean
+GROUP BY Date
+ORDER BY Weekly_Sales DESC;
+```
+
+2. Which stores in the dataset have the lowest and highest unemployment rate?  What factors do you think are impacting the unemployment rate?
+```{sql test2, eval=FALSE, echo=T}
+WITH corrdata AS (
+SELECT Store, avg(CAST(Unemployment AS decimal)) AS Unemployment, avg(CAST(Temperature AS decimal)) AS Temperature, avg(CAST(Fuel_Price AS decimal)) AS Fuel_Prices, avg(CAST(CPI AS decimal)) AS CPI, avg(CAST(Weekly_Sales AS decimal)) AS Weekly_Sales
+FROM WalmartSalesClean
+GROUP BY Store
+/*ORDER BY Unemployment desc, Weekly_Sales */
+
+```
+
+Pearson's correlation
+```{sql test3, eval=FALSE, echo=T}
+rawdata AS (
+SELECT Unemployment AS x, Weekly_Sales AS y, Unemployment*Weekly_Sales AS xy, Unemployment*Unemployment AS xsquared, Weekly_Sales*Weekly_Sales AS ysquared	
+FROM corrdata
+),
+
+pdata AS (
+SELECT SUM(x) AS sumx, SUM(y) AS sumy, SUM(xy) as sumxy, SUM(xsquared) as sumx2, SUM(ysquared) as sumy2, COUNT(x) as n
+FROM rawdata
+)
+
+SELECT (n*sumxy - sumx * sumy) / (sqrt((n*sumx2 - sumx*sumx)*(n*sumy2 - sumy*sumy))) AS "Pearson's Correlation"
+FROM pdata
+
+```
+
+3. Is there any correlation between CPI and Weekly Sales?  How does the correlation differ when the Holiday Flag is 0 versus when the Holiday Flag is 1?
+```{sql test4, eval=FALSE, echo=T}
+WITH rdata AS (
+SELECT CAST(ROUND(CPI, 0) AS INT) AS CPI, CAST(Weekly_Sales AS decimal) AS Weekly_Sales
+FROM WalmartSalesClean
+WHERE Holiday_Flag = 0
+),
+
+corrdata AS(
+SELECT CPI, AVG(Weekly_Sales) AS Weekly_Sales
+FROM rdata
+GROUP BY CPI
+/*ORDER BY CPI ASC*/
+),
+
+```
+
+```{sql test5, eval=FALSE, echo=T}
+rawdata AS (
+SELECT CPI AS x, Weekly_Sales AS y, CPI*Weekly_Sales AS xy, CPI*CPI AS xsquared, Weekly_Sales*Weekly_Sales AS ysquared	
+FROM corrdata
+),
+
+pdata AS (
+SELECT SUM(x) AS sumx, SUM(y) AS sumy, SUM(xy) as sumxy, SUM(xsquared) as sumx2, SUM(ysquared) as sumy2, COUNT(x) as n
+FROM rawdata
+)
+
+SELECT (n*sumxy - sumx * sumy) / (sqrt((n*sumx2 - sumx*sumx)*(n*sumy2 - sumy*sumy))) AS "Pearson's Correlation"
+FROM pdata
 
 ```
 
 
+
+https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0
