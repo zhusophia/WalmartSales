@@ -122,14 +122,20 @@ GROUP BY Date
 ORDER BY Weekly_Sales DESC
 ```
 
-```{r, holidayordering}
+```{r, monthholidayordering}
 data %>% 
   filter(Holiday_Flag == 1) %>%
+  mutate(Date = substr(Date, 1, 2)) %>%
   select(Date, Weekly_Sales) %>%
   group_by(Date) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales)) %>%
   arrange(desc(Weekly_Sales))
 
 ```
+Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! 
+
+
+# adjust so that 02 is not displayed, but sintead, superbowl, make a grpah? 
 
 2. Which stores in the dataset have the lowest and highest unemployment rate?  What factors do you think are impacting the unemployment rate?
 ```{sql test2, eval=FALSE, echo=T}
@@ -137,7 +143,11 @@ WITH corrdata AS (
 SELECT Store, avg(CAST(Unemployment AS decimal)) AS Unemployment, avg(CAST(Temperature AS decimal)) AS Temperature, avg(CAST(Fuel_Price AS decimal)) AS Fuel_Prices, avg(CAST(CPI AS decimal)) AS CPI, avg(CAST(Weekly_Sales AS decimal)) AS Weekly_Sales
 FROM WalmartSalesClean
 GROUP BY Store
-/*ORDER BY Unemployment desc, Weekly_Sales */
+/*ORDER BY Unemployment desc, Weekly_Sales 
+
+  select(Date, Weekly_Sales) %>%
+  group_by(Date) %>%
+  arrange(desc(Weekly_Sales))*/
 
 ```
 

@@ -2126,8 +2126,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
 <div class="d-article">
-<p>Taking raw data from <a href="https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download">this dataset</a>, I’m looking at sales trends for the year</p>
-<p>Spanning just under two yeras, this dataset keeps tracks of the weekly sales of certain Walmart stores. there are 45 stores and 10 holidays. it also takes general indicators of the wellbeing of economy and enviormnet - temprarture, CPI, unemployement, and fuel prices.</p>
+<p>This project focuses on analyzing raw data from <a href="https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download">this dataset</a>, which tracks the weekly sales of 45 Walmart stores over 2 years! It also tracks external factors like whether the week contained a holiday, the CPI, and the unemployment rate of the region.</p>
+<p>First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&#39;Walmart_sales.csv&#39;</span>, parse_dates<span class="op">=</span>[<span class="st">&#39;Date&#39;</span>], dayfirst<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
@@ -2148,7 +2148,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#create cleaned csv</span></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">&#39;./WalmartSalesClean.csv&#39;</span>)</span></code></pre></div>
 </div>
-<p>after cleaning, the information appears as so:</p>
+<p>After cleaning, the data appears like so:</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
@@ -2163,81 +2163,155 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <ol type="1">
 <li>Which holidays affect weekly sales the most?</li>
 </ol>
+<p>Holidays are notorious for driving up sales as Walmart often runs promotional markdown events to incentivize purchases!</p>
+<div class="layout-chunk" data-layout="l-body">
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Date"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Weekly_Sales"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"02-12-2010","2":"1641957"},{"1":"09-10-2010","2":"1507461"},{"1":"11-26-2010","2":"1955624"},{"1":"12-31-2010","2":"1367320"},{"1":"02-11-2011","2":"1649615"},{"1":"09-09-2011","2":"1540471"},{"1":"11-25-2011","2":"2033321"},{"1":"12-30-2011","2":"1497463"},{"1":"02-10-2012","2":"1802477"},{"1":"09-07-2012","2":"1661767"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<p>The (repeating) holidays that appear in this data are:</p>
+<ul>
+<li>Super Bowl (Feb 9th)</li>
+<li>Labor Day (Sept 10th)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>Thanksgiving (Nov 26th)<br />
+</li>
+<li>Christmas and Hanukkah (Dec 31TH)</li>
+</ul>
+Using SQL:
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> WalmartSalesClean</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">COLUMN</span> Holiday_Flag <span class="dt">Int</span>;</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span>;</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag <span class="op">=</span> <span class="st">&#39;1&#39;</span>, <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span>;</span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>#filtering <span class="cf">for</span> holiday flags <span class="kw">and</span> sorting </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span>;</span></code></pre></div>
 </div>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code># A tibble: 450 × 2
+# Groups:   Date [10]
+   Date       Weekly_Sales
+   &lt;chr&gt;             &lt;dbl&gt;
+ 1 11-25-2011     3004702.
+ 2 11-25-2011     2950199.
+ 3 11-26-2010     2939946.
+ 4 11-26-2010     2921710.
+ 5 11-25-2011     2906233.
+ 6 11-25-2011     2864171.
+ 7 11-26-2010     2811634.
+ 8 11-26-2010     2789469.
+ 9 11-26-2010     2766400.
+10 11-25-2011     2685352.
+# ℹ 440 more rows</code></pre>
+</div>
+<p>It seems like Thanksgiving (for all stores) consistently ranks the highest amongst all the holidays!</p>
+<p>But, this isn’t accurate enough for me – why separate it by year and day for EVERY single store? Thankfully, all our holidays are in different months, so we can retain the month in the date column and aggregating weekly sales by the holiday.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> HOLIDAYDATE <span class="kw">AS</span> (</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> SUBSTRING (<span class="dt">DATE</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="kw">AS</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>#Re<span class="op">-</span>aggregating <span class="kw">by</span> <span class="dt">date</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> HOLIDAYDATE</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span></span></code></pre></div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code># A tibble: 4 × 2
+  Date  Weekly_Sales
+  &lt;chr&gt;        &lt;dbl&gt;
+1 02      145682278.
+2 09      140727685.
+3 11      132414608.
+4 12       86474980.</code></pre>
+</div>
+<p>Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl!</p>
+<h1 id="adjust-so-that-02-is-not-displayed-but-sintead-superbowl">adjust so that 02 is not displayed, but sintead, superbowl</h1>
 <ol start="2" type="1">
 <li>Which stores in the dataset have the lowest and highest unemployment rate? What factors do you think are impacting the unemployment rate?
 <div class="layout-chunk" data-layout="l-body">
 </li>
 </ol>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> corrdata <span class="kw">AS</span> (</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Temperature <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Temperature, <span class="fu">avg</span>(<span class="fu">CAST</span>(Fuel_Price <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Fuel_Prices, <span class="fu">avg</span>(<span class="fu">CAST</span>(CPI <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> CPI, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY Unemployment desc, Weekly_Sales */</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> corrdata <span class="kw">AS</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Temperature <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Temperature, <span class="fu">avg</span>(<span class="fu">CAST</span>(Fuel_Price <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Fuel_Prices, <span class="fu">avg</span>(<span class="fu">CAST</span>(CPI <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> CPI, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY Unemployment desc, Weekly_Sales </span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">  select(Date, Weekly_Sales) %&gt;%</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">  group_by(Date) %&gt;%</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">  arrange(desc(Weekly_Sales))*/</span></span></code></pre></div>
 </div>
 Pearson’s correlation
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> (</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> (</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
 </div>
 <ol start="3" type="1">
 <li>Is there any correlation between CPI and Weekly Sales? How does the correlation differ when the Holiday Flag is 0 versus when the Holiday Flag is 1?
 <div class="layout-chunk" data-layout="l-body">
 </li>
 </ol>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> rdata <span class="kw">AS</span> (</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span>(<span class="fu">ROUND</span>(CPI, <span class="dv">0</span>) <span class="kw">AS</span> <span class="dt">INT</span>) <span class="kw">AS</span> CPI, <span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>corrdata <span class="kw">AS</span>(</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI, <span class="fu">AVG</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rdata</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> CPI</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY CPI ASC*/</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>),</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> rdata <span class="kw">AS</span> (</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span>(<span class="fu">ROUND</span>(CPI, <span class="dv">0</span>) <span class="kw">AS</span> <span class="dt">INT</span>) <span class="kw">AS</span> CPI, <span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>corrdata <span class="kw">AS</span>(</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI, <span class="fu">AVG</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rdata</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> CPI</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY CPI ASC*/</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>),</span></code></pre></div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, CPI<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, CPI<span class="op">*</span>CPI <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> (</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, CPI<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, CPI<span class="op">*</span>CPI <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> (</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
 </div>
+<!-- 
+
+- which holidays appear?  
+- average weekly sales -> density graph? 
+- take a look at the most and least successful store 
+
+-->
 <p><a href="https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0" class="uri">https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0</a></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Note that this data is American.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
