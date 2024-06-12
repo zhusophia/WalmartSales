@@ -18,11 +18,9 @@ library(distill)
 ```
 
 
-We started with [fake news](https://zhusophia.github.io/Fake_Fake_News/), only to end up at phishing. That's just how the world works! 
+This project focuses on analyzing raw data from [this dataset](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download), which tracks the weekly sales of 45 Walmart stores over 2 years! It also tracks external factors like whether the week contained a holiday, the CPI, and the unemployment rate of the region.
 
-Taking raw data from [this dataset](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download), I'm looking at sales trends for the year  
-
-Spanning just under two yeras, this dataset keeps tracks of the weekly sales of certain Walmart stores. there are 45 stores and 10 holidays. it also takes general indicators of the wellbeing of economy and enviormnet - temprarture, CPI, unemployement, and fuel prices.
+First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values. 
 
 ```{python import, eval=FALSE, echo=T}
 import pandas as pd
@@ -49,8 +47,7 @@ df.to_csv('./WalmartSalesClean.csv')
 ```
 
 
-after cleaning, the information appears as so: 
-
+After cleaning, the data appears like so: 
 
 ```{r load data2}
 data <- read.csv("WalmartSalesClean.csv")
@@ -66,21 +63,72 @@ Let's answer a few questions about the data. We'll be using SQL to clean and man
 
 1. Which holidays affect weekly sales the most?
 
+Holidays are notorious for driving up sales as Walmart often runs promotional markdown events to incentivize purchases! 
 
+```{r, holiday}
+
+holidaydate <- data %>%
+  filter(Store == 1 & Holiday_Flag == 1) %>%
+  select(Date, Weekly_Sales) 
+
+paged_table(holidaydate)
+```
+
+The (repeating) holidays that appear in this data are: 
+
+- Super Bowl (Feb 9th)
+- Labor Day (Sept 10th)^[Note that this data is American.] 
+- Thanksgiving (Nov 26th)  
+- Christmas and Hanukkah (Dec 31TH)
+
+Using SQL: 
 ```{sql test1, eval=FALSE, echo=T}
 ALTER TABLE WalmartSalesClean
 ALTER COLUMN Holiday_Flag Int;
 
+#filtering for holiday flags and sorting 
 SELECT Date, SUM(CAST(Weekly_Sales AS FLOAT)) AS Weekly_Sales
 FROM WalmartSalesClean 
 WHERE Holiday_Flag='1'
 GROUP BY Date
 ORDER BY Weekly_Sales DESC;
+```
 
-SELECT Holiday_Flag = '1', Date, SUM(CAST(Weekly_Sales AS FLOAT)) AS Weekly_Sales
-FROM WalmartSalesClean
+```{r, holidayordering}
+data %>% 
+  filter(Holiday_Flag == 1) %>%
+  select(Date, Weekly_Sales) %>%
+  group_by(Date) %>%
+  arrange(desc(Weekly_Sales))
+
+```
+
+It seems like Thanksgiving (for all stores) consistently ranks the highest amongst all the holidays! 
+
+But, this isn't accurate enough for me -- why separate it by year and day for EVERY single store? Thankfully, all our holidays are in different months, so we can retain the month in the date column and aggregating weekly sales by the holiday. 
+
+```{sql filterholiday, eval=FALSE, echo=T}
+WITH HOLIDAYDATE AS (
+SELECT SUBSTRING (DATE, 1, 2) AS Date, SUM(CAST(Weekly_Sales AS FLOAT)) AS Weekly_Sales
+FROM WalmartSalesClean 
+WHERE Holiday_Flag='1'
 GROUP BY Date
-ORDER BY Weekly_Sales DESC;
+)
+
+#Re-aggregating by date 
+SELECT Date, SUM(Weekly_Sales) AS Weekly_Sales
+FROM HOLIDAYDATE
+GROUP BY Date
+ORDER BY Weekly_Sales DESC
+```
+
+```{r, holidayordering}
+data %>% 
+  filter(Holiday_Flag == 1) %>%
+  select(Date, Weekly_Sales) %>%
+  group_by(Date) %>%
+  arrange(desc(Weekly_Sales))
+
 ```
 
 2. Which stores in the dataset have the lowest and highest unemployment rate?  What factors do you think are impacting the unemployment rate?
@@ -142,6 +190,15 @@ SELECT (n*sumxy - sumx * sumy) / (sqrt((n*sumx2 - sumx*sumx)*(n*sumy2 - sumy*sum
 FROM pdata
 
 ```
+
+
+<!-- 
+
+- which holidays appear?  
+- average weekly sales -> density graph? 
+- take a look at the most and least successful store 
+
+-->
 
 
 
