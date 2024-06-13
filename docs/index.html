@@ -110,7 +110,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site"]}},"value":[{"type":"character","attributes":{},"value":["Phishing with SQL"]},{"type":"character","attributes":{},"value":["Welcome to the website. I hope you enjoy it!\n"]},{"type":"character","attributes":{},"value":["distill::distill_website"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site","output"]}},"value":[{"type":"character","attributes":{},"value":["Phishing with SQL"]},{"type":"character","attributes":{},"value":["Welcome to the website. I hope you enjoy it!\n"]},{"type":"character","attributes":{},"value":["distill::distill_website"]},{"type":"character","attributes":{},"value":["distill::distill_article"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2179,8 +2179,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </li>
 <li>Christmas and Hanukkah (Dec 31TH)</li>
 </ul>
+<p>code_folding &lt;- “Hello”</p>
 Using SQL:
 <div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> WalmartSalesClean</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">COLUMN</span> Holiday_Flag <span class="dt">Int</span>;</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -2190,70 +2195,94 @@ Using SQL:
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span>;</span></code></pre></div>
+</details>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code># A tibble: 450 × 2
-# Groups:   Date [10]
-   Date       Weekly_Sales
-   &lt;chr&gt;             &lt;dbl&gt;
- 1 11-25-2011     3004702.
- 2 11-25-2011     2950199.
- 3 11-26-2010     2939946.
- 4 11-26-2010     2921710.
- 5 11-25-2011     2906233.
- 6 11-25-2011     2864171.
- 7 11-26-2010     2811634.
- 8 11-26-2010     2789469.
- 9 11-26-2010     2766400.
-10 11-25-2011     2685352.
-# ℹ 440 more rows</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Date"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Weekly_Sales"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"11-25-2011","2":"3004702.3"},{"1":"11-25-2011","2":"2950198.6"},{"1":"11-26-2010","2":"2939946.4"},{"1":"11-26-2010","2":"2921709.7"},{"1":"11-25-2011","2":"2906233.2"},{"1":"11-25-2011","2":"2864170.6"},{"1":"11-26-2010","2":"2811634.0"},{"1":"11-26-2010","2":"2789469.5"},{"1":"11-26-2010","2":"2766400.0"},{"1":"11-25-2011","2":"2685351.8"},{"1":"11-26-2010","2":"2658725.3"},{"1":"11-26-2010","2":"2627910.8"},{"1":"11-25-2011","2":"2614202.3"},{"1":"11-25-2011","2":"2504400.7"},{"1":"02-10-2012","2":"2462978.3"},{"1":"02-10-2012","2":"2374660.6"},{"1":"11-25-2011","2":"2338832.4"},{"1":"11-26-2010","2":"2267452.4"},{"1":"11-25-2011","2":"2249811.5"},{"1":"02-10-2012","2":"2218595.8"},{"1":"02-11-2011","2":"2211388.1"},{"1":"09-09-2011","2":"2202742.9"},{"1":"09-10-2010","2":"2191767.8"},{"1":"02-12-2010","2":"2188307.4"},{"1":"02-11-2011","2":"2187847.3"},{"1":"02-12-2010","2":"2176028.5"},{"1":"02-11-2011","2":"2168041.6"},{"1":"09-07-2012","2":"2165796.3"},{"1":"11-26-2010","2":"2149355.2"},{"1":"02-12-2010","2":"2137809.5"},{"1":"09-07-2012","2":"2125104.7"},{"1":"02-11-2011","2":"2115408.3"},{"1":"02-12-2010","2":"2109107.9"},{"1":"02-10-2012","2":"2103322.7"},{"1":"09-09-2011","2":"2093139.0"},{"1":"09-07-2012","2":"2080529.1"},{"1":"02-10-2012","2":"2077256.2"},{"1":"11-26-2010","2":"2072685.1"},{"1":"02-10-2012","2":"2069284.6"},{"1":"11-25-2011","2":"2057059.5"},{"1":"09-09-2011","2":"2050542.6"},{"1":"12-30-2011","2":"2043245.0"},{"1":"11-25-2011","2":"2033320.7"},{"1":"02-12-2010","2":"2030933.5"},{"1":"09-10-2010","2":"2014954.8"},{"1":"12-30-2011","2":"2007105.9"},{"1":"11-26-2010","2":"1993367.8"},{"1":"02-11-2011","2":"1980405.0"},{"1":"11-25-2011","2":"1974646.8"},{"1":"12-30-2011","2":"1969056.9"},{"1":"11-26-2010","2":"1955624.1"},{"1":"02-11-2011","2":"1944438.9"},{"1":"11-26-2010","2":"1937033.5"},{"1":"11-25-2011","2":"1934099.6"},{"1":"12-30-2011","2":"1930690.4"},{"1":"11-25-2011","2":"1929738.3"},{"1":"12-30-2011","2":"1914148.9"},{"1":"09-10-2010","2":"1913494.8"},{"1":"09-09-2011","2":"1911470.8"},{"1":"11-25-2011","2":"1906713.4"},{"1":"09-07-2012","2":"1904512.3"},{"1":"09-07-2012","2":"1898777.1"},{"1":"12-30-2011","2":"1874226.5"},{"1":"09-09-2011","2":"1872921.3"},{"1":"11-26-2010","2":"1866681.6"},{"1":"09-10-2010","2":"1865820.8"},{"1":"11-26-2010","2":"1858856.1"},{"1":"11-25-2011","2":"1848953.5"},{"1":"09-07-2012","2":"1840955.2"},{"1":"09-10-2010","2":"1839128.8"},{"1":"02-10-2012","2":"1802477.4"},{"1":"12-31-2010","2":"1799737.8"},{"1":"12-31-2010","2":"1794868.7"},{"1":"11-26-2010","2":"1781867.0"},{"1":"11-26-2010","2":"1779276.5"},{"1":"09-10-2010","2":"1772143.9"},{"1":"11-25-2011","2":"1761235.7"},{"1":"11-26-2010","2":"1757242.5"},{"1":"12-31-2010","2":"1750434.6"},{"1":"09-09-2011","2":"1748000.6"},{"1":"02-12-2010","2":"1745362.7"},{"1":"11-25-2011","2":"1733822.4"},{"1":"09-10-2010","2":"1720530.2"},{"1":"09-07-2012","2":"1708283.3"},{"1":"12-31-2010","2":"1707298.1"},{"1":"02-12-2010","2":"1704218.8"},{"1":"11-25-2011","2":"1684468.7"},{"1":"12-31-2010","2":"1675292.0"},{"1":"09-09-2011","2":"1670579.8"},{"1":"09-07-2012","2":"1661767.3"},{"1":"11-26-2010","2":"1653759.4"},{"1":"02-10-2012","2":"1651605.4"},{"1":"12-30-2011","2":"1650604.6"},{"1":"02-11-2011","2":"1649614.9"},{"1":"02-12-2010","2":"1641957.4"},{"1":"02-11-2011","2":"1636224.8"},{"1":"11-26-2010","2":"1634635.9"},{"1":"11-25-2011","2":"1624171.0"},{"1":"12-31-2010","2":"1623716.5"},{"1":"02-10-2012","2":"1620603.9"},{"1":"09-07-2012","2":"1609811.8"},{"1":"09-07-2012","2":"1608077.0"},{"1":"02-12-2010","2":"1606283.9"},{"1":"11-26-2010","2":"1601377.4"},{"1":"12-30-2011","2":"1598080.5"},{"1":"11-25-2011","2":"1591920.4"},{"1":"09-10-2010","2":"1591453.4"},{"1":"02-12-2010","2":"1574684.1"},{"1":"02-10-2012","2":"1574287.8"},{"1":"02-10-2012","2":"1572966.1"},{"1":"09-09-2011","2":"1566712.8"},{"1":"11-26-2010","2":"1564502.3"},{"1":"02-12-2010","2":"1558968.5"},{"1":"02-12-2010","2":"1543947.2"},{"1":"09-09-2011","2":"1540471.2"},{"1":"02-11-2011","2":"1539230.3"},{"1":"12-30-2011","2":"1537139.6"},{"1":"02-12-2010","2":"1536549.9"},{"1":"11-25-2011","2":"1535857.5"},{"1":"02-10-2012","2":"1527688.6"},{"1":"09-09-2011","2":"1527455.2"},{"1":"09-10-2010","2":"1507460.7"},{"1":"02-10-2012","2":"1499496.7"},{"1":"12-30-2011","2":"1497462.7"},{"1":"09-07-2012","2":"1497073.8"},{"1":"02-11-2011","2":"1486920.2"},{"1":"09-09-2011","2":"1483574.4"},{"1":"09-07-2012","2":"1477134.8"},{"1":"09-10-2010","2":"1474498.6"},{"1":"09-07-2012","2":"1469694.0"},{"1":"12-31-2010","2":"1464050.0"},{"1":"02-10-2012","2":"1442988.4"},{"1":"12-31-2010","2":"1440963.0"},{"1":"02-11-2011","2":"1430851.1"},{"1":"09-09-2011","2":"1429345.9"},{"1":"09-07-2012","2":"1427162.3"},{"1":"09-10-2010","2":"1424225.4"},{"1":"09-09-2011","2":"1423289.9"},{"1":"02-11-2011","2":"1419236.9"},{"1":"02-12-2010","2":"1414107.1"},{"1":"12-30-2011","2":"1405168.1"},{"1":"02-10-2012","2":"1403460.9"},{"1":"02-11-2011","2":"1397301.4"},{"1":"09-07-2012","2":"1392143.8"},{"1":"02-12-2010","2":"1380892.1"},{"1":"09-09-2011","2":"1376670.3"},{"1":"12-31-2010","2":"1367320.0"},{"1":"12-30-2011","2":"1363973.2"},{"1":"02-10-2012","2":"1358444.1"},{"1":"09-07-2012","2":"1358111.6"},{"1":"12-30-2011","2":"1355405.9"},{"1":"12-30-2011","2":"1352084.2"},{"1":"11-25-2011","2":"1345595.8"},{"1":"02-11-2011","2":"1341240.6"},{"1":"09-09-2011","2":"1310087.0"},{"1":"11-26-2010","2":"1309476.7"},{"1":"09-10-2010","2":"1308179.0"},{"1":"09-07-2012","2":"1304584.4"},{"1":"11-26-2010","2":"1286833.6"},{"1":"11-25-2011","2":"1282320.1"},{"1":"09-09-2011","2":"1280959.0"},{"1":"09-10-2010","2":"1279666.5"},{"1":"12-31-2010","2":"1275146.9"},{"1":"09-10-2010","2":"1272842.9"},{"1":"12-30-2011","2":"1270036.5"},{"1":"02-12-2010","2":"1266229.1"},{"1":"12-30-2011","2":"1264014.2"},{"1":"11-26-2010","2":"1261693.2"},{"1":"09-07-2012","2":"1255633.3"},{"1":"02-11-2011","2":"1249786.4"},{"1":"09-09-2011","2":"1249439.9"},{"1":"09-10-2010","2":"1246062.2"},{"1":"11-26-2010","2":"1245628.6"},{"1":"02-10-2012","2":"1238844.6"},{"1":"11-25-2011","2":"1235163.9"},{"1":"09-10-2010","2":"1231428.5"},{"1":"12-31-2010","2":"1230012.2"},{"1":"11-25-2011","2":"1230011.9"},{"1":"02-11-2011","2":"1227893.9"},{"1":"11-25-2011","2":"1225700.3"},{"1":"11-25-2011","2":"1219263.4"},{"1":"12-30-2011","2":"1213486.9"},{"1":"12-31-2010","2":"1208600.1"},{"1":"09-10-2010","2":"1200888.3"},{"1":"02-10-2012","2":"1199330.9"},{"1":"12-31-2010","2":"1198071.6"},{"1":"02-12-2010","2":"1187880.7"},{"1":"11-26-2010","2":"1182500.2"},{"1":"09-10-2010","2":"1172672.3"},{"1":"12-31-2010","2":"1172003.1"},{"1":"11-25-2011","2":"1170672.9"},{"1":"12-31-2010","2":"1169773.9"},{"1":"02-12-2010","2":"1168815.3"},{"1":"11-26-2010","2":"1166142.9"},{"1":"09-09-2011","2":"1161900.2"},{"1":"02-10-2012","2":"1161615.5"},{"1":"02-11-2011","2":"1150003.4"},{"1":"02-10-2012","2":"1129422.9"},{"1":"09-09-2011","2":"1128237.3"},{"1":"09-07-2012","2":"1126685.9"},{"1":"02-11-2011","2":"1124357.2"},{"1":"02-12-2010","2":"1123566.1"},{"1":"02-11-2011","2":"1122053.6"},{"1":"11-26-2010","2":"1120018.9"},{"1":"02-12-2010","2":"1117863.3"},{"1":"11-25-2011","2":"1116211.4"},{"1":"11-26-2010","2":"1115240.6"},{"1":"12-30-2011","2":"1111638.1"},{"1":"12-30-2011","2":"1102367.6"},{"1":"12-31-2010","2":"1090558.6"},{"1":"09-07-2012","2":"1088248.4"},{"1":"02-11-2011","2":"1086421.6"},{"1":"09-07-2012","2":"1083521.2"},{"1":"09-07-2012","2":"1081874.0"},{"1":"02-10-2012","2":"1081005.6"},{"1":"02-12-2010","2":"1075656.3"},{"1":"09-09-2011","2":"1069711.0"},{"1":"11-25-2011","2":"1066478.1"},{"1":"02-10-2012","2":"1047658.1"},{"1":"09-10-2010","2":"1042226.3"},{"1":"02-10-2012","2":"1034448.1"},{"1":"09-10-2010","2":"1028635.4"},{"1":"02-12-2010","2":"1022571.2"},{"1":"02-10-2012","2":"1021400.4"},{"1":"09-09-2011","2":"1021392.0"},{"1":"02-12-2010","2":"1015684.1"},{"1":"02-11-2011","2":"1015654.6"},{"1":"09-10-2010","2":"1011201.1"},{"1":"02-11-2011","2":"1010711.1"},{"1":"12-30-2011","2":"1010562.5"},{"1":"02-11-2011","2":"1009206.3"},{"1":"11-26-2010","2":"1005448.8"},{"1":"09-09-2011","2":"1004434.5"},{"1":"12-31-2010","2":"1001790.2"},{"1":"02-10-2012","2":"999785.5"},{"1":"09-07-2012","2":"996628.8"},{"1":"02-11-2011","2":"996147.4"},{"1":"02-12-2010","2":"994801.4"},{"1":"02-12-2010","2":"994611.0"},{"1":"09-07-2012","2":"984833.3"},{"1":"12-30-2011","2":"982661.1"},{"1":"09-07-2012","2":"976415.6"},{"1":"11-26-2010","2":"975268.9"},{"1":"12-30-2011","2":"972834.4"},{"1":"09-10-2010","2":"967310.8"},{"1":"12-30-2011","2":"965512.4"},{"1":"09-10-2010","2":"961686.0"},{"1":"12-31-2010","2":"955463.8"},{"1":"02-12-2010","2":"955338.3"},{"1":"09-07-2012","2":"955146.0"},{"1":"09-09-2011","2":"951549.6"},{"1":"11-25-2011","2":"949075.9"},{"1":"09-10-2010","2":"932241.0"},{"1":"09-07-2012","2":"932160.4"},{"1":"02-11-2011","2":"931939.5"},{"1":"09-09-2011","2":"930506.1"},{"1":"09-10-2010","2":"924174.4"},{"1":"09-09-2011","2":"922850.6"},{"1":"09-09-2011","2":"922440.6"},{"1":"11-25-2011","2":"913165.2"},{"1":"12-30-2011","2":"908853.2"},{"1":"12-30-2011","2":"904650.6"},{"1":"09-10-2010","2":"903119.0"},{"1":"12-31-2010","2":"902109.7"},{"1":"12-31-2010","2":"891736.9"},{"1":"12-31-2010","2":"887907.0"},{"1":"02-10-2012","2":"880165.7"},{"1":"12-31-2010","2":"877268.3"},{"1":"12-30-2011","2":"869403.6"},{"1":"02-11-2011","2":"859258.2"},{"1":"12-30-2011","2":"858572.2"},{"1":"02-10-2012","2":"849779.1"},{"1":"09-09-2011","2":"848358.1"},{"1":"02-12-2010","2":"841951.9"},{"1":"11-26-2010","2":"835189.3"},{"1":"09-10-2010","2":"831425.2"},{"1":"12-30-2011","2":"815915.5"},{"1":"11-25-2011","2":"814753.5"},{"1":"02-11-2011","2":"813211.5"},{"1":"12-31-2010","2":"811318.3"},{"1":"02-12-2010","2":"809321.4"},{"1":"12-30-2011","2":"804362.4"},{"1":"02-10-2012","2":"803657.1"},{"1":"12-30-2011","2":"777207.3"},{"1":"12-31-2010","2":"774262.3"},{"1":"12-31-2010","2":"773586.5"},{"1":"02-11-2011","2":"771908.5"},{"1":"02-10-2012","2":"770652.8"},{"1":"11-26-2010","2":"768070.5"},{"1":"09-07-2012","2":"766512.7"},{"1":"02-11-2011","2":"766456.0"},{"1":"09-09-2011","2":"746129.6"},{"1":"12-31-2010","2":"729572.1"},{"1":"09-10-2010","2":"722120.0"},{"1":"09-10-2010","2":"721460.2"},{"1":"11-25-2011","2":"712422.4"},{"1":"12-30-2011","2":"683665.4"},{"1":"02-12-2010","2":"682919.0"},{"1":"02-12-2010","2":"682447.1"},{"1":"12-31-2010","2":"679156.2"},{"1":"02-10-2012","2":"674919.4"},{"1":"09-10-2010","2":"674055.8"},{"1":"09-09-2011","2":"673248.5"},{"1":"12-31-2010","2":"672903.2"},{"1":"09-07-2012","2":"671482.9"},{"1":"11-25-2011","2":"669965.2"},{"1":"12-30-2011","2":"665861.1"},{"1":"09-07-2012","2":"663814.2"},{"1":"02-10-2012","2":"662198.7"},{"1":"02-10-2012","2":"658984.4"},{"1":"02-12-2010","2":"656988.6"},{"1":"09-10-2010","2":"655811.9"},{"1":"09-09-2011","2":"653989.7"},{"1":"11-26-2010","2":"651837.8"},{"1":"09-09-2011","2":"649128.2"},{"1":"09-07-2012","2":"642827.3"},{"1":"09-10-2010","2":"641965.2"},{"1":"12-31-2010","2":"635862.6"},{"1":"02-11-2011","2":"635651.0"},{"1":"11-26-2010","2":"633520.3"},{"1":"02-10-2012","2":"628218.2"},{"1":"02-11-2011","2":"628063.9"},{"1":"12-31-2010","2":"623092.5"},{"1":"09-07-2012","2":"617405.3"},{"1":"02-11-2011","2":"615666.8"},{"1":"09-09-2011","2":"613135.2"},{"1":"02-10-2012","2":"609736.1"},{"1":"09-09-2011","2":"608390.9"},{"1":"09-09-2011","2":"607593.5"},{"1":"12-30-2011","2":"603460.8"},{"1":"09-07-2012","2":"597876.6"},{"1":"09-10-2010","2":"589091.0"},{"1":"09-07-2012","2":"587259.8"},{"1":"02-12-2010","2":"583364.0"},{"1":"02-11-2011","2":"582864.3"},{"1":"11-25-2011","2":"577698.4"},{"1":"12-31-2010","2":"576332.1"},{"1":"02-12-2010","2":"575710.0"},{"1":"12-31-2010","2":"575317.4"},{"1":"09-09-2011","2":"574622.6"},{"1":"09-07-2012","2":"565812.3"},{"1":"11-26-2010","2":"565567.8"},{"1":"02-10-2012","2":"563460.8"},{"1":"02-11-2011","2":"559903.1"},{"1":"11-25-2011","2":"556925.2"},{"1":"02-11-2011","2":"555279.0"},{"1":"02-12-2010","2":"552677.5"},{"1":"12-30-2011","2":"551743.1"},{"1":"02-11-2011","2":"550387.8"},{"1":"12-30-2011","2":"549788.4"},{"1":"02-10-2012","2":"545840.1"},{"1":"12-31-2010","2":"543754.2"},{"1":"09-07-2012","2":"540811.8"},{"1":"09-10-2010","2":"537518.6"},{"1":"09-07-2012","2":"537138.6"},{"1":"09-10-2010","2":"535769.3"},{"1":"12-31-2010","2":"534740.3"},{"1":"02-12-2010","2":"529852.7"},{"1":"02-12-2010","2":"529672.9"},{"1":"09-09-2011","2":"528784.9"},{"1":"02-10-2012","2":"527041.5"},{"1":"09-07-2012","2":"526838.1"},{"1":"02-12-2010","2":"524104.9"},{"1":"11-25-2011","2":"522554.0"},{"1":"02-11-2011","2":"522514.3"},{"1":"11-26-2010","2":"522296.7"},{"1":"11-26-2010","2":"518220.7"},{"1":"09-10-2010","2":"510296.1"},{"1":"11-25-2011","2":"507900.1"},{"1":"09-09-2011","2":"506273.7"},{"1":"09-09-2011","2":"505406.7"},{"1":"12-30-2011","2":"505405.8"},{"1":"02-12-2010","2":"497374.6"},{"1":"09-10-2010","2":"491290.4"},{"1":"09-07-2012","2":"490274.8"},{"1":"11-26-2010","2":"488362.6"},{"1":"09-10-2010","2":"484835.2"},{"1":"02-10-2012","2":"473767.0"},{"1":"02-10-2012","2":"473292.5"},{"1":"02-12-2010","2":"472044.3"},{"1":"02-11-2011","2":"470921.2"},{"1":"02-10-2012","2":"469787.4"},{"1":"02-12-2010","2":"469563.7"},{"1":"02-11-2011","2":"466806.9"},{"1":"12-31-2010","2":"465992.0"},{"1":"11-26-2010","2":"462732.4"},{"1":"12-31-2010","2":"460331.7"},{"1":"12-31-2010","2":"459770.8"},{"1":"09-10-2010","2":"455162.9"},{"1":"12-30-2011","2":"454412.3"},{"1":"11-25-2011","2":"452163.9"},{"1":"02-10-2012","2":"451366.0"},{"1":"12-30-2011","2":"451327.6"},{"1":"09-10-2010","2":"434471.4"},{"1":"09-07-2012","2":"433565.8"},{"1":"02-11-2011","2":"430526.2"},{"1":"12-31-2010","2":"428953.6"},{"1":"02-12-2010","2":"420729.0"},{"1":"12-30-2011","2":"410553.9"},{"1":"11-26-2010","2":"408891.5"},{"1":"09-07-2012","2":"408229.7"},{"1":"02-11-2011","2":"401501.2"},{"1":"09-09-2011","2":"397771.7"},{"1":"12-31-2010","2":"397631.0"},{"1":"11-25-2011","2":"393715.7"},{"1":"12-31-2010","2":"382677.8"},{"1":"02-11-2011","2":"377672.5"},{"1":"09-09-2011","2":"377347.5"},{"1":"12-30-2011","2":"376777.5"},{"1":"09-09-2011","2":"370897.8"},{"1":"11-26-2010","2":"360858.0"},{"1":"12-31-2010","2":"359310.7"},{"1":"09-09-2011","2":"352960.6"},{"1":"09-10-2010","2":"352261.0"},{"1":"09-07-2012","2":"350648.9"},{"1":"12-30-2011","2":"349624.9"},{"1":"02-10-2012","2":"349239.9"},{"1":"12-30-2011","2":"342667.3"},{"1":"02-12-2010","2":"342214.9"},{"1":"09-07-2012","2":"338737.3"},{"1":"09-10-2010","2":"336227.7"},{"1":"02-10-2012","2":"335741.9"},{"1":"11-25-2011","2":"332811.5"},{"1":"02-10-2012","2":"325378.0"},{"1":"09-09-2011","2":"321110.2"},{"1":"02-12-2010","2":"311825.7"},{"1":"02-11-2011","2":"311590.5"},{"1":"11-25-2011","2":"309129.0"},{"1":"11-26-2010","2":"307646.5"},{"1":"02-11-2011","2":"307486.7"},{"1":"09-10-2010","2":"306533.1"},{"1":"12-31-2010","2":"303908.8"},{"1":"12-31-2010","2":"298180.2"},{"1":"09-09-2011","2":"295811.2"},{"1":"02-12-2010","2":"294882.8"},{"1":"09-07-2012","2":"293728.6"},{"1":"12-30-2011","2":"287425.2"},{"1":"02-12-2010","2":"286857.1"},{"1":"09-07-2012","2":"286428.8"},{"1":"09-10-2010","2":"283455.1"},{"1":"02-10-2012","2":"282552.6"},{"1":"09-09-2011","2":"281842.3"},{"1":"02-11-2011","2":"276198.7"},{"1":"09-10-2010","2":"272834.9"},{"1":"12-30-2011","2":"263917.8"},{"1":"11-25-2011","2":"255996.5"},{"1":"12-31-2010","2":"241937.1"},{"1":"11-26-2010","2":"240044.6"},{"1":"12-31-2010","2":"219804.9"},{"1":"12-30-2011","2":"215359.2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 <p>It seems like Thanksgiving (for all stores) consistently ranks the highest amongst all the holidays!</p>
 <p>But, this isn’t accurate enough for me – why separate it by year and day for EVERY single store? Thankfully, all our holidays are in different months, so we can retain the month in the date column and aggregating weekly sales by the holiday.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> HOLIDAYDATE <span class="kw">AS</span> (</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> SUBSTRING (<span class="dt">DATE</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="kw">AS</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>#Re<span class="op">-</span>aggregating <span class="kw">by</span> <span class="dt">date</span> </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> HOLIDAYDATE</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">CASE</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">02</span> <span class="cf">THEN</span> <span class="st">&#39;Super Bowl&#39;</span> <span class="co">--changing months to holiday names</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">09</span> <span class="cf">THEN</span> <span class="st">&#39;Labor Day&#39;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">11</span> <span class="cf">THEN</span> <span class="st">&#39;Thanksgiving&#39;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">12</span> <span class="cf">THEN</span> <span class="st">&#39;Christmas&#39;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cf">END</span> <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> (  <span class="co">--subquery to have two GROUP BY statements </span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> SUBSTRING (<span class="dt">DATE</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> WalmartSalesClean </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">AS</span> temptable </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday <span class="co">--Summarizing and reordering data </span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span></span></code></pre></div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code># A tibble: 4 × 2
-  Date  Weekly_Sales
-  &lt;chr&gt;        &lt;dbl&gt;
-1 02      145682278.
-2 09      140727685.
-3 11      132414608.
-4 12       86474980.</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Holiday"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Weekly_Sales"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Super Bowl","2":"145682278"},{"1":"Labor Day","2":"140727685"},{"1":"Thanksgiving","2":"132414609"},{"1":"Christmas","2":"86474980"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 <p>Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl!</p>
-<h1 id="adjust-so-that-02-is-not-displayed-but-sintead-superbowl">adjust so that 02 is not displayed, but sintead, superbowl</h1>
+<h1 id="adjust-so-that-02-is-not-displayed-but-sintead-superbowl-make-a-grpah">adjust so that 02 is not displayed, but sintead, superbowl, make a grpah?</h1>
 <ol start="2" type="1">
 <li>Which stores in the dataset have the lowest and highest unemployment rate? What factors do you think are impacting the unemployment rate?
 <div class="layout-chunk" data-layout="l-body">
 </li>
 </ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> corrdata <span class="kw">AS</span> (</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Temperature <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Temperature, <span class="fu">avg</span>(<span class="fu">CAST</span>(Fuel_Price <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Fuel_Prices, <span class="fu">avg</span>(<span class="fu">CAST</span>(CPI <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> CPI, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY Unemployment desc, Weekly_Sales </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">  select(Date, Weekly_Sales) %&gt;%</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">  group_by(Date) %&gt;%</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">  arrange(desc(Weekly_Sales))*/</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> corrdata <span class="kw">AS</span> (</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Temperature <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Temperature, <span class="fu">avg</span>(<span class="fu">CAST</span>(Fuel_Price <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Fuel_Prices, <span class="fu">avg</span>(<span class="fu">CAST</span>(CPI <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> CPI, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY Unemployment desc, Weekly_Sales </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">  select(Date, Weekly_Sales) %&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">  group_by(Date) %&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">  arrange(desc(Weekly_Sales))*/</span></span></code></pre></div>
 </div>
 Pearson’s correlation
 <div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> (</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Is there any correlation between CPI and Weekly Sales? How does the correlation differ when the Holiday Flag is 0 versus when the Holiday Flag is 1?
+<div class="layout-chunk" data-layout="l-body">
+</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> rdata <span class="kw">AS</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span>(<span class="fu">ROUND</span>(CPI, <span class="dv">0</span>) <span class="kw">AS</span> <span class="dt">INT</span>) <span class="kw">AS</span> CPI, <span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>corrdata <span class="kw">AS</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI, <span class="fu">AVG</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rdata</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> CPI</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY CPI ASC*/</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>),</span></code></pre></div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, CPI<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, CPI<span class="op">*</span>CPI <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>),</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
@@ -2265,38 +2294,6 @@ Pearson’s correlation
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
 </div>
-<ol start="3" type="1">
-<li>Is there any correlation between CPI and Weekly Sales? How does the correlation differ when the Holiday Flag is 0 versus when the Holiday Flag is 1?
-<div class="layout-chunk" data-layout="l-body">
-</li>
-</ol>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> rdata <span class="kw">AS</span> (</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span>(<span class="fu">ROUND</span>(CPI, <span class="dv">0</span>) <span class="kw">AS</span> <span class="dt">INT</span>) <span class="kw">AS</span> CPI, <span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>corrdata <span class="kw">AS</span>(</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI, <span class="fu">AVG</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rdata</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> CPI</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY CPI ASC*/</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>),</span></code></pre></div>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, CPI<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, CPI<span class="op">*</span>CPI <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> (</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
-</div>
 <!-- 
 
 - which holidays appear?  
@@ -2305,11 +2302,11 @@ Pearson’s correlation
 
 -->
 <p><a href="https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0" class="uri">https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0</a></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Note that this data is American.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>This data is American.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->
