@@ -88,29 +88,29 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>Phishing with SQL</title>
+  <title>Phishing with SQL: Weekly Walmart Sales Analysis</title>
 
-  <meta property="description" itemprop="description" content="Welcome to the website. I hope you enjoy it!"/>
+  <meta property="description" itemprop="description" content="Utilizing SQL, Python, and R to analyze Walmart Sales."/>
 
 
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Phishing with SQL"/>
+  <meta property="og:title" content="Phishing with SQL: Weekly Walmart Sales Analysis"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="Welcome to the website. I hope you enjoy it!"/>
+  <meta property="og:description" content="Utilizing SQL, Python, and R to analyze Walmart Sales."/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Phishing with SQL"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Phishing with SQL"/>
-  <meta property="twitter:description" content="Welcome to the website. I hope you enjoy it!"/>
+  <meta property="twitter:title" content="Phishing with SQL: Weekly Walmart Sales Analysis"/>
+  <meta property="twitter:description" content="Utilizing SQL, Python, and R to analyze Walmart Sales."/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site","output"]}},"value":[{"type":"character","attributes":{},"value":["Phishing with SQL"]},{"type":"character","attributes":{},"value":["Welcome to the website. I hope you enjoy it!\n"]},{"type":"character","attributes":{},"value":["distill::distill_website"]},{"type":"character","attributes":{},"value":["distill::distill_article"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site","output"]}},"value":[{"type":"character","attributes":{},"value":["Weekly Walmart Sales Analysis"]},{"type":"character","attributes":{},"value":["Utilizing SQL, Python, and R to analyze Walmart Sales.\n"]},{"type":"character","attributes":{},"value":["distill::distill_website"]},{"type":"character","attributes":{},"value":["distill::distill_article"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2077,6 +2077,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
   <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
   <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+  <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+  <link href="site_libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+  <script src="site_libs/bsTable-3.3.7/bootstrapTable.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2096,7 +2100,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Phishing with SQL","description":"Welcome to the website. I hope you enjoy it!","authors":[]}
+{"title":"Weekly Walmart Sales Analysis","description":"Utilizing SQL, Python, and R to analyze Walmart Sales.","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2118,10 +2122,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>Phishing with SQL</h1>
+<h1>Weekly Walmart Sales Analysis</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><p>Welcome to the website. I hope you enjoy it!</p></p>
+<p><p>Utilizing SQL, Python, and R to analyze Walmart Sales.</p></p>
 </div>
 
 
@@ -2129,24 +2133,29 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>This project focuses on analyzing raw data from <a href="https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download">this dataset</a>, which tracks the weekly sales of 45 Walmart stores over 2 years! It also tracks external factors like whether the week contained a holiday, the CPI, and the unemployment rate of the region.</p>
 <p>First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&#39;Walmart_sales.csv&#39;</span>, parse_dates<span class="op">=</span>[<span class="st">&#39;Date&#39;</span>], dayfirst<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sort by store number and then date</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df.sort_values(by<span class="op">=</span>[<span class="st">&#39;Store&#39;</span>, <span class="st">&#39;Date&#39;</span>])</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#standarize dates to mm-dd-yyyy</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&#39;Date&#39;</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">&#39;Date&#39;</span>], <span class="bu">format</span><span class="op">=</span><span class="st">&#39;</span><span class="sc">%d</span><span class="st">-%m-%Y&#39;</span>).dt.strftime(<span class="st">&#39;%m-</span><span class="sc">%d</span><span class="st">-%Y&#39;</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#rounding data </span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">round</span>({<span class="st">&#39;Weekly_Sales&#39;</span>:<span class="dv">2</span>, <span class="st">&#39;Temperature&#39;</span>:<span class="dv">0</span>, <span class="st">&#39;Fuel_Price&#39;</span>:<span class="dv">2</span>, <span class="st">&#39;CPI&#39;</span>:<span class="dv">3</span>, <span class="st">&#39;Unemployment&#39;</span>:<span class="dv">3</span>})</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#removing missing values</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>df.dropna</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#create cleaned csv</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">&#39;./WalmartSalesClean.csv&#39;</span>)</span></code></pre></div>
+<details>
+<summary>
+Show Python code
+</summary>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&#39;Walmart_sales.csv&#39;</span>, parse_dates<span class="op">=</span>[<span class="st">&#39;Date&#39;</span>], dayfirst<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#sort by store number and then date</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>df.sort_values(by<span class="op">=</span>[<span class="st">&#39;Store&#39;</span>, <span class="st">&#39;Date&#39;</span>])</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#standarize dates to mm-dd-yyyy</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&#39;Date&#39;</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">&#39;Date&#39;</span>], <span class="bu">format</span><span class="op">=</span><span class="st">&#39;</span><span class="sc">%d</span><span class="st">-%m-%Y&#39;</span>).dt.strftime(<span class="st">&#39;%m-</span><span class="sc">%d</span><span class="st">-%Y&#39;</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#rounding data </span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">round</span>({<span class="st">&#39;Weekly_Sales&#39;</span>:<span class="dv">2</span>, <span class="st">&#39;Temperature&#39;</span>:<span class="dv">0</span>, <span class="st">&#39;Fuel_Price&#39;</span>:<span class="dv">2</span>, <span class="st">&#39;CPI&#39;</span>:<span class="dv">3</span>, <span class="st">&#39;Unemployment&#39;</span>:<span class="dv">3</span>})</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#removing missing values</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>df.dropna</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#create cleaned csv</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">&#39;./WalmartSalesClean.csv&#39;</span>)</span></code></pre></div>
+</details>
 </div>
 <p>After cleaning, the data appears like so:</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2160,9 +2169,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 </div>
 <p>Let’s answer a few questions about the data. We’ll be using SQL to clean and manipulate the data.</p>
-<ol type="1">
-<li>Which holidays affect weekly sales the most?</li>
-</ol>
+<h3 id="which-holidays-affect-weekly-sales-the-most">Which holidays affect weekly sales the most?</h3>
 <p>Holidays are notorious for driving up sales as Walmart often runs promotional markdown events to incentivize purchases!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div data-pagedtable="false">
@@ -2177,24 +2184,23 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <li>Labor Day (Sept 10th)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
 <li>Thanksgiving (Nov 26th)<br />
 </li>
-<li>Christmas and Hanukkah (Dec 31TH)</li>
+<li>Christmas and Hanukkah (Dec 31th)</li>
 </ul>
-<p>code_folding &lt;- “Hello”</p>
-Using SQL:
+<p>First, let’s look at which days had the highest profit:</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
 <summary>
-Show code
+Show SQL code
 </summary>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> WalmartSalesClean</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">COLUMN</span> Holiday_Flag <span class="dt">Int</span>;</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>#filtering <span class="cf">for</span> holiday flags <span class="kw">and</span> sorting </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> WalmartSalesClean</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">COLUMN</span> Holiday_Flag <span class="dt">Int</span>;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>#filtering <span class="cf">for</span> holiday flags <span class="kw">and</span> sorting </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span>;</span></code></pre></div>
 </details>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -2205,23 +2211,28 @@ Show code
 </div>
 </div>
 <p>It seems like Thanksgiving (for all stores) consistently ranks the highest amongst all the holidays!</p>
-<p>But, this isn’t accurate enough for me – why separate it by year and day for EVERY single store? Thankfully, all our holidays are in different months, so we can retain the month in the date column and aggregating weekly sales by the holiday.</p>
+<p>But, this isn’t specific enough for me. Let’s find the total sales per holiday so that we can have a more accurate comparison!</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">CASE</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">02</span> <span class="cf">THEN</span> <span class="st">&#39;Super Bowl&#39;</span> <span class="co">--changing months to holiday names</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">09</span> <span class="cf">THEN</span> <span class="st">&#39;Labor Day&#39;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">11</span> <span class="cf">THEN</span> <span class="st">&#39;Thanksgiving&#39;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">12</span> <span class="cf">THEN</span> <span class="st">&#39;Christmas&#39;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cf">END</span> <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> (  <span class="co">--subquery to have two GROUP BY statements </span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> SUBSTRING (<span class="dt">DATE</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales </span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> WalmartSalesClean </span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">AS</span> temptable </span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday <span class="co">--Summarizing and reordering data </span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span></span></code></pre></div>
+<details>
+<summary>
+Show SQL code
+</summary>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">CASE</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">02</span> <span class="cf">THEN</span> <span class="st">&#39;Super Bowl&#39;</span> <span class="co">--changing months to holiday names</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">09</span> <span class="cf">THEN</span> <span class="st">&#39;Labor Day&#39;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">11</span> <span class="cf">THEN</span> <span class="st">&#39;Thanksgiving&#39;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">12</span> <span class="cf">THEN</span> <span class="st">&#39;Christmas&#39;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">END</span> <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> (  <span class="co">--subquery to have two GROUP BY statements </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> SUBSTRING (<span class="dt">DATE</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> WalmartSalesClean </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">AS</span> temptable </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday <span class="co">--Summarizing and reordering data </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span></span></code></pre></div>
+</details>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div data-pagedtable="false">
@@ -2230,24 +2241,215 @@ Show code
   </script>
 </div>
 </div>
-<p>Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl!</p>
-<h1 id="adjust-so-that-02-is-not-displayed-but-sintead-superbowl-make-a-grpah">adjust so that 02 is not displayed, but sintead, superbowl, make a grpah?</h1>
-<ol start="2" type="1">
-<li>Which stores in the dataset have the lowest and highest unemployment rate? What factors do you think are impacting the unemployment rate?
 <div class="layout-chunk" data-layout="l-body">
-</li>
-</ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> corrdata <span class="kw">AS</span> (</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Temperature <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Temperature, <span class="fu">avg</span>(<span class="fu">CAST</span>(Fuel_Price <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Fuel_Prices, <span class="fu">avg</span>(<span class="fu">CAST</span>(CPI <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> CPI, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<p><img src="index_files/figure-html5/holidaypiesales-1.png" width="624" /></p>
+</div>
+<p>Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! Perhaps, it boils down to the cultural significance of Thanksgiving, where it “symbolizes intercultural peace, America’s opportunity for newcomers, and the sanctity of home and family”.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> I’m more of the opinion that it’s an opportunity to invite all your friends and family and spend the entire day cooking – that means food costs can balloon quickly!</p>
+<h3 id="which-stores-have-the-lowest-and-highest-unemployment-rate">Which stores have the lowest and highest unemployment rate?</h3>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show SQL code
+</summary>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- highest unemployment rate </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> TOP <span class="dv">6</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Unemployment <span class="kw">desc</span>, Weekly_Sales <span class="kw">desc</span> <span class="co">-- need to use weekly sales as a parameter as stores may have the same unemployment rate</span></span></code></pre></div>
+</details>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:employmenttable">Table 1: </span>Highest Unemployment
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Store
+</th>
+<th style="text-align:right;">
+Unemployment
+</th>
+<th style="text-align:right;">
+Weekly_Sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+13.116483
+</td>
+<td style="text-align:right;">
+1009001.6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+13.116483
+</td>
+<td style="text-align:right;">
+1323522.2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+38
+</td>
+<td style="text-align:right;">
+13.116483
+</td>
+<td style="text-align:right;">
+385731.7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+9.934804
+</td>
+<td style="text-align:right;">
+966781.6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:right;">
+9.934804
+</td>
+<td style="text-align:right;">
+633324.7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:right;">
+9.806385
+</td>
+<td style="text-align:right;">
+539451.4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show SQL code
+</summary>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- lowest unemployment rate</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> TOP <span class="dv">6</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY Unemployment desc, Weekly_Sales </span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">  select(Date, Weekly_Sales) %&gt;%</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">  group_by(Date) %&gt;%</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">  arrange(desc(Weekly_Sales))*/</span></span></code></pre></div>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Unemployment, Weekly_Sales <span class="kw">desc</span></span></code></pre></div>
+</details>
 </div>
-Pearson’s correlation
+<div class="layout-chunk" data-layout="l-body">
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:lowemptable">Table 2: </span>Lowest Unemployment
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Store
+</th>
+<th style="text-align:right;">
+Unemployment
+</th>
+<th style="text-align:right;">
+Weekly_Sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+4.796014
+</td>
+<td style="text-align:right;">
+1389864.5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+4.796014
+</td>
+<td style="text-align:right;">
+964128.0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5.964692
+</td>
+<td style="text-align:right;">
+2094713.0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+6.091846
+</td>
+<td style="text-align:right;">
+908749.5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+6.099881
+</td>
+<td style="text-align:right;">
+543980.6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+6.295406
+</td>
+<td style="text-align:right;">
+318011.8
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Interestingly, it doesn’t seem like there’s really a correlation between high unemployment and low weekly sales. I’d expect that places with higher unemployment meant that consumers had less disposable income to spend at Walmart. But, Walmart is known for having super cheap products and consumers could’ve primarily bought inelastic goods and other necessities.</p>
+<p>It could also be that Walmart’s penetration pricing worked <em>too</em> well. Walmart is notorious for significantly impacting the local economy of the neighborhood, positively and negatively. On one hand, low prices means that consumers can afford more things in a one-stop location and stores near the Walmart get more business due to the influx of foot traffic. On the other, Walmart is known for hiring many workers and paying minimum wage, as well as displacing small businesses due to their low prices (and subsequently, small profit margins) with their penetrating pricing. These margins are things that only large corporations can withstand, while small businesses simply can’t afford to compete.</p>
+<p>The positive and negative effects can differ depending on the neighborhood that Walmart enters, with this data being a good example of the impacts that Walmart can have.</p>
+<p>Pearson’s correlation</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
@@ -2295,10 +2497,10 @@ Pearson’s correlation
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
 </div>
 <!-- 
-
-- which holidays appear?  
-- average weekly sales -> density graph? 
-- take a look at the most and least successful store 
+- Which week and which store had the highest/lowest weekly sales? What's the average?  
+  - average weekly sales -> density graph? 
+  - take a look at the most and least successful store 
+  - what traits could impact that? take the average of cpi and stuff and see if there's a massive difference? 
 
 -->
 <p><a href="https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0" class="uri">https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0</a></p>
@@ -2307,6 +2509,7 @@ Pearson’s correlation
 <hr />
 <ol>
 <li id="fn1"><p>This data is American.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://www.britannica.com/topic/Thanksgiving-Day" class="uri">https://www.britannica.com/topic/Thanksgiving-Day</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->

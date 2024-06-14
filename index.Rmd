@@ -1,7 +1,7 @@
 ---
-title: "Phishing with SQL"
+title: "Weekly Walmart Sales Analysis"
 description: |
-  Welcome to the website. I hope you enjoy it!
+  Utilizing SQL, R, and Python to analyze Walmart sales.
 site: distill::distill_website 
 output: 
   distill::distill_article
@@ -19,6 +19,7 @@ library(rmarkdown)
 library(plotly)
 library(ggplot2)
 library(distill)
+library(kableExtra)
 
 ```
 
@@ -27,13 +28,11 @@ This project focuses on analyzing raw data from [this dataset](https://www.kaggl
 
 First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values. 
 
-```{python import, eval=FALSE, echo=T}
+```{python cleaning, eval=FALSE, echo=T, code_folding="Show Python code"}
+#import 
 import pandas as pd
 df = pd.read_csv('Walmart_sales.csv', parse_dates=['Date'], dayfirst=False)
 
-```
-
-```{python cleaning, eval=FALSE, echo=T}
 #sort by store number and then date
 df.sort_values(by=['Store', 'Date'])
 
@@ -66,7 +65,7 @@ paged_table(head(data))
 Let's answer a few questions about the data. We'll be using SQL to clean and manipulate the data. 
 
 
-1. Which holidays affect weekly sales the most?
+### Which holidays affect weekly sales the most?
 
 Holidays are notorious for driving up sales as Walmart often runs promotional markdown events to incentivize purchases! 
 
@@ -84,13 +83,12 @@ The (repeating) holidays that appear in this data are:
 - Super Bowl (Feb 9th)
 - Labor Day (Sept 10th)^[This data is American.] 
 - Thanksgiving (Nov 26th)  
-- Christmas and Hanukkah (Dec 31TH)
+- Christmas and Hanukkah (Dec 31th)  
 
+  
+First, let's look at which days had the highest profit:
 
-
-
-Using SQL: 
-```{sql test1, eval=FALSE, echo=T, code_folding=TRUE}
+```{sql test1, eval=FALSE, echo=T, code_folding="Show SQL code"}
 ALTER TABLE WalmartSalesClean
 ALTER COLUMN Holiday_Flag Int;
 
@@ -116,9 +114,9 @@ paged_table(holidayordering)
 
 It seems like Thanksgiving (for all stores) consistently ranks the highest amongst all the holidays! 
 
-But, this isn't accurate enough for me -- why separate it by year and day for EVERY single store? Thankfully, all our holidays are in different months, so we can retain the month in the date column and aggregating weekly sales by the holiday. 
+But, this isn't specific enough for me. Let's find the total sales per holiday so that we can have a more accurate comparison!
 
-```{sql filterholiday, eval=FALSE, echo=T}
+```{sql filterholiday, eval=FALSE, echo=T, code_folding="Show SQL code"}
 SELECT 
 CASE 
 WHEN Holiday = 02 THEN 'Super Bowl' --changing months to holiday names
@@ -149,26 +147,78 @@ holidaydisplay$Holiday <- c("Super Bowl", "Labor Day", "Thanksgiving", "Christma
 paged_table(holidaydisplay)
 
 ```
-Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! 
 
+```{r, holidaypiesales}
 
-# adjust so that 02 is not displayed, but sintead, superbowl, make a grpah? 
-
-2. Which stores in the dataset have the lowest and highest unemployment rate?  What factors do you think are impacting the unemployment rate?
-```{sql test2, eval=FALSE, echo=T}
-WITH corrdata AS (
-SELECT Store, avg(CAST(Unemployment AS decimal)) AS Unemployment, avg(CAST(Temperature AS decimal)) AS Temperature, avg(CAST(Fuel_Price AS decimal)) AS Fuel_Prices, avg(CAST(CPI AS decimal)) AS CPI, avg(CAST(Weekly_Sales AS decimal)) AS Weekly_Sales
-FROM WalmartSalesClean
-GROUP BY Store
-/*ORDER BY Unemployment desc, Weekly_Sales 
-
-  select(Date, Weekly_Sales) %>%
-  group_by(Date) %>%
-  arrange(desc(Weekly_Sales))*/
+ggplot(holidaydisplay, aes(x="", y=Weekly_Sales, fill=Holiday)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  ggtitle("Total Walmart Sales per Holiday")+
+  coord_polar("y", start=0) +
+  theme_void() 
 
 ```
 
+Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! Perhaps, it boils down to the cultural significance of Thanksgiving, where it "symbolizes intercultural peace, America's opportunity for newcomers, and the sanctity of home and family".^[https://www.britannica.com/topic/Thanksgiving-Day] I'm more of the opinion that it's an opportunity to invite all your friends and family and spend the entire day cooking -- that means food costs can balloon quickly! 
+
+
+### Which stores have the lowest and highest unemployment rate?
+
+```{sql test2, eval=FALSE, echo=T, code_folding="Show SQL code"}
+-- highest unemployment rate 
+SELECT TOP 6 Store, avg(CAST(Unemployment AS decimal)) AS Unemployment, avg(CAST(Weekly_Sales AS decimal)) AS Weekly_Sales
+FROM WalmartSalesClean
+GROUP BY Store
+ORDER BY Unemployment desc, Weekly_Sales desc -- need to use weekly sales as a parameter as stores may have the same unemployment rate
+
+```
+
+```{r employmenttable, echo=F}
+highemp <- data %>%
+  select(Store, Unemployment, Weekly_Sales) %>%
+  group_by(Store) %>%
+  summarize(Unemployment = mean(Unemployment), Weekly_Sales = mean(Weekly_Sales)) %>%
+  arrange(desc(Unemployment)) 
+
+knitr::kable(head(highemp), caption = "Highest Unemployment") %>%
+  kable_styling(position = "center")
+
+
+```
+
+```{sql lowemploy, eval=FALSE, echo=T, code_folding="Show SQL code"}
+-- lowest unemployment rate
+SELECT TOP 6 Store, avg(CAST(Unemployment AS decimal)) AS Unemployment, avg(CAST(Weekly_Sales AS decimal)) AS Weekly_Sales
+FROM WalmartSalesClean
+GROUP BY Store
+ORDER BY Unemployment, Weekly_Sales desc
+
+```
+
+```{r lowemptable, echo=F}
+
+lowemp <- data %>%
+  select(Store, Unemployment, Weekly_Sales) %>%
+  group_by(Store) %>%
+  summarize(Unemployment = mean(Unemployment), Weekly_Sales = mean(Weekly_Sales)) %>%
+  arrange(Unemployment)
+
+knitr::kable(head(lowemp), caption = "Lowest Unemployment") %>%
+  kable_styling(position = "center")
+
+
+```
+
+Interestingly, there's not a strong correlation between high unemployment and low weekly sales. I'd expect that places with higher unemployment meant that consumers had less disposable income to spend at Walmart. But, Walmart is known for having super cheap products and consumers could've primarily bought inelastic goods and other necessities. 
+
+It could also be that Walmart's penetration pricing worked *too* well. Walmart is notorious for significantly impacting the local economy of the neighborhood, positively and negatively. On one hand, low prices means that consumers can afford more things in a one-stop location and stores near the Walmart get more business due to the influx of foot traffic. On the other, Walmart is known for hiring many workers and paying minimum wage, as well as displacing small businesses due to their low prices (and subsequently, small profit margins) with their pricing. These margins are things that only large corporations can withstand, while small businesses simply can't afford to compete.  
+
+The positive and negative effects differ depending on the neighborhood that Walmart enters, with this data being a good example of the impacts that Walmart can have. 
+
+mention the economy in 2010 - 2012. is this the avg unemployment rate? what was happenign that could've influecned this? 
+- how does cpi, temprature, fuel prices affect the data as well? psyhcology? 
+
 Pearson's correlation
+
 ```{sql test3, eval=FALSE, echo=T}
 rawdata AS (
 SELECT Unemployment AS x, Weekly_Sales AS y, Unemployment*Weekly_Sales AS xy, Unemployment*Unemployment AS xsquared, Weekly_Sales*Weekly_Sales AS ysquared	
@@ -220,10 +270,10 @@ FROM pdata
 
 
 <!-- 
-
-- which holidays appear?  
-- average weekly sales -> density graph? 
-- take a look at the most and least successful store 
+- Which week and which store had the highest/lowest weekly sales? What's the average?  
+  - average weekly sales -> density graph? 
+  - take a look at the most and least successful store 
+  - what traits could impact that? take the average of cpi and stuff and see if there's a massive difference? 
 
 -->
 
