@@ -24,6 +24,12 @@ library(kableExtra)
 ```
 
 
+## Welcome     
+
+This project is currently being re-written. There are major changes in progress. First, I am looking to include more in-depth and statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights are changing and updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables are currently not the main priority. Please proceed with this in mind. 
+
+## Introduction
+
 This project focuses on analyzing raw data from [this dataset](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download), which tracks the weekly sales of 45 Walmart stores over 2 years! It also tracks external factors like whether the week contained a holiday, the CPI, and the unemployment rate of the region.
 
 First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values. 
@@ -62,8 +68,8 @@ paged_table(head(data))
 
 ```
 
-Let's answer a few questions about the data. We'll be using SQL to clean and manipulate the data. 
-
+## Analysis
+Now that the data has been cleaned, we can use SQL and R to explore this data.
 
 ### Which holidays affect weekly sales the most?
 
@@ -93,7 +99,7 @@ First, let's look at which days had the highest profit:
 ALTER TABLE WalmartSalesClean
 ALTER COLUMN Holiday_Flag Int;
 
-#filtering for holiday flags and sorting 
+ --filtering for holiday flags and sorting 
 SELECT Date, SUM(CAST(Weekly_Sales AS FLOAT)) AS Weekly_Sales
 FROM WalmartSalesClean 
 WHERE Holiday_Flag='1'
@@ -215,7 +221,62 @@ It could also be that Walmart's penetration pricing worked *too* well. Walmart i
 
 The positive and negative effects differ depending on the neighborhood that Walmart enters, with this data being a good example of the impacts that Walmart can have. 
 
-It should also be noted that this data comes from 2010 - 2012 -- aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployement was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.^[https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm] However, 
+It should also be noted that this data comes from 2010 - 2012 -- aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployement was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.^[https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm] 
+
+### Sample Pearson Correlation 
+
+We can also use statistics to back up these claims by checking the correlation between weekly sales and other factors. This gives us insight into the relationship between each of the variables. 
+
+The sample Pearson correlation coefficient was used to determine whether there was a linear correlation between the two sets of data. The coefficient ranges from $-1$ $\le$ $r_{X,Y}$ $\le$ $1$, where $-1$ means a perfect negative linear relationship (as weekly sales go up, the other variable goes down) and $1$ means a perfect positive linear relationship (as weekly sales go up, the other variable goes up.) 
+
+Subsequently:
+
+- if $r_{X,Y}$ $\ge$ $0$, the variables have a positive relationship.  
+- $r_{X,Y}$ $\le$ $0$, the variables have a negative relationship. 
+
+Based on the above analysis, the following relationships are predicted: 
+
+- Weekly sales and holiday: $r_{X,Y}$ $\ge$ $0$ 
+- Weekly sales and unemployment: $r_{X,Y}$ $\le$ $0$
+- Weekly sales and CPI: $r_{X,Y}$ $\ge$ $0$
+- Weekly sales and fuel price: $r_{X,Y}$ $\ge$ $0$
+- Weekly sales and temperature: $r_{X,Y}$ $\ge$ $0$ 
+
+Using 
+
+$r_{xy}={\frac {n\sum x_{i}y_{i}-\sum x_{i}\sum y_{i}}{\sqrt{(n\sum x^2 - \sum x \sum x)(n\sum y^2 - \sum y \sum y)}}}$
+
+The sample Pearson correlation coefficient calculated is:
+
+```{sql samplepc, eval=FALSE, echo=T, code_folding="Show SQL code"}
+-- calculating the Pearson coefficient for weekly sales and unemployment. Replacing the y value (in this case, unemployment) with the other factors would yield the coefficient for that specific factor 
+
+rawdata AS ( -- calculating expectation 
+SELECT Unemployment AS x, Weekly_Sales AS y, Unemployment*Weekly_Sales AS xy, Unemployment*Unemployment AS xsquared, Weekly_Sales*Weekly_Sales AS ysquared	
+FROM corrdata
+),
+
+pdata AS ( -- reorganizing data 
+SELECT SUM(x) AS sumx, SUM(y) AS sumy, SUM(xy) as sumxy, SUM(xsquared) as sumx2, SUM(ysquared) as sumy2, COUNT(x) as n
+FROM rawdata
+)
+
+--- covariance(xy) / (std. dev. x) * (std. dev. y)
+SELECT (n*sumxy - sumx * sumy) / (sqrt((n*sumx2 - sumx*sumx)*(n*sumy2 - sumy*sumy))) AS "Pearson's Correlation"
+FROM pdata
+
+```
+```{r, pctable}
+
+pctable <- data.frame(Variable = c("Holiday", "Unemploymment", "CPI", "Fuel Prices", "Temperature"), "P Coefficient" = c(1, 1, 1, 1,1))
+
+paged_table(pctable)
+
+```
+
+<!--
+
+However, 
 
 ```{r}
 
@@ -267,7 +328,8 @@ ggplot(data=tempandsales, aes(x=Temperature, y = Weekly_Sales)) +
   geom_bar(stat="identity")
 
 ```
-
+- https://www.psychologytoday.com/ca/blog/consumed/201312/warm-and-fuzzy-temperature-and-consumer-behavior
+- change labels, make it easier to understand (ex. axis labels, numbers, etc.)
 box plot of temperature maybe?
 ```{r}
 
@@ -324,15 +386,18 @@ FROM pdata
 
 ```
 
+fuel prices affect on economy: https://investopedia.com/financial-edge/0511/how-gas-prices-affect-the-economy.aspx
 
-<!-- 
+
 - Which week and which store had the highest/lowest weekly sales? What's the average?  
+- sales by year, sales by store 
   - average weekly sales -> density graph? 
   - take a look at the most and least successful store 
   - what traits could impact that? take the average of cpi and stuff and see if there's a massive difference? 
-
--->
+  - summary of everything you learned would be very useful! 
 
 https://www.kaggle.com/code/phuvd1609/walmart-sales-forecasting   
 
 https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0
+
+-->

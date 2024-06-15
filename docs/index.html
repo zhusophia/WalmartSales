@@ -88,22 +88,22 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>Phishing with SQL: Weekly Walmart Sales Analysis</title>
+  <title>Analyzing Walmart Sales: Weekly Walmart Sales Analysis</title>
 
   <meta property="description" itemprop="description" content="Utilizing SQL, R, and Python to analyze Walmart sales."/>
 
 
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Phishing with SQL: Weekly Walmart Sales Analysis"/>
+  <meta property="og:title" content="Analyzing Walmart Sales: Weekly Walmart Sales Analysis"/>
   <meta property="og:type" content="article"/>
   <meta property="og:description" content="Utilizing SQL, R, and Python to analyze Walmart sales."/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="Phishing with SQL"/>
+  <meta property="og:site_name" content="Analyzing Walmart Sales"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Phishing with SQL: Weekly Walmart Sales Analysis"/>
+  <meta property="twitter:title" content="Analyzing Walmart Sales: Weekly Walmart Sales Analysis"/>
   <meta property="twitter:description" content="Utilizing SQL, R, and Python to analyze Walmart sales."/>
 
   <!--/radix_placeholder_meta_tags-->
@@ -2108,11 +2108,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <header class="header header--fixed" role="banner">
 <nav class="distill-site-nav distill-site-header">
 <div class="nav-left">
-<a href="index.html" class="title">Phishing with SQL</a>
+<a href="index.html" class="title">Analyzing Walmart Sales</a>
 </div>
 <div class="nav-right">
 <a href="index.html">Home</a>
-<a href="about.html">About</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>
@@ -2130,6 +2129,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
 <div class="d-article">
+<h2 id="welcome">Welcome</h2>
+<p>This project is currently being re-written. There are major changes in progress. First, I am looking to include more in-depth and statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights are changing and updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables are currently not the main priority. Please proceed with this in mind.</p>
+<h2 id="introduction">Introduction</h2>
 <p>This project focuses on analyzing raw data from <a href="https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download">this dataset</a>, which tracks the weekly sales of 45 Walmart stores over 2 years! It also tracks external factors like whether the week contained a holiday, the CPI, and the unemployment rate of the region.</p>
 <p>First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2168,7 +2170,8 @@ Show Python code
   </script>
 </div>
 </div>
-<p>Let’s answer a few questions about the data. We’ll be using SQL to clean and manipulate the data.</p>
+<h2 id="analysis">Analysis</h2>
+<p>Now that the data has been cleaned, we can use SQL and R to explore this data.</p>
 <h3 id="which-holidays-affect-weekly-sales-the-most">Which holidays affect weekly sales the most?</h3>
 <p>Holidays are notorious for driving up sales as Walmart often runs promotional markdown events to incentivize purchases!</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2196,7 +2199,7 @@ Show SQL code
 <div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> WalmartSalesClean</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">COLUMN</span> Holiday_Flag <span class="dt">Int</span>;</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>#filtering <span class="cf">for</span> holiday flags <span class="kw">and</span> sorting </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a> <span class="co">--filtering for holiday flags and sorting </span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean </span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
@@ -2450,11 +2453,66 @@ Weekly_Sales
 <p>Interestingly, there’s not a strong correlation between high unemployment and low weekly sales. I’d expect that places with higher unemployment meant that consumers had less disposable income to spend at Walmart. But, Walmart is known for having super cheap products and consumers could’ve primarily bought inelastic goods and other necessities.</p>
 <p>It could also be that Walmart’s penetration pricing worked <em>too</em> well. Walmart is notorious for significantly impacting the local economy of the neighborhood, positively and negatively. On one hand, low prices means that consumers can afford more things in a one-stop location and stores near the Walmart get more business due to the influx of foot traffic. On the other, Walmart is known for hiring many workers and paying minimum wage, as well as displacing small businesses due to their low prices (and subsequently, small profit margins) with their pricing. These margins are things that only large corporations can withstand, while small businesses simply can’t afford to compete.</p>
 <p>The positive and negative effects differ depending on the neighborhood that Walmart enters, with this data being a good example of the impacts that Walmart can have.</p>
-<p>It should also be noted that this data comes from 2010 - 2012 – aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployement was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> However,</p>
+<p>It should also be noted that this data comes from 2010 - 2012 – aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployement was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<h3 id="sample-pearson-correlation">Sample Pearson Correlation</h3>
+<p>We can also use statistics to back up these claims by checking the correlation between weekly sales and other factors. This gives us insight into the relationship between each of the variables.</p>
+<p>The sample Pearson correlation coefficient was used to determine whether there was a linear correlation between the two sets of data. The coefficient ranges from <span class="math inline">\(-1\)</span> <span class="math inline">\(\le\)</span> <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\le\)</span> <span class="math inline">\(1\)</span>, where <span class="math inline">\(-1\)</span> means a perfect negative linear relationship (as weekly sales go up, the other variable goes down) and <span class="math inline">\(1\)</span> means a perfect positive linear relationship (as weekly sales go up, the other variable goes up.)</p>
+<p>Subsequently:</p>
+<ul>
+<li>if <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\ge\)</span> <span class="math inline">\(0\)</span>, the variables have a positive relationship.<br />
+</li>
+<li><span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\le\)</span> <span class="math inline">\(0\)</span>, the variables have a negative relationship.</li>
+</ul>
+<p>Based on the above analysis, the following relationships are predicted:</p>
+<ul>
+<li>Weekly sales and holiday: <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\ge\)</span> <span class="math inline">\(0\)</span></li>
+<li>Weekly sales and unemployment: <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\le\)</span> <span class="math inline">\(0\)</span></li>
+<li>Weekly sales and CPI: <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\ge\)</span> <span class="math inline">\(0\)</span></li>
+<li>Weekly sales and fuel price: <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\ge\)</span> <span class="math inline">\(0\)</span></li>
+<li>Weekly sales and temperature: <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\ge\)</span> <span class="math inline">\(0\)</span></li>
+</ul>
+<p>Using</p>
+<p><span class="math inline">\(r_{xy}={\frac {n\sum x_{i}y_{i}-\sum x_{i}\sum y_{i}}{\sqrt{(n\sum x^2 - \sum x \sum x)(n\sum y^2 - \sum y \sum y)}}}\)</span></p>
+<p>The sample Pearson correlation coefficient calculated is:</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code># A tibble: 33 × 2
+<details>
+<summary>
+Show SQL code
+</summary>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- calculating the Pearson coefficient for weekly sales and unemployment. Replacing the y value (in this case, unemployment) with the other factors would yield the coefficient for that specific factor </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> ( <span class="co">-- calculating expectation </span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> ( <span class="co">-- reorganizing data </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">--- covariance(xy) / (std. dev. x) * (std. dev. y)</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
+</details>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["P.Coefficient"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Holiday","2":"1"},{"1":"Unemploymment","2":"1"},{"1":"CPI","2":"1"},{"1":"Fuel Prices","2":"1"},{"1":"Temperature","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<!--
+
+However, 
+
+<div class="layout-chunk" data-layout="l-body">
+
+```
+# A tibble: 33 × 2
    Date      Unemployment
-   &lt;chr&gt;            &lt;dbl&gt;
+   <chr>            <dbl>
  1 2010 / 02         5.89
  2 2010 / 03         5.89
  3 2010 / 04         5.44
@@ -2465,87 +2523,130 @@ Weekly_Sales
  8 2010 / 09         5.33
  9 2010 / 10         5.29
 10 2010 / 11         5.29
-# ℹ 23 more rows</code></pre>
-<p><img src="index_files/figure-html5/unnamed-chunk-1-1.png" width="624" /></p>
+# ℹ 23 more rows
+```
+
+<img src="index_files/figure-html5/unnamed-chunk-1-1.png" width="624" />
+
 </div>
-<p>potentially uerope?
-- <a href="https://w3.unece.org/PXWeb2015/pxweb/en/STAT/STAT__20-ME__3-MELF/40_en_MEUnRateY_r.px/table/tableViewLayout1/" class="uri">https://w3.unece.org/PXWeb2015/pxweb/en/STAT/STAT__20-ME__3-MELF/40_en_MEUnRateY_r.px/table/tableViewLayout1/</a>
-- <a href="https://www150.statcan.gc.ca/n1/pub/75-001-x/2010104/charts-graphiques/11148/c-g000k-eng.htm" class="uri">https://www150.statcan.gc.ca/n1/pub/75-001-x/2010104/charts-graphiques/11148/c-g000k-eng.htm</a>
-- <a href="https://data.oecd.org/unemp/unemployment-rate.htm" class="uri">https://data.oecd.org/unemp/unemployment-rate.htm</a></p>
-<p>We can compare it to OECD data –</p>
-<p>Countries it’s located in
-- US, Mexico, Canada, UK, China, South Africa, Argentina, Brazil</p>
-<p><a href="https://www.thestreet.com/markets/history-of-walmart-15092339" class="uri">https://www.thestreet.com/markets/history-of-walmart-15092339</a>
-<a href="https://grocerynews.org/research-rankings/globalization-food-sales" class="uri">https://grocerynews.org/research-rankings/globalization-food-sales</a>
-- <a href="https://flowingdata.com/2010/04/07/watching-the-growth-of-walmart-now-with-100-more-sams-club/" class="uri">https://flowingdata.com/2010/04/07/watching-the-growth-of-walmart-now-with-100-more-sams-club/</a></p>
-<p>mention the economy in 2010 - 2012. is this the avg unemployment rate? what was happenign that could’ve influecned this?
-- how does cpi, temprature, fuel prices affect the data as well? psyhcology?</p>
-<p>Where are these stores located?</p>
-Psychology of Temperature and Buying
+
+
+potentially uerope? 
+- https://w3.unece.org/PXWeb2015/pxweb/en/STAT/STAT__20-ME__3-MELF/40_en_MEUnRateY_r.px/table/tableViewLayout1/
+- https://www150.statcan.gc.ca/n1/pub/75-001-x/2010104/charts-graphiques/11148/c-g000k-eng.htm
+- https://data.oecd.org/unemp/unemployment-rate.htm
+
+We can compare it to OECD data -- 
+
+Countries it's located in 
+- US, Mexico, Canada, UK, China, South Africa, Argentina, Brazil    
+
+https://www.thestreet.com/markets/history-of-walmart-15092339
+https://grocerynews.org/research-rankings/globalization-food-sales
+- https://flowingdata.com/2010/04/07/watching-the-growth-of-walmart-now-with-100-more-sams-club/
+
+mention the economy in 2010 - 2012. is this the avg unemployment rate? what was happenign that could've influecned this? 
+- how does cpi, temprature, fuel prices affect the data as well? psyhcology? 
+
+Where are these stores located? 
+
+Psychology of Temperature and Buying 
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
+<img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" />
+
 </div>
+
+- https://www.psychologytoday.com/ca/blog/consumed/201312/warm-and-fuzzy-temperature-and-consumer-behavior
+- change labels, make it easier to understand (ex. axis labels, numbers, etc.)
 box plot of temperature maybe?
 <div class="layout-chunk" data-layout="l-body">
 
+
 </div>
-<p>Pearson’s correlation</p>
+
+
+Pearson's correlation
+
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> (</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
+
+```sql
+rawdata AS (
+SELECT Unemployment AS x, Weekly_Sales AS y, Unemployment*Weekly_Sales AS xy, Unemployment*Unemployment AS xsquared, Weekly_Sales*Weekly_Sales AS ysquared  
+FROM corrdata
+),
+
+pdata AS (
+SELECT SUM(x) AS sumx, SUM(y) AS sumy, SUM(xy) as sumxy, SUM(xsquared) as sumx2, SUM(ysquared) as sumy2, COUNT(x) as n
+FROM rawdata
+)
+
+SELECT (n*sumxy - sumx * sumy) / (sqrt((n*sumx2 - sumx*sumx)*(n*sumy2 - sumy*sumy))) AS "Pearson's Correlation"
+FROM pdata
+
+```
+
 </div>
-<ol start="3" type="1">
-<li>Is there any correlation between CPI and Weekly Sales? How does the correlation differ when the Holiday Flag is 0 versus when the Holiday Flag is 1?
+
+
+3. Is there any correlation between CPI and Weekly Sales?  How does the correlation differ when the Holiday Flag is 0 versus when the Holiday Flag is 1?
 <div class="layout-chunk" data-layout="l-body">
-</li>
-</ol>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> rdata <span class="kw">AS</span> (</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span>(<span class="fu">ROUND</span>(CPI, <span class="dv">0</span>) <span class="kw">AS</span> <span class="dt">INT</span>) <span class="kw">AS</span> CPI, <span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>corrdata <span class="kw">AS</span>(</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI, <span class="fu">AVG</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rdata</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> CPI</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">/*ORDER BY CPI ASC*/</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>),</span></code></pre></div>
+
+```sql
+WITH rdata AS (
+SELECT CAST(ROUND(CPI, 0) AS INT) AS CPI, CAST(Weekly_Sales AS decimal) AS Weekly_Sales
+FROM WalmartSalesClean
+WHERE Holiday_Flag = 0
+),
+
+corrdata AS(
+SELECT CPI, AVG(Weekly_Sales) AS Weekly_Sales
+FROM rdata
+GROUP BY CPI
+/*ORDER BY CPI ASC*/
+),
+
+```
+
 </div>
+
+
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> (</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CPI <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, CPI<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, CPI<span class="op">*</span>CPI <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> (</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
+
+```sql
+rawdata AS (
+SELECT CPI AS x, Weekly_Sales AS y, CPI*Weekly_Sales AS xy, CPI*CPI AS xsquared, Weekly_Sales*Weekly_Sales AS ysquared  
+FROM corrdata
+),
+
+pdata AS (
+SELECT SUM(x) AS sumx, SUM(y) AS sumy, SUM(xy) as sumxy, SUM(xsquared) as sumx2, SUM(ysquared) as sumy2, COUNT(x) as n
+FROM rawdata
+)
+
+SELECT (n*sumxy - sumx * sumy) / (sqrt((n*sumx2 - sumx*sumx)*(n*sumy2 - sumy*sumy))) AS "Pearson's Correlation"
+FROM pdata
+
+```
+
 </div>
-<!-- 
+
+
+fuel prices affect on economy: https://investopedia.com/financial-edge/0511/how-gas-prices-affect-the-economy.aspx
+
+
 - Which week and which store had the highest/lowest weekly sales? What's the average?  
+- sales by year, sales by store 
   - average weekly sales -> density graph? 
   - take a look at the most and least successful store 
   - what traits could impact that? take the average of cpi and stuff and see if there's a massive difference? 
+  - summary of everything you learned would be very useful! 
+
+https://www.kaggle.com/code/phuvd1609/walmart-sales-forecasting   
+
+https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0
 
 -->
-<p><a href="https://www.kaggle.com/code/phuvd1609/walmart-sales-forecasting" class="uri">https://www.kaggle.com/code/phuvd1609/walmart-sales-forecasting</a></p>
-<p><a href="https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0" class="uri">https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0</a></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
@@ -2560,6 +2661,15 @@ box plot of temperature maybe?
 <div class="d-appendix">
 </div>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->
