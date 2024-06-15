@@ -81,10 +81,11 @@ paged_table(holidaydate)
 The (repeating) holidays that appear in this data are: 
 
 - Super Bowl (Feb 9th)
-- Labor Day (Sept 10th)^[This data is American.] 
+- Labor Day (Sept 10th)
 - Thanksgiving (Nov 26th)  
 - Christmas and Hanukkah (Dec 31th)  
 
+With these holidays, it is implied that the curator of data would have been American, and this data could've been taken from American stores. However, the geographical location of these stores are not contained within the dataset.  
   
 First, let's look at which days had the highest profit:
 
@@ -214,8 +215,63 @@ It could also be that Walmart's penetration pricing worked *too* well. Walmart i
 
 The positive and negative effects differ depending on the neighborhood that Walmart enters, with this data being a good example of the impacts that Walmart can have. 
 
+It should also be noted that this data comes from 2010 - 2012 -- aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployement was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.^[https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm] However, 
+
+```{r}
+
+emp23 <- data %>% 
+  filter(Store == 23) %>% 
+  mutate(Month = substr(Date, 1, 2), Year = substr(Date, 7, 10), Date = paste(Year,"/" ,Month)) %>%
+  select(Date, Unemployment) %>%
+  group_by(Date) %>%
+  summarize(Unemployment = mean(Unemployment))
+
+emp23
+  
+
+ggplot(data=emp23, aes(x=Date, y=Unemployment, group=1)) +
+  geom_line()+
+  geom_point() + 
+  theme(axis.text.x = element_text(angle = 90)) 
+
+```
+
+potentially uerope? 
+- https://w3.unece.org/PXWeb2015/pxweb/en/STAT/STAT__20-ME__3-MELF/40_en_MEUnRateY_r.px/table/tableViewLayout1/
+- https://www150.statcan.gc.ca/n1/pub/75-001-x/2010104/charts-graphiques/11148/c-g000k-eng.htm
+- https://data.oecd.org/unemp/unemployment-rate.htm
+
+We can compare it to OECD data -- 
+
+Countries it's located in 
+- US, Mexico, Canada, UK, China, South Africa, Argentina, Brazil	
+
+https://www.thestreet.com/markets/history-of-walmart-15092339
+https://grocerynews.org/research-rankings/globalization-food-sales
+- https://flowingdata.com/2010/04/07/watching-the-growth-of-walmart-now-with-100-more-sams-club/
+
 mention the economy in 2010 - 2012. is this the avg unemployment rate? what was happenign that could've influecned this? 
 - how does cpi, temprature, fuel prices affect the data as well? psyhcology? 
+
+Where are these stores located? 
+
+Psychology of Temperature and Buying 
+```{r}
+tempandsales <- data %>% 
+  select(Temperature, Weekly_Sales) %>%
+  group_by(Temperature) %>%
+  summarize(Weekly_Sales = mean(Weekly_Sales)) %>%
+  arrange(desc(Weekly_Sales))
+
+ggplot(data=tempandsales, aes(x=Temperature, y = Weekly_Sales)) +
+  geom_bar(stat="identity")
+
+```
+
+box plot of temperature maybe?
+```{r}
+
+```
 
 Pearson's correlation
 
@@ -277,6 +333,6 @@ FROM pdata
 
 -->
 
-
+https://www.kaggle.com/code/phuvd1609/walmart-sales-forecasting   
 
 https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0
