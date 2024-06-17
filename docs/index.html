@@ -2471,8 +2471,9 @@ Weekly_Sales
 <li>Weekly sales and fuel price: <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\ge\)</span> <span class="math inline">\(0\)</span></li>
 <li>Weekly sales and temperature: <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\ge\)</span> <span class="math inline">\(0\)</span></li>
 </ul>
-<p>Using</p>
+<p>The following formula will be used:</p>
 <p><span class="math inline">\(r_{xy}={\frac {n\sum x_{i}y_{i}-\sum x_{i}\sum y_{i}}{\sqrt{(n\sum x^2 - \sum x \sum x)(n\sum y^2 - \sum y \sum y)}}}\)</span></p>
+<p>where <span class="math inline">\(x\)</span> is Weekly_Sales, and <span class="math inline">\(y\)</span> the variable we want to test the correlation of.</p>
 <p>The sample Pearson correlation coefficient calculated is:</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
@@ -2481,29 +2482,78 @@ Show SQL code
 </summary>
 <div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- calculating the Pearson coefficient for weekly sales and unemployment. Replacing the y value (in this case, unemployment) with the other factors would yield the coefficient for that specific factor </span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> ( <span class="co">-- calculating expectation </span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> corrdata</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> rdata <span class="kw">AS</span> (</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Unemployment, <span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>),</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> ( <span class="co">-- reorganizing data </span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> ( <span class="co">-- calculating expectation </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rdata</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>),</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">--- covariance(xy) / (std. dev. x) * (std. dev. y)</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> ( <span class="co">-- reorganizing data </span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">--- covariance(xy) / (std. dev. x) * (std. dev. y)</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
 </details>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["P.Coefficient"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Holiday","2":"1"},{"1":"Unemploymment","2":"1"},{"1":"CPI","2":"1"},{"1":"Fuel Prices","2":"1"},{"1":"Temperature","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["P.Coefficient"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Unemploymment","2":"-0.101436981"},{"1":"CPI","2":"-0.072495982"},{"1":"Fuel Prices","2":"-0.006468951"},{"1":"Temperature","2":"-0.063768858"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
+<p>Only the unemployment variable followed the expected analysis.</p>
+<h3 id="point-biserial-correlation-coefficient">Point-biserial Correlation Coefficient</h3>
+<p>For Holiday_Flag, we need to use a point-biserial correlation coefficient instead of the Pearson correlation coefficent. This is because Holiday_Flag is a dichotomous variable (values can only be 1 or 0 to symbolize yes/no) compared <code>Weekly Sales</code>, which is not a dichotomous variable (values can be any number).</p>
+<p>Although you can use Pearson’s with dichotomous variables, the usefulness of the correlation would be debatable since it’s not meant to be utilized with dichotomous variables. Hence, it’s best to use a point-biserial, as it is equivalent to the Pearson correlation coefficient.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p>We will be using the following formula:
+<span class="math inline">\({r_{pb}={\frac {M_{1}-M_{0}}{s_{n}}}{\sqrt {\frac {n_{1}n_{0}}{n^{2}}}}}\)</span></p>
+<p>where:
+<span class="math inline">\(M_1\)</span> = Mean weekly sales when the Holiday_Flag = 1<br />
+<span class="math inline">\(M_0\)</span> = Mean weekly sales when the Holiday_Flag = 0<br />
+<span class="math inline">\(s_n\)</span> = Standard deviation of weekly sales<br />
+<span class="math inline">\(n_1\)</span> = Number of data points where Holiday_Flag = 1<br />
+<span class="math inline">\(M_2\)</span> = Number of data points where Holiday_Flag = 0<br />
+<span class="math inline">\(n\)</span> = Total number of data points in the sample</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show SQL code
+</summary>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> meanflag <span class="kw">AS</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Avg_Weekly_Sales</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>), </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>countflag <span class="kw">AS</span> (</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">count</span>(Holiday_Flag) <span class="kw">AS</span> n_Holiday_Flag</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>joinmeancount <span class="kw">AS</span> (</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> meanflag.Holiday_Flag, meanflag.Avg_Weekly_Sales, countflag.n_Holiday_Flag</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> meanflag</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> countflag</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> countflag.Holiday_Flag <span class="op">=</span> meanflag.Holiday_Flag</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> STDEV(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> <span class="fu">stddev</span>, <span class="fu">count</span>(Weekly_Sales) <span class="kw">as</span> n</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span></code></pre></div>
+</details>
+</div>
 <!--
+
+https://www.techrepublic.com/article/sql-basics-query-multiple-tables/
+
 
 However, 
 
@@ -2526,7 +2576,7 @@ However,
 # ℹ 23 more rows
 ```
 
-<img src="index_files/figure-html5/unnamed-chunk-1-1.png" width="624" />
+<img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" />
 
 </div>
 
@@ -2552,7 +2602,7 @@ Where are these stores located?
 
 Psychology of Temperature and Buying 
 <div class="layout-chunk" data-layout="l-body">
-<img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" />
+<img src="index_files/figure-html5/unnamed-chunk-3-1.png" width="624" />
 
 </div>
 
@@ -2646,12 +2696,13 @@ https://www.kaggle.com/code/phuvd1609/walmart-sales-forecasting
 https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0
 
 -->
-<div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://www.britannica.com/topic/Thanksgiving-Day" class="uri">https://www.britannica.com/topic/Thanksgiving-Day</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p><a href="https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm" class="uri">https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><a href="https://en.wikipedia.org/wiki/Point-biserial_correlation_coefficient" class="uri">https://en.wikipedia.org/wiki/Point-biserial_correlation_coefficient</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->
