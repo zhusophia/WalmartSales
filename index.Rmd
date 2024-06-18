@@ -26,9 +26,9 @@ library(kableExtra)
 
 ## Welcome     
 
-This project is currently being re-written. There are major changes in progress. First, I am looking to include more in-depth and statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights are changing and updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables are currently not the main priority. Please proceed with this in mind. 
+This project is currently being re-written. There are major changes in progress. First, I am looking to include more statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights will be updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables are currently not the main priority. Please proceed with this in mind. 
 
-For a more polished (but less relevant and more informal case study) to showcase my R skills and interest in psychology, please [click here](https://zhusophia.github.io/bigfive/intro.html)! 
+For a more polished (but less relevant and more informal case study) to showcase my data analysis skills and interest in psychology, please [click here](https://zhusophia.github.io/bigfive/intro.html)! 
 
 ## Introduction
 
@@ -95,7 +95,7 @@ The (repeating) holidays that appear in this data are:
 
 With these holidays, it is implied that the curator of data would have been American, and this data could've been taken from American stores. However, the geographical location of these stores are not contained within the dataset.  
   
-First, let's look at which days had the highest profit:
+First, the days had the highest profit should be examined:
 
 ```{sql test1, eval=FALSE, echo=T, code_folding="Show SQL code"}
 ALTER TABLE WalmartSalesClean
@@ -121,9 +121,7 @@ paged_table(holidayordering)
 
 ```
 
-It seems like Thanksgiving (for all stores) consistently ranks the highest amongst all the holidays! 
-
-But, this isn't specific enough for me. Let's find the total sales per holiday so that we can have a more accurate comparison!
+It seems like Thanksgiving (for all stores) consistently ranks the highest amongst all the holidays. To be more accurate, the total sales per holiday can be extracted. 
 
 ```{sql filterholiday, eval=FALSE, echo=T, code_folding="Show SQL code"}
 SELECT 
@@ -167,7 +165,7 @@ ggplot(holidaydisplay, aes(x="", y=Weekly_Sales, fill=Holiday)) +
 
 ```
 
-Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! Perhaps, it boils down to the cultural significance of Thanksgiving, where it "symbolizes intercultural peace, America's opportunity for newcomers, and the sanctity of home and family".^[https://www.britannica.com/topic/Thanksgiving-Day] I'm more of the opinion that it's an opportunity to invite all your friends and family and spend the entire day cooking -- that means food costs can balloon quickly! 
+Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! This could be caused by the cultural significance of Thanksgiving, where it "symbolizes intercultural peace, America's opportunity for newcomers, and the sanctity of home and family".^[https://www.britannica.com/topic/Thanksgiving-Day] However, I am more inclined to believe that Thanksgiving is typically used as an opportunity to invite all your friends and family and spend the entire day cooking -- that means food costs can balloon quickly! 
 
 
 ### Which stores have the lowest and highest unemployment rate?
@@ -302,7 +300,7 @@ $M_1$ = Mean weekly sales when the Holiday_Flag = 1
 $M_0$ = Mean weekly sales when the Holiday_Flag = 0  
 $s_n$ = Standard deviation of weekly sales  
 $n_1$ = Number of data points where Holiday_Flag = 1  
-$M_2$ = Number of data points where Holiday_Flag = 0  
+$n_2$ = Number of data points where Holiday_Flag = 0  
 $n$ = Total number of data points in the sample  
 
 ```{sql, eval=FALSE, code_folding="Show SQL code"}
@@ -358,6 +356,45 @@ paged_table(pctable)
 ```
 
 When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction. 
+
+
+### How do Weekly Sales Vary by Store and by Year? 
+
+Let's start by separately analyzing weekly sales. 
+
+First, we can look at which stores are the most profitable. 
+
+```{r, salesstorechart}
+
+salesstore <- data %>%
+  select(Store, Weekly_Sales) %>%
+  group_by(Store) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales)) %>%
+  arrange(desc(Weekly_Sales))
+
+ggplot(data=salesstore, aes(x=Store, y=Weekly_Sales)) +
+  geom_bar(stat="identity")
+
+```
+
+It seems like store 33, 44, and 5 have the least amount of sales, while store 20, 4, and 14 have the most. 
+
+We can also see how time and weekly sales affect each other.
+
+```{r, salesyeartable}
+salesyear <- data %>%
+  mutate(Month = substr(Date, 1, 2), Year = substr(Date, 7, 10), Date = paste(Year,"/" ,Month)) %>%
+  select(Date, Weekly_Sales) %>%
+  group_by(Date) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales))
+
+ggplot(data=salesyear, aes(x=Date, y=Weekly_Sales, group=1)) +
+  geom_line()+
+  geom_point() + 
+  theme(axis.text.x = element_text(angle = 90)) 
+
+```
+There always seems to be a spike in December and a low in January.  
 
 <!--
 

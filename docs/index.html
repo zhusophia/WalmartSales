@@ -2130,8 +2130,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <div class="d-article">
 <h2 id="welcome">Welcome</h2>
-<p>This project is currently being re-written. There are major changes in progress. First, I am looking to include more in-depth and statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights are changing and updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables are currently not the main priority. Please proceed with this in mind.</p>
-<p>For a more polished (but less relevant and more informal case study) to showcase my R skills and interest in psychology, please <a href="https://zhusophia.github.io/bigfive/intro.html">click here</a>!</p>
+<p>This project is currently being re-written. There are major changes in progress. First, I am looking to include more statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights will be updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables are currently not the main priority. Please proceed with this in mind.</p>
+<p>For a more polished (but less relevant and more informal case study) to showcase my data analysis skills and interest in psychology, please <a href="https://zhusophia.github.io/bigfive/intro.html">click here</a>!</p>
 <h2 id="introduction">Introduction</h2>
 <p>This project focuses on analyzing raw data from <a href="https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download">this dataset</a>, which tracks the weekly sales of 45 Walmart stores over 2 years! It also tracks external factors like whether the week contained a holiday, the CPI, and the unemployment rate of the region.</p>
 <p>First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values.</p>
@@ -2191,7 +2191,7 @@ Show Python code
 <li>Christmas and Hanukkah (Dec 31th)</li>
 </ul>
 <p>With these holidays, it is implied that the curator of data would have been American, and this data could’ve been taken from American stores. However, the geographical location of these stores are not contained within the dataset.</p>
-<p>First, let’s look at which days had the highest profit:</p>
+<p>First, the days had the highest profit should be examined:</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
 <summary>
@@ -2215,8 +2215,7 @@ Show SQL code
   </script>
 </div>
 </div>
-<p>It seems like Thanksgiving (for all stores) consistently ranks the highest amongst all the holidays!</p>
-<p>But, this isn’t specific enough for me. Let’s find the total sales per holiday so that we can have a more accurate comparison!</p>
+<p>It seems like Thanksgiving (for all stores) consistently ranks the highest amongst all the holidays. To be more accurate, the total sales per holiday can be extracted.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
 <summary>
@@ -2249,7 +2248,7 @@ Show SQL code
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="index_files/figure-html5/holidaypiesales-1.png" width="624" /></p>
 </div>
-<p>Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! Perhaps, it boils down to the cultural significance of Thanksgiving, where it “symbolizes intercultural peace, America’s opportunity for newcomers, and the sanctity of home and family”.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> I’m more of the opinion that it’s an opportunity to invite all your friends and family and spend the entire day cooking – that means food costs can balloon quickly!</p>
+<p>Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! This could be caused by the cultural significance of Thanksgiving, where it “symbolizes intercultural peace, America’s opportunity for newcomers, and the sanctity of home and family”.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> However, I am more inclined to believe that Thanksgiving is typically used as an opportunity to invite all your friends and family and spend the entire day cooking – that means food costs can balloon quickly!</p>
 <h3 id="which-stores-have-the-lowest-and-highest-unemployment-rate">Which stores have the lowest and highest unemployment rate?</h3>
 <div class="layout-chunk" data-layout="l-body">
 <details>
@@ -2520,7 +2519,7 @@ Show SQL code
 <span class="math inline">\(M_0\)</span> = Mean weekly sales when the Holiday_Flag = 0<br />
 <span class="math inline">\(s_n\)</span> = Standard deviation of weekly sales<br />
 <span class="math inline">\(n_1\)</span> = Number of data points where Holiday_Flag = 1<br />
-<span class="math inline">\(M_2\)</span> = Number of data points where Holiday_Flag = 0<br />
+<span class="math inline">\(n_2\)</span> = Number of data points where Holiday_Flag = 0<br />
 <span class="math inline">\(n\)</span> = Total number of data points in the sample</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
@@ -2574,6 +2573,18 @@ Show SQL code
 </div>
 </div>
 <p>When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction.</p>
+<h3 id="how-do-weekly-sales-vary-by-store-and-by-year">How do Weekly Sales Vary by Store and by Year?</h3>
+<p>Let’s start by separately analyzing weekly sales.</p>
+<p>First, we can look at which stores are the most profitable.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="index_files/figure-html5/salesstorechart-1.png" width="624" /></p>
+</div>
+<p>It seems like store 33, 44, and 5 have the least amount of sales, while store 20, 4, and 14 have the most.</p>
+<p>We can also see how time and weekly sales affect each other.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="index_files/figure-html5/salesyeartable-1.png" width="624" /></p>
+</div>
+<p>There always seems to be a spike in December and a low in January.</p>
 <!--
 
 However, 
