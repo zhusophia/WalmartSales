@@ -2131,6 +2131,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="d-article">
 <h2 id="welcome">Welcome</h2>
 <p>This project is currently being re-written. There are major changes in progress. First, I am looking to include more in-depth and statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights are changing and updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables are currently not the main priority. Please proceed with this in mind.</p>
+<p>For a more polished (but less relevant and more informal case study) to showcase my R skills and interest in psychology, please <a href="https://zhusophia.github.io/bigfive/intro.html">click here</a>!</p>
 <h2 id="introduction">Introduction</h2>
 <p>This project focuses on analyzing raw data from <a href="https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download">this dataset</a>, which tracks the weekly sales of 45 Walmart stores over 2 years! It also tracks external factors like whether the week contained a holiday, the CPI, and the unemployment rate of the region.</p>
 <p>First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values.</p>
@@ -2505,16 +2506,15 @@ Show SQL code
 <div class="layout-chunk" data-layout="l-body">
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["P.Coefficient"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Unemploymment","2":"-0.101436981"},{"1":"CPI","2":"-0.072495982"},{"1":"Fuel Prices","2":"-0.006468951"},{"1":"Temperature","2":"-0.063768858"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Correlation Coefficient"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Unemploymment","2":"-0.101436981"},{"1":"CPI","2":"-0.072495982"},{"1":"Fuel Prices","2":"-0.006468951"},{"1":"Temperature","2":"-0.063768858"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
-<p>Only the unemployment variable followed the expected analysis.</p>
 <h3 id="point-biserial-correlation-coefficient">Point-biserial Correlation Coefficient</h3>
 <p>For Holiday_Flag, we need to use a point-biserial correlation coefficient instead of the Pearson correlation coefficent. This is because Holiday_Flag is a dichotomous variable (values can only be 1 or 0 to symbolize yes/no) compared <code>Weekly Sales</code>, which is not a dichotomous variable (values can be any number).</p>
 <p>Although you can use Pearson’s with dichotomous variables, the usefulness of the correlation would be debatable since it’s not meant to be utilized with dichotomous variables. Hence, it’s best to use a point-biserial, as it is equivalent to the Pearson correlation coefficient.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
-<p>We will be using the following formula:
-<span class="math inline">\({r_{pb}={\frac {M_{1}-M_{0}}{s_{n}}}{\sqrt {\frac {n_{1}n_{0}}{n^{2}}}}}\)</span></p>
+<p>We will be using the following formula:</p>
+<p><span class="math inline">\({r_{pb}={\frac {M_{1}-M_{0}}{s_{n}}}{\sqrt {\frac {n_{1}n_{0}}{n^{2}}}}}\)</span></p>
 <p>where:
 <span class="math inline">\(M_1\)</span> = Mean weekly sales when the Holiday_Flag = 1<br />
 <span class="math inline">\(M_0\)</span> = Mean weekly sales when the Holiday_Flag = 0<br />
@@ -2527,33 +2527,54 @@ Show SQL code
 <summary>
 Show SQL code
 </summary>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> meanflag <span class="kw">AS</span> (</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Avg_Weekly_Sales</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>), </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>countflag <span class="kw">AS</span> (</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">count</span>(Holiday_Flag) <span class="kw">AS</span> n_Holiday_Flag</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>joinmeancount <span class="kw">AS</span> (</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> meanflag.Holiday_Flag, meanflag.Avg_Weekly_Sales, countflag.n_Holiday_Flag</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> meanflag</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> countflag</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> countflag.Holiday_Flag <span class="op">=</span> meanflag.Holiday_Flag</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> STDEV(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> <span class="fu">stddev</span>, <span class="fu">count</span>(Weekly_Sales) <span class="kw">as</span> n</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">--grabbing avg weekly sales for holiday / no holiday</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> meanflag <span class="kw">AS</span> ( </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Avg_Weekly_Sales</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>), </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- grabbing number of holiday / no holiday days</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>countflag <span class="kw">AS</span> ( </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">count</span>(Holiday_Flag) <span class="kw">AS</span> n_Holiday_Flag</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">-- combining it into one table</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>joinmeancount <span class="kw">AS</span> ( </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> meanflag.Holiday_Flag, meanflag.Avg_Weekly_Sales, countflag.n_Holiday_Flag</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> meanflag</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> countflag</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> countflag.Holiday_Flag <span class="op">=</span> meanflag.Holiday_Flag</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">-- adding standard deviation and total count of weekly sales</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>joinstdn <span class="kw">AS</span> ( </span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> STDEV(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> sn, <span class="fu">count</span>(Weekly_Sales) <span class="kw">as</span> n, </span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> n_Holiday_Flag <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">1</span>) <span class="kw">AS</span> n1, </span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> n_Holiday_Flag <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span>) <span class="kw">AS</span> n0, </span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> Avg_Weekly_Sales <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">1</span>) <span class="kw">AS</span> m1,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> Avg_Weekly_Sales <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span>) <span class="kw">AS</span> m0</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="co">-- calculating correlation, need to convert into floats for division</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> ((m1<span class="op">-</span>m0)<span class="op">/</span>sn) <span class="op">*</span> <span class="fu">SQRT</span>((<span class="fu">CAST</span>(n1 <span class="op">*</span> n0 <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="op">/</span> (<span class="fu">CAST</span>(n <span class="op">*</span> n <span class="kw">AS</span> <span class="dt">FLOAT</span>))) <span class="kw">AS</span> r_pb </span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> joinstdn</span></code></pre></div>
 </details>
 </div>
+<p>which results in an <span class="math inline">\(r_pb\)</span> value of ~ 0.037 – a slight positive correlation.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Correlation Coefficient"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Holiday","2":"0.036888099"},{"1":"Unemploymment","2":"-0.101436981"},{"1":"CPI","2":"-0.072495982"},{"1":"Fuel Prices","2":"-0.006468951"},{"1":"Temperature","2":"-0.063768858"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<p>When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction.</p>
 <!--
-
-https://www.techrepublic.com/article/sql-basics-query-multiple-tables/
-
 
 However, 
 

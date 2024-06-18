@@ -28,6 +28,8 @@ library(kableExtra)
 
 This project is currently being re-written. There are major changes in progress. First, I am looking to include more in-depth and statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights are changing and updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables are currently not the main priority. Please proceed with this in mind. 
 
+For a more polished (but less relevant and more informal case study) to showcase my R skills and interest in psychology, please [click here](https://zhusophia.github.io/bigfive/intro.html)! 
+
 ## Introduction
 
 This project focuses on analyzing raw data from [this dataset](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download), which tracks the weekly sales of 45 Walmart stores over 2 years! It also tracks external factors like whether the week contained a holiday, the CPI, and the unemployment rate of the region.
@@ -276,13 +278,14 @@ FROM pdata
 ```{r, pctable}
 #remove dot in title name 
 
-pctable <- data.frame(Variable = c("Unemploymment", "CPI", "Fuel Prices", "Temperature"), "P Coefficient" = c(-0.101436981393985, -0.0724959823775918, -0.00646895141525588,-0.0637688579328555))
+pctable <- data.frame(Variable = c("Unemploymment", "CPI", "Fuel Prices", "Temperature"), "Correlation Coefficient" = c(-0.101436981393985, -0.0724959823775918, -0.00646895141525588,-0.0637688579328555))
+
+colnames(pctable) <- c("Variable", "Correlation Coefficient")
+
 
 paged_table(pctable)
 
 ```
-
-Only the unemployment variable followed the expected analysis. 
 
 ### Point-biserial Correlation Coefficient
 
@@ -291,7 +294,8 @@ For Holiday_Flag, we need to use a point-biserial correlation coefficient instea
 Although you can use Pearson's with dichotomous variables, the usefulness of the correlation would be debatable since it's not meant to be utilized with dichotomous variables. Hence, it's best to use a point-biserial, as it is equivalent to the Pearson correlation coefficient.^[https://en.wikipedia.org/wiki/Point-biserial_correlation_coefficient]
 
 We will be using the following formula: 
-${r_{pb}={\frac {M_{1}-M_{0}}{s_{n}}}{\sqrt {\frac {n_{1}n_{0}}{n^{2}}}}}$
+
+${r_{pb}={\frac {M_{1}-M_{0}}{s_{n}}}{\sqrt {\frac {n_{1}n_{0}}{n^{2}}}}}$  
 
 where:
 $M_1$ = Mean weekly sales when the Holiday_Flag = 1  
@@ -302,33 +306,60 @@ $M_2$ = Number of data points where Holiday_Flag = 0
 $n$ = Total number of data points in the sample  
 
 ```{sql, eval=FALSE, code_folding="Show SQL code"}
-WITH meanflag AS (
+
+--grabbing avg weekly sales for holiday / no holiday
+WITH meanflag AS ( 
 SELECT Holiday_Flag, avg(CAST(Weekly_Sales AS decimal)) AS Avg_Weekly_Sales
 FROM WalmartSalesClean
 GROUP BY Holiday_Flag
 ), 
 
-countflag AS (
+-- grabbing number of holiday / no holiday days
+countflag AS ( 
 SELECT Holiday_Flag, count(Holiday_Flag) AS n_Holiday_Flag
 FROM WalmartSalesClean
 GROUP BY Holiday_Flag
 ),
 
-joinmeancount AS (
+-- combining it into one table
+joinmeancount AS ( 
 SELECT meanflag.Holiday_Flag, meanflag.Avg_Weekly_Sales, countflag.n_Holiday_Flag
 FROM meanflag
 INNER JOIN countflag
 	ON countflag.Holiday_Flag = meanflag.Holiday_Flag
+),
+
+-- adding standard deviation and total count of weekly sales
+joinstdn AS ( 
+SELECT STDEV(CAST(Weekly_Sales AS decimal)) AS sn, count(Weekly_Sales) as n, 
+(SELECT n_Holiday_Flag FROM joinmeancount WHERE Holiday_Flag = 1) AS n1, 
+(SELECT n_Holiday_Flag FROM joinmeancount WHERE Holiday_Flag = 0) AS n0, 
+(SELECT Avg_Weekly_Sales FROM joinmeancount WHERE Holiday_Flag = 1) AS m1,
+(SELECT Avg_Weekly_Sales FROM joinmeancount WHERE Holiday_Flag = 0) AS m0
+FROM WalmartSalesClean
 )
 
-SELECT STDEV(CAST(Weekly_Sales AS decimal)) AS stddev, count(Weekly_Sales) as n
-FROM WalmartSalesClean
+-- calculating correlation, need to convert into floats for division
+SELECT ((m1-m0)/sn) * SQRT((CAST(n1 * n0 AS FLOAT)) / (CAST(n * n AS FLOAT))) AS r_pb 
+FROM joinstdn
+
 ```
 
+which results in an $r_pb$ value of ~ 0.037 -- a slight positive correlation. 
+
+```{r, pctablefull}
+#remove dot in title name 
+
+pctable <- data.frame(Variable = c("Holiday", "Unemploymment", "CPI", "Fuel Prices", "Temperature"), "Correlation Coefficient" = c(0.0368880993675271, -0.101436981393985, -0.0724959823775918, -0.00646895141525588,-0.0637688579328555))
+
+colnames(pctable) <- c("Variable", "Correlation Coefficient")
+paged_table(pctable)
+
+```
+
+When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction. 
+
 <!--
-
-https://www.techrepublic.com/article/sql-basics-query-multiple-tables/
-
 
 However, 
 
