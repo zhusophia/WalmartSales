@@ -26,7 +26,7 @@ library(kableExtra)
 
 ## Welcome     
 
-This project is currently being re-written. There are major changes in progress. First, I am looking to include more statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights will be updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables are currently not the main priority. Please proceed with this in mind. 
+This project is currently being re-written. There are major changes in progress. First, I am looking to include more statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights will be updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables may not be the main priority. Please proceed with this in mind. 
 
 For a more polished (but less relevant and more informal case study) to showcase my data analysis skills and interest in psychology, please [click here](https://zhusophia.github.io/bigfive/intro.html)! 
 
@@ -369,17 +369,52 @@ First, we can look at which stores are the most profitable.
 salesstore <- data %>%
   select(Store, Weekly_Sales) %>%
   group_by(Store) %>%
-  summarize(Weekly_Sales = sum(Weekly_Sales)) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales)/1000000) %>%
   arrange(desc(Weekly_Sales))
 
-ggplot(data=salesstore, aes(x=Store, y=Weekly_Sales)) +
-  geom_bar(stat="identity")
+salesstorep <- ggplot(data=salesstore, aes(x=Store, y=Weekly_Sales), fill=Store) +
+  geom_bar(stat="identity", fill="#414288", aes(text = paste0(
+    "Store Number: ", Store,
+    "<br>",
+    "Total Sales (Millions): ", round(Weekly_Sales, digits=3)))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Total Sales per Store") +
+  xlab("Store Number") +
+  ylab("Sales (Millions)") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.x = element_text(vjust =-3), 
+    axis.title.y = element_text(vjust =5)
+  )  
+ggplotly(salesstorep, tooltip = "text")
 
 ```
 
 It seems like store 33, 44, and 5 have the least amount of sales, while store 20, 4, and 14 have the most. 
 
-We can also see how time and weekly sales affect each other.
+```{r, mostsales}
+msales <- data %>%
+  group_by(Store) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales), Temperature = mean(Temperature), Fuel_Price = mean(Fuel_Price), CPI = mean(CPI), Unemployment =  mean(Unemployment)) %>%
+  filter(Store == 5 | Store == 44 | Store == 33) %>% 
+  arrange(desc(Weekly_Sales))
+
+paged_table(msales)
+  
+```
+
+```{r, leastsales}
+lsales <- data %>%
+  group_by(Store) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales), Temperature = mean(Temperature), Fuel_Price = mean(Fuel_Price), CPI = mean(CPI), Unemployment =  mean(Unemployment)) %>%
+  filter(Store == 20 | Store == 4 | Store == 14) %>% 
+  arrange(Weekly_Sales)
+paged_table(lsales)
+
+## make these side by side 
+```
+
+We can also see how sales varied from month to month. 
 
 ```{r, salesyeartable}
 salesyear <- data %>%
@@ -388,10 +423,24 @@ salesyear <- data %>%
   group_by(Date) %>%
   summarize(Weekly_Sales = sum(Weekly_Sales))
 
-ggplot(data=salesyear, aes(x=Date, y=Weekly_Sales, group=1)) +
-  geom_line()+
-  geom_point() + 
-  theme(axis.text.x = element_text(angle = 90)) 
+salesyearp <-ggplot(data=salesyear, aes(x=Date, y=Weekly_Sales/1000000, group=1)) +
+  geom_line(colour = "#414288")+
+  geom_point(aes(text = paste0(
+    "Date: ", Date,
+    "<br>",
+    "Monthly Sales (Millions): ", round(Weekly_Sales/1000000, digits=3)))) + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  ggtitle("Total Sales by Month") +
+  xlab("Date") +
+  ylab("Monthly Sales (Millions)") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.x = element_text(vjust =-2), 
+    axis.title.y = element_text(vjust =4)
+  ) 
+
+ggplotly(salesyearp, tooltip = "text")
 
 ```
 There always seems to be a spike in December and a low in January.  
@@ -521,5 +570,7 @@ fuel prices affect on economy: https://investopedia.com/financial-edge/0511/how-
 https://www.kaggle.com/code/phuvd1609/walmart-sales-forecasting   
 
 https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0
+
+https://coolors.co/d8dbe2-a9bcd0-58a4b0-373f51-1b1b1e
 
 -->
