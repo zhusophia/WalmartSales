@@ -2077,10 +2077,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
   <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
   <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-  <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
-  <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-  <link href="site_libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
-  <script src="site_libs/bsTable-3.3.7/bootstrapTable.js"></script>
   <script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
   <script src="site_libs/plotly-binding-4.10.2/plotly.js"></script>
   <script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
@@ -2089,6 +2085,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
   <link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
   <script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+  <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+  <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+  <link href="site_libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+  <script src="site_libs/bsTable-3.3.7/bootstrapTable.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2181,7 +2181,240 @@ Show Python code
 </div>
 <h2 id="analysis">Analysis</h2>
 <p>Now that the data has been cleaned, we can use SQL and R to explore this data.</p>
-<h3 id="which-holidays-affect-weekly-sales-the-most">Which holidays affect weekly sales the most?</h3>
+<h3 id="how-do-weekly-sales-vary-by-store-and-by-year">How do weekly sales vary by store and by year?</h3>
+<p>First, weekly sales data is analyzed without taking the other factors into consideration.</p>
+<p>We can identify the stores with the highest sales:</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show SQL code
+</summary>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">Store</span>, <span class="fu">sum</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales</span></code></pre></div>
+</details>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-486789227868ad1a7c2c" style="width:624px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-486789227868ad1a7c2c">{"x":{"data":[{"orientation":"v","width":[0.89999999999999858,0.90000000000000036,0.89999999999999858,0.89999999999999858,0.90000000000000013,0.89999999999999858,0.89999999999999858,0.90000000000000036,0.89999999999999991,0.90000000000000568,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.90000000000000568,0.90000000000000213,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.90000000000000568,0.90000000000000568,0.90000000000000568,0.89999999999999947,0.89999999999999858,0.90000000000000568,0.89999999999999858,0.89999999999999858,0.90000000000000568,0.89999999999999858,0.90000000000000036,0.90000000000000568,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.90000000000000568,0.89999999999999858,0.90000000000000036,0.90000000000000568,0.90000000000000568,0.90000000000000036,0.90000000000000568,0.90000000000000568],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[20,4,14,13,2,10,27,6,1,39,19,31,23,24,11,28,41,32,18,22,12,26,34,40,35,8,17,45,21,25,43,15,7,42,9,29,16,37,30,3,38,36,5,44,33],"y":[301.39779246000001,299.54395338,288.99991133999998,286.51770379999999,275.38244098000001,271.61771389,253.85591688,223.75613063999998,222.40280884999999,207.44554246999999,206.63486209999999,199.61390549999999,198.75061785,194.01602127999999,193.9627868,189.26368058,181.34193489,166.81924616000001,155.11473420999999,147.07564857,144.28723015,143.41639379,138.249763,137.87030978999999,131.52067208,129.95118113000001,127.78213882999999,112.39534142000001,108.11787892,101.06117917,90.565435409999992,89.133683919999996,81.598275139999998,79.565752429999989,77.789218989999995,77.141554310000004,74.252425400000007,74.20274031999999,62.716885120000001,57.586735070000003,55.159626420000002,53.412214970000001,45.475688900000002,43.293087840000005,37.160221960000001],"text":["Store Number: 20<br>Total Sales (Millions): 301.398","Store Number: 4<br>Total Sales (Millions): 299.544","Store Number: 14<br>Total Sales (Millions): 289","Store Number: 13<br>Total Sales (Millions): 286.518","Store Number: 2<br>Total Sales (Millions): 275.382","Store Number: 10<br>Total Sales (Millions): 271.618","Store Number: 27<br>Total Sales (Millions): 253.856","Store Number: 6<br>Total Sales (Millions): 223.756","Store Number: 1<br>Total Sales (Millions): 222.403","Store Number: 39<br>Total Sales (Millions): 207.446","Store Number: 19<br>Total Sales (Millions): 206.635","Store Number: 31<br>Total Sales (Millions): 199.614","Store Number: 23<br>Total Sales (Millions): 198.751","Store Number: 24<br>Total Sales (Millions): 194.016","Store Number: 11<br>Total Sales (Millions): 193.963","Store Number: 28<br>Total Sales (Millions): 189.264","Store Number: 41<br>Total Sales (Millions): 181.342","Store Number: 32<br>Total Sales (Millions): 166.819","Store Number: 18<br>Total Sales (Millions): 155.115","Store Number: 22<br>Total Sales (Millions): 147.076","Store Number: 12<br>Total Sales (Millions): 144.287","Store Number: 26<br>Total Sales (Millions): 143.416","Store Number: 34<br>Total Sales (Millions): 138.25","Store Number: 40<br>Total Sales (Millions): 137.87","Store Number: 35<br>Total Sales (Millions): 131.521","Store Number: 8<br>Total Sales (Millions): 129.951","Store Number: 17<br>Total Sales (Millions): 127.782","Store Number: 45<br>Total Sales (Millions): 112.395","Store Number: 21<br>Total Sales (Millions): 108.118","Store Number: 25<br>Total Sales (Millions): 101.061","Store Number: 43<br>Total Sales (Millions): 90.565","Store Number: 15<br>Total Sales (Millions): 89.134","Store Number: 7<br>Total Sales (Millions): 81.598","Store Number: 42<br>Total Sales (Millions): 79.566","Store Number: 9<br>Total Sales (Millions): 77.789","Store Number: 29<br>Total Sales (Millions): 77.142","Store Number: 16<br>Total Sales (Millions): 74.252","Store Number: 37<br>Total Sales (Millions): 74.203","Store Number: 30<br>Total Sales (Millions): 62.717","Store Number: 3<br>Total Sales (Millions): 57.587","Store Number: 38<br>Total Sales (Millions): 55.16","Store Number: 36<br>Total Sales (Millions): 53.412","Store Number: 5<br>Total Sales (Millions): 45.476","Store Number: 44<br>Total Sales (Millions): 43.293","Store Number: 33<br>Total Sales (Millions): 37.16"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,113,206,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":49.125778331257784,"r":7.3059360730593621,"b":41.82648401826485,"l":43.105022831050235},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Total Sales per Store","font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.6950000000000005,47.695],"tickmode":"array","ticktext":["0","10","20","30","40"],"tickvals":[0,10,20,30,40],"categoryorder":"array","categoryarray":["0","10","20","30","40"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716894984},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Store Number","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-15.069889623000002,316.467682083],"tickmode":"array","ticktext":["  0","100","200","300"],"tickvals":[0,100,200,300],"categoryorder":"array","categoryarray":["  0","100","200","300"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Total Sales (Millions)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716894984}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"535079ff1e61":{"x":{},"y":{},"text":{},"type":"bar"}},"cur_data":"535079ff1e61","visdat":{"535079ff1e61":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<p>It seems like store 33, 44, and 5 have the least amount of sales, while store 20, 4, and 14 have the most.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show SQL code
+</summary>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> TOP <span class="dv">3</span> <span class="kw">Store</span>, <span class="fu">sum</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales, <span class="fu">avg</span>(Temperature) <span class="kw">AS</span> Temperature, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(CPI) <span class="kw">AS</span> CPI, <span class="fu">avg</span>(Fuel_Price) <span class="kw">AS</span> Fuel_Price, <span class="fu">avg</span>(Unemployment) <span class="kw">AS</span> Unemployment</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales</span></code></pre></div>
+</details>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:mostsales">Table 1: </span>Highest Unemployment
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Store
+</th>
+<th style="text-align:right;">
+Weekly_Sales
+</th>
+<th style="text-align:right;">
+Temperature
+</th>
+<th style="text-align:right;">
+Fuel_Price
+</th>
+<th style="text-align:right;">
+CPI
+</th>
+<th style="text-align:right;">
+Unemployment
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+45475689
+</td>
+<td style="text-align:right;">
+69.41014
+</td>
+<td style="text-align:right;">
+3.219699
+</td>
+<td style="text-align:right;">
+216.5656
+</td>
+<td style="text-align:right;">
+6.295406
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+43293088
+</td>
+<td style="text-align:right;">
+53.69713
+</td>
+<td style="text-align:right;">
+3.286147
+</td>
+<td style="text-align:right;">
+128.6797
+</td>
+<td style="text-align:right;">
+6.735622
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+37160222
+</td>
+<td style="text-align:right;">
+76.72818
+</td>
+<td style="text-align:right;">
+3.575923
+</td>
+<td style="text-align:right;">
+128.6797
+</td>
+<td style="text-align:right;">
+8.533154
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show SQL code
+</summary>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> TOP <span class="dv">3</span> <span class="kw">Store</span>, <span class="fu">sum</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales, <span class="fu">avg</span>(Temperature) <span class="kw">AS</span> Temperature, </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(CPI) <span class="kw">AS</span> CPI, <span class="fu">avg</span>(Fuel_Price) <span class="kw">AS</span> Fuel_Price, <span class="fu">avg</span>(Unemployment) <span class="kw">AS</span> Unemployment</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">desc</span></span></code></pre></div>
+</details>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:leastsaletable">Table 2: </span>Lowest Unemployment
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Store
+</th>
+<th style="text-align:right;">
+Weekly_Sales
+</th>
+<th style="text-align:right;">
+Temperature
+</th>
+<th style="text-align:right;">
+Fuel_Price
+</th>
+<th style="text-align:right;">
+CPI
+</th>
+<th style="text-align:right;">
+Unemployment
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+288999911
+</td>
+<td style="text-align:right;">
+57.79098
+</td>
+<td style="text-align:right;">
+3.417608
+</td>
+<td style="text-align:right;">
+186.2857
+</td>
+<td style="text-align:right;">
+8.648748
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+299543953
+</td>
+<td style="text-align:right;">
+62.25336
+</td>
+<td style="text-align:right;">
+3.216972
+</td>
+<td style="text-align:right;">
+128.6797
+</td>
+<td style="text-align:right;">
+5.964692
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+301397792
+</td>
+<td style="text-align:right;">
+55.45140
+</td>
+<td style="text-align:right;">
+3.417608
+</td>
+<td style="text-align:right;">
+209.0381
+</td>
+<td style="text-align:right;">
+7.371413
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>However, there doesn’t seem to be an easily identifiable correlation between sales and the factors (e.g. unemployment, temperature, etc.). Further analysis must be conducted to determine the relationship between these variables.</p>
+<p>We can also see how Walmart sales varied from month to month.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-2ae5970c5da33472d243" style="width:624px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-2ae5970c5da33472d243">{"x":{"data":[{"x":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33],"y":[190.33298303999999,181.9198025,231.41236805,186.71093433999999,192.24617236,232.58012597999999,187.64011088999999,177.26789637000002,217.16182402000001,202.85337013999998,288.76053272000001,163.70396683000001,186.33132787,179.35644829,226.52651097,181.64815816000001,189.77338519,229.91139887,188.59933225,220.84773841999998,183.26128315,210.16235487,288.07810248000004,168.89447165999999,192.06357953999998,231.50965049000001,188.92090594999999,188.76647944999999,240.61032928999998,187.50945240000001,236.85076567999999,180.64554447,184.36168042],"text":"","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(255,194,32,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33],"y":[190.33298303999999,181.9198025,231.41236805,186.71093433999999,192.24617236,232.58012597999999,187.64011088999999,177.26789637000002,217.16182402000001,202.85337013999998,288.76053272000001,163.70396683000001,186.33132787,179.35644829,226.52651097,181.64815816000001,189.77338519,229.91139887,188.59933225,220.84773841999998,183.26128315,210.16235487,288.07810248000004,168.89447165999999,192.06357953999998,231.50965049000001,188.92090594999999,188.76647944999999,240.61032928999998,187.50945240000001,236.85076567999999,180.64554447,184.36168042],"text":["Date: 2010 / 02<br>Monthly Sales (Millions): 190.333","Date: 2010 / 03<br>Monthly Sales (Millions): 181.92","Date: 2010 / 04<br>Monthly Sales (Millions): 231.412","Date: 2010 / 05<br>Monthly Sales (Millions): 186.711","Date: 2010 / 06<br>Monthly Sales (Millions): 192.246","Date: 2010 / 07<br>Monthly Sales (Millions): 232.58","Date: 2010 / 08<br>Monthly Sales (Millions): 187.64","Date: 2010 / 09<br>Monthly Sales (Millions): 177.268","Date: 2010 / 10<br>Monthly Sales (Millions): 217.162","Date: 2010 / 11<br>Monthly Sales (Millions): 202.853","Date: 2010 / 12<br>Monthly Sales (Millions): 288.761","Date: 2011 / 01<br>Monthly Sales (Millions): 163.704","Date: 2011 / 02<br>Monthly Sales (Millions): 186.331","Date: 2011 / 03<br>Monthly Sales (Millions): 179.356","Date: 2011 / 04<br>Monthly Sales (Millions): 226.527","Date: 2011 / 05<br>Monthly Sales (Millions): 181.648","Date: 2011 / 06<br>Monthly Sales (Millions): 189.773","Date: 2011 / 07<br>Monthly Sales (Millions): 229.911","Date: 2011 / 08<br>Monthly Sales (Millions): 188.599","Date: 2011 / 09<br>Monthly Sales (Millions): 220.848","Date: 2011 / 10<br>Monthly Sales (Millions): 183.261","Date: 2011 / 11<br>Monthly Sales (Millions): 210.162","Date: 2011 / 12<br>Monthly Sales (Millions): 288.078","Date: 2012 / 01<br>Monthly Sales (Millions): 168.894","Date: 2012 / 02<br>Monthly Sales (Millions): 192.064","Date: 2012 / 03<br>Monthly Sales (Millions): 231.51","Date: 2012 / 04<br>Monthly Sales (Millions): 188.921","Date: 2012 / 05<br>Monthly Sales (Millions): 188.766","Date: 2012 / 06<br>Monthly Sales (Millions): 240.61","Date: 2012 / 07<br>Monthly Sales (Millions): 187.509","Date: 2012 / 08<br>Monthly Sales (Millions): 236.851","Date: 2012 / 09<br>Monthly Sales (Millions): 180.646","Date: 2012 / 10<br>Monthly Sales (Millions): 184.362"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,113,206,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,113,206,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":49.125778331257784,"r":7.3059360730593621,"b":82.739726027397296,"l":43.105022831050235},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Total Sales by Month","font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,33.600000000000001],"tickmode":"array","ticktext":["2010 / 02","2010 / 03","2010 / 04","2010 / 05","2010 / 06","2010 / 07","2010 / 08","2010 / 09","2010 / 10","2010 / 11","2010 / 12","2011 / 01","2011 / 02","2011 / 03","2011 / 04","2011 / 05","2011 / 06","2011 / 07","2011 / 08","2011 / 09","2011 / 10","2011 / 11","2011 / 12","2012 / 01","2012 / 02","2012 / 03","2012 / 04","2012 / 05","2012 / 06","2012 / 07","2012 / 08","2012 / 09","2012 / 10"],"tickvals":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33],"categoryorder":"array","categoryarray":["2010 / 02","2010 / 03","2010 / 04","2010 / 05","2010 / 06","2010 / 07","2010 / 08","2010 / 09","2010 / 10","2010 / 11","2010 / 12","2011 / 01","2011 / 02","2011 / 03","2011 / 04","2011 / 05","2011 / 06","2011 / 07","2011 / 08","2011 / 09","2011 / 10","2011 / 11","2011 / 12","2012 / 01","2012 / 02","2012 / 03","2012 / 04","2012 / 05","2012 / 06","2012 / 07","2012 / 08","2012 / 09","2012 / 10"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716894984},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Date","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[157.45113853550001,295.01336101449999],"tickmode":"array","ticktext":["200","250"],"tickvals":[200,250],"categoryorder":"array","categoryarray":["200","250"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Monthly Sales (Millions)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716894984}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"53503684009":{"x":{},"y":{},"type":"scatter"},"53501f536f5f":{"x":{},"y":{},"text":{}}},"cur_data":"53503684009","visdat":{"53503684009":["function (y) ","x"],"53501f536f5f":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<p>There always seems to be a spike in December and a low in January. The high in December is likely caused by the holiday season, as consumers commonly buy large quantities of food, drinks, and gifts. The low in January could be explained by people saving because of New Year’s resolutions or ‘No-Spend’ January – trends that emphasize saving money. Consumers may also have less money after the December spending.</p>
+<p>This graph also emphasizes the cyclic nature of consumer spending. The pattern is very consistent across the two years.</p>
+<h3 id="do-holidays-generate-more-sales-which-holidays-affect-weekly-sales-the-most">Do holidays generate more sales? Which holidays affect weekly sales the most?</h3>
 <p>Holidays are notorious for driving up sales as Walmart often runs promotional markdown events to incentivize purchases!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div data-pagedtable="false">
@@ -2198,22 +2431,22 @@ Show Python code
 </li>
 <li>Christmas and Hanukkah (Dec 31th)</li>
 </ul>
-<p>With these holidays, it is implied that the curator of data would have been American, and this data could’ve been taken from American stores. However, the geographical location of these stores are not contained within the dataset.</p>
+<p>With these holidays, it is implied that the curator of data would have been American and this data could have been taken from American stores. However, the geographical location of these stores are not contained within the data set, so we should be wary of this assumption.</p>
 <p>First, the days had the highest profit should be examined:</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
 <summary>
 Show SQL code
 </summary>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> WalmartSalesClean</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">COLUMN</span> Holiday_Flag <span class="dt">Int</span>;</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a> <span class="co">--filtering for holiday flags and sorting </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> WalmartSalesClean</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">COLUMN</span> Holiday_Flag <span class="dt">Int</span>;</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a> <span class="co">--filtering for holiday flags and sorting </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">Date</span>, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span>;</span></code></pre></div>
 </details>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -2229,21 +2462,21 @@ Show SQL code
 <summary>
 Show SQL code
 </summary>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">CASE</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">02</span> <span class="cf">THEN</span> <span class="st">&#39;Super Bowl&#39;</span> <span class="co">--changing months to holiday names</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">09</span> <span class="cf">THEN</span> <span class="st">&#39;Labor Day&#39;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">11</span> <span class="cf">THEN</span> <span class="st">&#39;Thanksgiving&#39;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">12</span> <span class="cf">THEN</span> <span class="st">&#39;Christmas&#39;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">END</span> <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> (  <span class="co">--subquery to have two GROUP BY statements </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> SUBSTRING (<span class="dt">DATE</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> WalmartSalesClean </span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">AS</span> temptable </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday <span class="co">--Summarizing and reordering data </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">CASE</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">02</span> <span class="cf">THEN</span> <span class="st">&#39;Super Bowl&#39;</span> <span class="co">--changing months to holiday names</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">09</span> <span class="cf">THEN</span> <span class="st">&#39;Labor Day&#39;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">11</span> <span class="cf">THEN</span> <span class="st">&#39;Thanksgiving&#39;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> Holiday <span class="op">=</span> <span class="dv">12</span> <span class="cf">THEN</span> <span class="st">&#39;Christmas&#39;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">END</span> <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(Weekly_Sales) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> (  <span class="co">--subquery to have two GROUP BY statements </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> SUBSTRING (<span class="dt">DATE</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="kw">AS</span> Holiday, <span class="fu">SUM</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="kw">AS</span> Weekly_Sales </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> WalmartSalesClean </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> Holiday_Flag<span class="op">=</span><span class="st">&#39;1&#39;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">Date</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">AS</span> temptable </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday <span class="co">--Summarizing and reordering data </span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Weekly_Sales <span class="kw">DESC</span></span></code></pre></div>
 </details>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -2254,7 +2487,8 @@ Show SQL code
 </div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="index_files/figure-html5/holidaypiesales-1.png" width="624" /></p>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-a188e3616ed2d3335903" style="width:624px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-a188e3616ed2d3335903">{"x":{"visdat":{"535049831209":["function () ","plotlyVisDat"]},"cur_data":"535049831209","attrs":{"535049831209":{"labels":{},"values":{},"textposition":"inside","textinfo":"label+percent","insidetextfont":{"color":"#FFFFFF"},"hoverinfo":"text","text":{},"marker":{"colors":["#0071CE","#ffc220","#041f41","#6cace4"]},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":20,"t":50,"r":20},"title":{"text":"Total Sales by Holiday","xanchor":"center","font":{"size":26}},"xaxis":{"showgrid":false,"zeroline":false,"showticklabels":false},"yaxis":{"showgrid":false,"zeroline":false,"showticklabels":false},"showlegend":false,"hovermode":"closest"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["Super Bowl","Labor Day","Thanksgiving","Christmas"],"values":[145682278.34,140727684.68000001,132414608.5,86474980.040000007],"textposition":["inside","inside","inside","inside"],"textinfo":"label+percent","insidetextfont":{"color":"#FFFFFF"},"hoverinfo":["text","text","text","text"],"text":["Super Bowl <br /> 145.682  million sales","Labor Day <br /> 140.728  million sales","Thanksgiving <br /> 132.415  million sales","Christmas <br /> 86.475  million sales"],"marker":{"color":"rgba(31,119,180,1)","colors":["#0071CE","#ffc220","#041f41","#6cace4"],"line":{"color":"rgba(255,255,255,1)"}},"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 <p>Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! This could be caused by the cultural significance of Thanksgiving, where it “symbolizes intercultural peace, America’s opportunity for newcomers, and the sanctity of home and family”.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> However, I am more inclined to believe that Thanksgiving is typically used as an opportunity to invite all your friends and family and spend the entire day cooking – that means food costs can balloon quickly!</p>
 <h3 id="which-stores-have-the-lowest-and-highest-unemployment-rate">Which stores have the lowest and highest unemployment rate?</h3>
@@ -2263,17 +2497,17 @@ Show SQL code
 <summary>
 Show SQL code
 </summary>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- highest unemployment rate </span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> TOP <span class="dv">6</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Unemployment <span class="kw">desc</span>, Weekly_Sales <span class="kw">desc</span> <span class="co">-- need to use weekly sales as a parameter as stores may have the same unemployment rate</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- highest unemployment rate </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> TOP <span class="dv">6</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Unemployment <span class="kw">desc</span>, Weekly_Sales <span class="kw">desc</span> <span class="co">-- need to use weekly sales as a parameter as stores may have the same unemployment rate</span></span></code></pre></div>
 </details>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:employmenttable">Table 1: </span>Highest Unemployment
+<span id="tab:employmenttable">Table 3: </span>Highest Unemployment
 </caption>
 <thead>
 <tr>
@@ -2363,17 +2597,17 @@ Weekly_Sales
 <summary>
 Show SQL code
 </summary>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- lowest unemployment rate</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> TOP <span class="dv">6</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Unemployment, Weekly_Sales <span class="kw">desc</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- lowest unemployment rate</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> TOP <span class="dv">6</span> <span class="kw">Store</span>, <span class="fu">avg</span>(<span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Unemployment, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">Store</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> Unemployment, Weekly_Sales <span class="kw">desc</span></span></code></pre></div>
 </details>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:lowemptable">Table 2: </span>Lowest Unemployment
+<span id="tab:lowemptable">Table 4: </span>Lowest Unemployment
 </caption>
 <thead>
 <tr>
@@ -2461,7 +2695,7 @@ Weekly_Sales
 <p>Interestingly, there’s not a strong correlation between high unemployment and low weekly sales. I’d expect that places with higher unemployment meant that consumers had less disposable income to spend at Walmart. But, Walmart is known for having super cheap products and consumers could’ve primarily bought inelastic goods and other necessities.</p>
 <p>It could also be that Walmart’s penetration pricing worked <em>too</em> well. Walmart is notorious for significantly impacting the local economy of the neighborhood, positively and negatively. On one hand, low prices means that consumers can afford more things in a one-stop location and stores near the Walmart get more business due to the influx of foot traffic. On the other, Walmart is known for hiring many workers and paying minimum wage, as well as displacing small businesses due to their low prices (and subsequently, small profit margins) with their pricing. These margins are things that only large corporations can withstand, while small businesses simply can’t afford to compete.</p>
 <p>The positive and negative effects differ depending on the neighborhood that Walmart enters, with this data being a good example of the impacts that Walmart can have.</p>
-<p>It should also be noted that this data comes from 2010 - 2012 – aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployement was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>It should also be noted that this data comes from 2010 - 2012 – aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployment was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <h3 id="sample-pearson-correlation">Sample Pearson Correlation</h3>
 <p>We can also use statistics to back up these claims by checking the correlation between weekly sales and other factors. This gives us insight into the relationship between each of the variables.</p>
 <p>The sample Pearson correlation coefficient was used to determine whether there was a linear correlation between the two sets of data. The coefficient ranges from <span class="math inline">\(-1\)</span> <span class="math inline">\(\le\)</span> <span class="math inline">\(r_{X,Y}\)</span> <span class="math inline">\(\le\)</span> <span class="math inline">\(1\)</span>, where <span class="math inline">\(-1\)</span> means a perfect negative linear relationship (as weekly sales go up, the other variable goes down) and <span class="math inline">\(1\)</span> means a perfect positive linear relationship (as weekly sales go up, the other variable goes up.)</p>
@@ -2488,26 +2722,29 @@ Weekly_Sales
 <summary>
 Show SQL code
 </summary>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- calculating the Pearson coefficient for weekly sales and unemployment. Replacing the y value (in this case, unemployment) with the other factors would yield the coefficient for that specific factor </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> rdata <span class="kw">AS</span> (</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Unemployment, <span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Weekly_Sales</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> ( <span class="co">-- calculating expectation </span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared  </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rdata</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> ( <span class="co">-- reorganizing data </span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">--- covariance(xy) / (std. dev. x) * (std. dev. y)</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- calculating the Pearson coefficient for weekly sales and unemployment. </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- Replacing the y value (in this case, unemployment) with the other factors </span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- would yield the coefficient for that specific factor </span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> rdata <span class="kw">AS</span> (</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span>(Unemployment <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Unemployment, <span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>) <span class="kw">AS</span> Weekly_Sales</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>rawdata <span class="kw">AS</span> ( <span class="co">-- calculating expectation </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Unemployment <span class="kw">AS</span> x, Weekly_Sales <span class="kw">AS</span> y, Unemployment<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> xy, Unemployment<span class="op">*</span>Unemployment <span class="kw">AS</span> xsquared, </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>Weekly_Sales<span class="op">*</span>Weekly_Sales <span class="kw">AS</span> ysquared   </span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rdata</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>pdata <span class="kw">AS</span> ( <span class="co">-- reorganizing data </span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUM</span>(x) <span class="kw">AS</span> sumx, <span class="fu">SUM</span>(y) <span class="kw">AS</span> sumy, <span class="fu">SUM</span>(xy) <span class="kw">as</span> sumxy, <span class="fu">SUM</span>(xsquared) <span class="kw">as</span> sumx2, <span class="fu">SUM</span>(ysquared) <span class="kw">as</span> sumy2, <span class="fu">COUNT</span>(x) <span class="kw">as</span> n</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rawdata</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">--- covariance(xy) / (std. dev. x) * (std. dev. y)</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (n<span class="op">*</span>sumxy <span class="op">-</span> sumx <span class="op">*</span> sumy) <span class="op">/</span> (<span class="fu">sqrt</span>((n<span class="op">*</span>sumx2 <span class="op">-</span> sumx<span class="op">*</span>sumx)<span class="op">*</span>(n<span class="op">*</span>sumy2 <span class="op">-</span> sumy<span class="op">*</span>sumy))) <span class="kw">AS</span> <span class="ot">&quot;Pearson&#39;s Correlation&quot;</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pdata</span></code></pre></div>
 </details>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -2517,13 +2754,13 @@ Show SQL code
   </script>
 </div>
 </div>
-<h3 id="point-biserial-correlation-coefficient">Point-biserial Correlation Coefficient</h3>
+<h3 id="point-biserial-correlation-coefficient">Point-Biserial Correlation Coefficient</h3>
 <p>For Holiday_Flag, we need to use a point-biserial correlation coefficient instead of the Pearson correlation coefficent. This is because Holiday_Flag is a dichotomous variable (values can only be 1 or 0 to symbolize yes/no) compared <code>Weekly Sales</code>, which is not a dichotomous variable (values can be any number).</p>
 <p>Although you can use Pearson’s with dichotomous variables, the usefulness of the correlation would be debatable since it’s not meant to be utilized with dichotomous variables. Hence, it’s best to use a point-biserial, as it is equivalent to the Pearson correlation coefficient.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <p>We will be using the following formula:</p>
 <p><span class="math inline">\({r_{pb}={\frac {M_{1}-M_{0}}{s_{n}}}{\sqrt {\frac {n_{1}n_{0}}{n^{2}}}}}\)</span></p>
-<p>where:
-<span class="math inline">\(M_1\)</span> = Mean weekly sales when the Holiday_Flag = 1<br />
+<p>where:</p>
+<p><span class="math inline">\(M_1\)</span> = Mean weekly sales when the Holiday_Flag = 1<br />
 <span class="math inline">\(M_0\)</span> = Mean weekly sales when the Holiday_Flag = 0<br />
 <span class="math inline">\(s_n\)</span> = Standard deviation of weekly sales<br />
 <span class="math inline">\(n_1\)</span> = Number of data points where Holiday_Flag = 1<br />
@@ -2534,45 +2771,45 @@ Show SQL code
 <summary>
 Show SQL code
 </summary>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">--grabbing avg weekly sales for holiday / no holiday</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> meanflag <span class="kw">AS</span> ( </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Avg_Weekly_Sales</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>), </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- grabbing number of holiday / no holiday days</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>countflag <span class="kw">AS</span> ( </span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">count</span>(Holiday_Flag) <span class="kw">AS</span> n_Holiday_Flag</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">-- combining it into one table</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>joinmeancount <span class="kw">AS</span> ( </span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> meanflag.Holiday_Flag, meanflag.Avg_Weekly_Sales, countflag.n_Holiday_Flag</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> meanflag</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> countflag</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> countflag.Holiday_Flag <span class="op">=</span> meanflag.Holiday_Flag</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">-- adding standard deviation and total count of weekly sales</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>joinstdn <span class="kw">AS</span> ( </span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> STDEV(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> sn, <span class="fu">count</span>(Weekly_Sales) <span class="kw">as</span> n, </span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> n_Holiday_Flag <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">1</span>) <span class="kw">AS</span> n1, </span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> n_Holiday_Flag <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span>) <span class="kw">AS</span> n0, </span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> Avg_Weekly_Sales <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">1</span>) <span class="kw">AS</span> m1,</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> Avg_Weekly_Sales <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span>) <span class="kw">AS</span> m0</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="co">-- calculating correlation, need to convert into floats for division</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> ((m1<span class="op">-</span>m0)<span class="op">/</span>sn) <span class="op">*</span> <span class="fu">SQRT</span>((<span class="fu">CAST</span>(n1 <span class="op">*</span> n0 <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="op">/</span> (<span class="fu">CAST</span>(n <span class="op">*</span> n <span class="kw">AS</span> <span class="dt">FLOAT</span>))) <span class="kw">AS</span> r_pb </span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> joinstdn</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">--grabbing avg weekly sales for holiday / no holiday</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> meanflag <span class="kw">AS</span> ( </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">avg</span>(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> Avg_Weekly_Sales</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>), </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- grabbing number of holiday / no holiday days</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>countflag <span class="kw">AS</span> ( </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Holiday_Flag, <span class="fu">count</span>(Holiday_Flag) <span class="kw">AS</span> n_Holiday_Flag</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> Holiday_Flag</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">-- combining it into one table</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>joinmeancount <span class="kw">AS</span> ( </span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> meanflag.Holiday_Flag, meanflag.Avg_Weekly_Sales, countflag.n_Holiday_Flag</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> meanflag</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> countflag</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> countflag.Holiday_Flag <span class="op">=</span> meanflag.Holiday_Flag</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">-- adding standard deviation and total count of weekly sales</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>joinstdn <span class="kw">AS</span> ( </span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> STDEV(<span class="fu">CAST</span>(Weekly_Sales <span class="kw">AS</span> <span class="dt">decimal</span>)) <span class="kw">AS</span> sn, <span class="fu">count</span>(Weekly_Sales) <span class="kw">as</span> n, </span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> n_Holiday_Flag <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">1</span>) <span class="kw">AS</span> n1, </span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> n_Holiday_Flag <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span>) <span class="kw">AS</span> n0, </span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> Avg_Weekly_Sales <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">1</span>) <span class="kw">AS</span> m1,</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> Avg_Weekly_Sales <span class="kw">FROM</span> joinmeancount <span class="kw">WHERE</span> Holiday_Flag <span class="op">=</span> <span class="dv">0</span>) <span class="kw">AS</span> m0</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> WalmartSalesClean</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="co">-- calculating correlation, need to convert into floats for division</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> ((m1<span class="op">-</span>m0)<span class="op">/</span>sn) <span class="op">*</span> <span class="fu">SQRT</span>((<span class="fu">CAST</span>(n1 <span class="op">*</span> n0 <span class="kw">AS</span> <span class="dt">FLOAT</span>)) <span class="op">/</span> (<span class="fu">CAST</span>(n <span class="op">*</span> n <span class="kw">AS</span> <span class="dt">FLOAT</span>))) <span class="kw">AS</span> r_pb </span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> joinstdn</span></code></pre></div>
 </details>
 </div>
-<p>which results in an <span class="math inline">\(r_pb\)</span> value of ~ 0.037 – a slight positive correlation.</p>
+<p>which results in an <span class="math inline">\(r_{pb}\)</span> value of ~ 0.037 – a slight positive correlation.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -2581,34 +2818,6 @@ Show SQL code
 </div>
 </div>
 <p>When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction.</p>
-<h3 id="how-do-weekly-sales-vary-by-store-and-by-year">How do Weekly Sales Vary by Store and by Year?</h3>
-<p>Let’s start by separately analyzing weekly sales.</p>
-<p>First, we can look at which stores are the most profitable.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-643080dc2af739e64439" style="width:624px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-643080dc2af739e64439">{"x":{"data":[{"orientation":"v","width":[0.89999999999999858,0.90000000000000036,0.89999999999999858,0.89999999999999858,0.90000000000000013,0.89999999999999858,0.89999999999999858,0.90000000000000036,0.89999999999999991,0.90000000000000568,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.90000000000000568,0.90000000000000213,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.90000000000000568,0.90000000000000568,0.90000000000000568,0.89999999999999947,0.89999999999999858,0.90000000000000568,0.89999999999999858,0.89999999999999858,0.90000000000000568,0.89999999999999858,0.90000000000000036,0.90000000000000568,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.90000000000000568,0.89999999999999858,0.90000000000000036,0.90000000000000568,0.90000000000000568,0.90000000000000036,0.90000000000000568,0.90000000000000568],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[20,4,14,13,2,10,27,6,1,39,19,31,23,24,11,28,41,32,18,22,12,26,34,40,35,8,17,45,21,25,43,15,7,42,9,29,16,37,30,3,38,36,5,44,33],"y":[301.39779246000001,299.54395338,288.99991133999998,286.51770379999999,275.38244098000001,271.61771389,253.85591688,223.75613063999998,222.40280884999999,207.44554246999999,206.63486209999999,199.61390549999999,198.75061785,194.01602127999999,193.9627868,189.26368058,181.34193489,166.81924616000001,155.11473420999999,147.07564857,144.28723015,143.41639379,138.249763,137.87030978999999,131.52067208,129.95118113000001,127.78213882999999,112.39534142000001,108.11787892,101.06117917,90.565435409999992,89.133683919999996,81.598275139999998,79.565752429999989,77.789218989999995,77.141554310000004,74.252425400000007,74.20274031999999,62.716885120000001,57.586735070000003,55.159626420000002,53.412214970000001,45.475688900000002,43.293087840000005,37.160221960000001],"text":["Store Number: 20<br>Total Sales (Millions): 301.398","Store Number: 4<br>Total Sales (Millions): 299.544","Store Number: 14<br>Total Sales (Millions): 289","Store Number: 13<br>Total Sales (Millions): 286.518","Store Number: 2<br>Total Sales (Millions): 275.382","Store Number: 10<br>Total Sales (Millions): 271.618","Store Number: 27<br>Total Sales (Millions): 253.856","Store Number: 6<br>Total Sales (Millions): 223.756","Store Number: 1<br>Total Sales (Millions): 222.403","Store Number: 39<br>Total Sales (Millions): 207.446","Store Number: 19<br>Total Sales (Millions): 206.635","Store Number: 31<br>Total Sales (Millions): 199.614","Store Number: 23<br>Total Sales (Millions): 198.751","Store Number: 24<br>Total Sales (Millions): 194.016","Store Number: 11<br>Total Sales (Millions): 193.963","Store Number: 28<br>Total Sales (Millions): 189.264","Store Number: 41<br>Total Sales (Millions): 181.342","Store Number: 32<br>Total Sales (Millions): 166.819","Store Number: 18<br>Total Sales (Millions): 155.115","Store Number: 22<br>Total Sales (Millions): 147.076","Store Number: 12<br>Total Sales (Millions): 144.287","Store Number: 26<br>Total Sales (Millions): 143.416","Store Number: 34<br>Total Sales (Millions): 138.25","Store Number: 40<br>Total Sales (Millions): 137.87","Store Number: 35<br>Total Sales (Millions): 131.521","Store Number: 8<br>Total Sales (Millions): 129.951","Store Number: 17<br>Total Sales (Millions): 127.782","Store Number: 45<br>Total Sales (Millions): 112.395","Store Number: 21<br>Total Sales (Millions): 108.118","Store Number: 25<br>Total Sales (Millions): 101.061","Store Number: 43<br>Total Sales (Millions): 90.565","Store Number: 15<br>Total Sales (Millions): 89.134","Store Number: 7<br>Total Sales (Millions): 81.598","Store Number: 42<br>Total Sales (Millions): 79.566","Store Number: 9<br>Total Sales (Millions): 77.789","Store Number: 29<br>Total Sales (Millions): 77.142","Store Number: 16<br>Total Sales (Millions): 74.252","Store Number: 37<br>Total Sales (Millions): 74.203","Store Number: 30<br>Total Sales (Millions): 62.717","Store Number: 3<br>Total Sales (Millions): 57.587","Store Number: 38<br>Total Sales (Millions): 55.16","Store Number: 36<br>Total Sales (Millions): 53.412","Store Number: 5<br>Total Sales (Millions): 45.476","Store Number: 44<br>Total Sales (Millions): 43.293","Store Number: 33<br>Total Sales (Millions): 37.16"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(65,66,136,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":49.125778331257784,"r":7.3059360730593621,"b":41.82648401826485,"l":43.105022831050235},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Total Sales per Store","font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.6950000000000005,47.695],"tickmode":"array","ticktext":["0","10","20","30","40"],"tickvals":[0,10,20,30,40],"categoryorder":"array","categoryarray":["0","10","20","30","40"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716894984},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Store Number","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-15.069889623000002,316.467682083],"tickmode":"array","ticktext":["  0","100","200","300"],"tickvals":[0,100,200,300],"categoryorder":"array","categoryarray":["  0","100","200","300"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Sales (Millions)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716894984}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"59583087613d":{"x":{},"y":{},"text":{},"type":"bar"}},"cur_data":"59583087613d","visdat":{"59583087613d":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-</div>
-<p>It seems like store 33, 44, and 5 have the least amount of sales, while store 20, 4, and 14 have the most.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Store"],"name":[1],"type":["int"],"align":["right"]},{"label":["Weekly_Sales"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Temperature"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Fuel_Price"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["CPI"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Unemployment"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"5","2":"45475689","3":"69.41014","4":"3.219699","5":"216.5656","6":"6.295406"},{"1":"44","2":"43293088","3":"53.69713","4":"3.286147","5":"128.6797","6":"6.735622"},{"1":"33","2":"37160222","3":"76.72818","4":"3.575923","5":"128.6797","6":"8.533154"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Store"],"name":[1],"type":["int"],"align":["right"]},{"label":["Weekly_Sales"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Temperature"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Fuel_Price"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["CPI"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Unemployment"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"14","2":"288999911","3":"57.79098","4":"3.417608","5":"186.2857","6":"8.648748"},{"1":"4","2":"299543953","3":"62.25336","4":"3.216972","5":"128.6797","6":"5.964692"},{"1":"20","2":"301397792","3":"55.45140","4":"3.417608","5":"209.0381","6":"7.371413"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-<p>We can also see how sales varied from month to month.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-3528a5146d3ed2897488" style="width:624px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-3528a5146d3ed2897488">{"x":{"data":[{"x":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33],"y":[190.33298303999999,181.9198025,231.41236805,186.71093433999999,192.24617236,232.58012597999999,187.64011088999999,177.26789637000002,217.16182402000001,202.85337013999998,288.76053272000001,163.70396683000001,186.33132787,179.35644829,226.52651097,181.64815816000001,189.77338519,229.91139887,188.59933225,220.84773841999998,183.26128315,210.16235487,288.07810248000004,168.89447165999999,192.06357953999998,231.50965049000001,188.92090594999999,188.76647944999999,240.61032928999998,187.50945240000001,236.85076567999999,180.64554447,184.36168042],"text":"","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(65,66,136,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33],"y":[190.33298303999999,181.9198025,231.41236805,186.71093433999999,192.24617236,232.58012597999999,187.64011088999999,177.26789637000002,217.16182402000001,202.85337013999998,288.76053272000001,163.70396683000001,186.33132787,179.35644829,226.52651097,181.64815816000001,189.77338519,229.91139887,188.59933225,220.84773841999998,183.26128315,210.16235487,288.07810248000004,168.89447165999999,192.06357953999998,231.50965049000001,188.92090594999999,188.76647944999999,240.61032928999998,187.50945240000001,236.85076567999999,180.64554447,184.36168042],"text":["Date: 2010 / 02<br>Monthly Sales (Millions): 190.333","Date: 2010 / 03<br>Monthly Sales (Millions): 181.92","Date: 2010 / 04<br>Monthly Sales (Millions): 231.412","Date: 2010 / 05<br>Monthly Sales (Millions): 186.711","Date: 2010 / 06<br>Monthly Sales (Millions): 192.246","Date: 2010 / 07<br>Monthly Sales (Millions): 232.58","Date: 2010 / 08<br>Monthly Sales (Millions): 187.64","Date: 2010 / 09<br>Monthly Sales (Millions): 177.268","Date: 2010 / 10<br>Monthly Sales (Millions): 217.162","Date: 2010 / 11<br>Monthly Sales (Millions): 202.853","Date: 2010 / 12<br>Monthly Sales (Millions): 288.761","Date: 2011 / 01<br>Monthly Sales (Millions): 163.704","Date: 2011 / 02<br>Monthly Sales (Millions): 186.331","Date: 2011 / 03<br>Monthly Sales (Millions): 179.356","Date: 2011 / 04<br>Monthly Sales (Millions): 226.527","Date: 2011 / 05<br>Monthly Sales (Millions): 181.648","Date: 2011 / 06<br>Monthly Sales (Millions): 189.773","Date: 2011 / 07<br>Monthly Sales (Millions): 229.911","Date: 2011 / 08<br>Monthly Sales (Millions): 188.599","Date: 2011 / 09<br>Monthly Sales (Millions): 220.848","Date: 2011 / 10<br>Monthly Sales (Millions): 183.261","Date: 2011 / 11<br>Monthly Sales (Millions): 210.162","Date: 2011 / 12<br>Monthly Sales (Millions): 288.078","Date: 2012 / 01<br>Monthly Sales (Millions): 168.894","Date: 2012 / 02<br>Monthly Sales (Millions): 192.064","Date: 2012 / 03<br>Monthly Sales (Millions): 231.51","Date: 2012 / 04<br>Monthly Sales (Millions): 188.921","Date: 2012 / 05<br>Monthly Sales (Millions): 188.766","Date: 2012 / 06<br>Monthly Sales (Millions): 240.61","Date: 2012 / 07<br>Monthly Sales (Millions): 187.509","Date: 2012 / 08<br>Monthly Sales (Millions): 236.851","Date: 2012 / 09<br>Monthly Sales (Millions): 180.646","Date: 2012 / 10<br>Monthly Sales (Millions): 184.362"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":49.125778331257784,"r":7.3059360730593621,"b":82.739726027397296,"l":43.105022831050235},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Total Sales by Month","font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,33.600000000000001],"tickmode":"array","ticktext":["2010 / 02","2010 / 03","2010 / 04","2010 / 05","2010 / 06","2010 / 07","2010 / 08","2010 / 09","2010 / 10","2010 / 11","2010 / 12","2011 / 01","2011 / 02","2011 / 03","2011 / 04","2011 / 05","2011 / 06","2011 / 07","2011 / 08","2011 / 09","2011 / 10","2011 / 11","2011 / 12","2012 / 01","2012 / 02","2012 / 03","2012 / 04","2012 / 05","2012 / 06","2012 / 07","2012 / 08","2012 / 09","2012 / 10"],"tickvals":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33],"categoryorder":"array","categoryarray":["2010 / 02","2010 / 03","2010 / 04","2010 / 05","2010 / 06","2010 / 07","2010 / 08","2010 / 09","2010 / 10","2010 / 11","2010 / 12","2011 / 01","2011 / 02","2011 / 03","2011 / 04","2011 / 05","2011 / 06","2011 / 07","2011 / 08","2011 / 09","2011 / 10","2011 / 11","2011 / 12","2012 / 01","2012 / 02","2012 / 03","2012 / 04","2012 / 05","2012 / 06","2012 / 07","2012 / 08","2012 / 09","2012 / 10"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716894984},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Date","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[157.45113853550001,295.01336101449999],"tickmode":"array","ticktext":["200","250"],"tickvals":[200,250],"categoryorder":"array","categoryarray":["200","250"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Monthly Sales (Millions)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716894984}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"5958220d6fb2":{"x":{},"y":{},"type":"scatter"},"59583b193350":{"x":{},"y":{},"text":{}}},"cur_data":"5958220d6fb2","visdat":{"5958220d6fb2":["function (y) ","x"],"59583b193350":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-</div>
-<p>There always seems to be a spike in December and a low in January.</p>
 <!--
 
 However, 
@@ -2632,7 +2841,7 @@ However,
 # ℹ 23 more rows
 ```
 
-<img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" />
+<img src="index_files/figure-html5/unnamed-chunk-4-1.png" width="624" />
 
 </div>
 
@@ -2658,7 +2867,7 @@ Where are these stores located?
 
 Psychology of Temperature and Buying 
 <div class="layout-chunk" data-layout="l-body">
-<img src="index_files/figure-html5/unnamed-chunk-3-1.png" width="624" />
+<img src="index_files/figure-html5/unnamed-chunk-5-1.png" width="624" />
 
 </div>
 
@@ -2740,10 +2949,7 @@ FROM pdata
 fuel prices affect on economy: https://investopedia.com/financial-edge/0511/how-gas-prices-affect-the-economy.aspx
 
 
-- Which week and which store had the highest/lowest weekly sales? What's the average?  
-- sales by year, sales by store 
   - average weekly sales -> density graph? 
-  - take a look at the most and least successful store 
   - what traits could impact that? take the average of cpi and stuff and see if there's a massive difference? 
   - summary of everything you learned would be very useful! 
 
@@ -2754,7 +2960,7 @@ https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sF
 https://coolors.co/d8dbe2-a9bcd0-58a4b0-373f51-1b1b1e
 
 -->
-<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>

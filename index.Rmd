@@ -20,6 +20,7 @@ library(plotly)
 library(ggplot2)
 library(distill)
 library(kableExtra)
+library(RColorBrewer)
 
 ```
 
@@ -73,7 +74,120 @@ paged_table(head(data))
 ## Analysis
 Now that the data has been cleaned, we can use SQL and R to explore this data.
 
-### Which holidays affect weekly sales the most?
+### How do weekly sales vary by store and by year? 
+
+First, weekly sales data is analyzed without taking the other factors into consideration.
+
+We can identify the stores with the highest sales: 
+
+
+```{sql, storessalessql, eval=F, code_folding="Show SQL code"}
+SELECT Store, sum(CAST(Weekly_Sales AS FLOAT)) AS Weekly_Sales
+FROM WalmartSalesClean
+GROUP BY Store
+ORDER BY Weekly_Sales
+```
+
+```{r, salesstorechart}
+
+salesstore <- data %>%
+  select(Store, Weekly_Sales) %>%
+  group_by(Store) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales)/1000000) %>%
+  arrange(desc(Weekly_Sales))
+
+salesstorep <- ggplot(data=salesstore, aes(x=Store, y=Weekly_Sales), fill=Store) +
+  geom_bar(stat="identity", fill="#0071CE", aes(text = paste0(
+    "Store Number: ", Store,
+    "<br>",
+    "Total Sales (Millions): ", round(Weekly_Sales, digits=3)))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Total Sales per Store") +
+  xlab("Store Number") +
+  ylab("Total Sales (Millions)") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.x = element_text(vjust =-3), 
+    axis.title.y = element_text(vjust =5)
+  )  
+ggplotly(salesstorep, tooltip = "text")
+
+```
+
+It seems like store 33, 44, and 5 have the least amount of sales, while store 20, 4, and 14 have the most. 
+
+```{sql, eval=FALSE, code_folding="Show SQL code"}
+SELECT TOP 3 Store, sum(Weekly_Sales) AS Weekly_Sales, avg(Temperature) AS Temperature, 
+avg(CPI) AS CPI, avg(Fuel_Price) AS Fuel_Price, avg(Unemployment) AS Unemployment
+FROM WalmartSalesClean
+GROUP BY Store
+ORDER BY Weekly_Sales
+```
+
+```{r, mostsales}
+msales <- data %>%
+  group_by(Store) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales), Temperature = mean(Temperature), Fuel_Price = mean(Fuel_Price), CPI = mean(CPI), Unemployment =  mean(Unemployment)) %>%
+  filter(Store == 5 | Store == 44 | Store == 33) %>% 
+  arrange(desc(Weekly_Sales))
+
+lsales <- data %>%
+  group_by(Store) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales), Temperature = mean(Temperature), Fuel_Price = mean(Fuel_Price), CPI = mean(CPI), Unemployment =  mean(Unemployment)) %>%
+  filter(Store == 20 | Store == 4 | Store == 14) %>% 
+  arrange(Weekly_Sales)
+
+  kable(caption = "Highest Unemployment", msales) %>% kable_styling()
+```
+
+```{sql, eval=FALSE, code_folding="Show SQL code"}
+SELECT TOP 3 Store, sum(Weekly_Sales) AS Weekly_Sales, avg(Temperature) AS Temperature, 
+avg(CPI) AS CPI, avg(Fuel_Price) AS Fuel_Price, avg(Unemployment) AS Unemployment
+FROM WalmartSalesClean
+GROUP BY Store
+ORDER BY Weekly_Sales desc
+```
+
+```{r, leastsaletable}
+  kable(caption = "Lowest Unemployment", lsales) %>% kable_styling()
+```
+
+However, there doesn't seem to be an easily identifiable correlation between sales and the factors (e.g. unemployment, temperature, etc.). Further analysis must be conducted to determine the relationship between these variables.  
+
+We can also see how Walmart sales varied from month to month. 
+
+```{r, salesyeartable}
+salesyear <- data %>%
+  mutate(Month = substr(Date, 1, 2), Year = substr(Date, 7, 10), Date = paste(Year,"/" ,Month)) %>%
+  select(Date, Weekly_Sales) %>%
+  group_by(Date) %>%
+  summarize(Weekly_Sales = sum(Weekly_Sales))
+
+salesyearp <-ggplot(data=salesyear, aes(x=Date, y=Weekly_Sales/1000000, group=1)) +
+  geom_line(colour = "#ffc220")+
+  geom_point(aes(text = paste0(
+    "Date: ", Date,
+    "<br>",
+    "Monthly Sales (Millions): ", round(Weekly_Sales/1000000, digits=3))), color = "#0071CE") + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  ggtitle("Total Sales by Month") +
+  xlab("Date") +
+  ylab("Monthly Sales (Millions)") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.x = element_text(vjust =-2), 
+    axis.title.y = element_text(vjust =4)
+  ) 
+
+ggplotly(salesyearp, tooltip = "text")
+
+```
+There always seems to be a spike in December and a low in January. The high in December is likely caused by the holiday season, as consumers commonly buy large quantities of food, drinks, and gifts. The low in January could be explained by people saving because of New Year's resolutions or 'No-Spend' January -- trends that emphasize saving money. Consumers may also have less money after the December spending. 
+
+This graph also emphasizes the cyclic nature of consumer spending. The pattern is very consistent across the two years. 
+
+### Do holidays generate more sales? Which holidays affect weekly sales the most?
 
 Holidays are notorious for driving up sales as Walmart often runs promotional markdown events to incentivize purchases! 
 
@@ -93,7 +207,7 @@ The (repeating) holidays that appear in this data are:
 - Thanksgiving (Nov 26th)  
 - Christmas and Hanukkah (Dec 31th)  
 
-With these holidays, it is implied that the curator of data would have been American, and this data could've been taken from American stores. However, the geographical location of these stores are not contained within the dataset.  
+With these holidays, it is implied that the curator of data would have been American and this data could have been taken from American stores. However, the geographical location of these stores are not contained within the data set, so we should be wary of this assumption.    
   
 First, the days had the highest profit should be examined:
 
@@ -154,19 +268,28 @@ holidaydisplay$Holiday <- c("Super Bowl", "Labor Day", "Thanksgiving", "Christma
 paged_table(holidaydisplay)
 
 ```
+\n
 
 ```{r, holidaypiesales}
 
-ggplot(holidaydisplay, aes(x="", y=Weekly_Sales, fill=Holiday)) +
-  geom_bar(stat="identity", width=1, color="white") +
-  ggtitle("Total Walmart Sales per Holiday")+
-  coord_polar("y", start=0) +
-  theme_void() 
+holidaypie <- plot_ly(holidaydisplay, labels = ~Holiday, values = ~Weekly_Sales, type = 'pie', 
+               textposition = 'inside',
+              textinfo = 'label+percent',
+                insidetextfont = list(color = '#FFFFFF'),
+               hoverinfo = 'text',
+        text = ~paste(Holiday, "\n", round(Weekly_Sales/1000000, digits = 3), ' million sales'), 
+        marker = list(colors = c('#0071CE', '#ffc220', '#041f41', '#6cace4'))) %>% 
+  layout(title = list(text='Total Sales by Holiday', xanchor = "center", font = list(size=26)),
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
+        showlegend = F, 
+        margin = list(l = 20, r = 20, t = 50))
+
+holidaypie
 
 ```
 
 Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! This could be caused by the cultural significance of Thanksgiving, where it "symbolizes intercultural peace, America's opportunity for newcomers, and the sanctity of home and family".^[https://www.britannica.com/topic/Thanksgiving-Day] However, I am more inclined to believe that Thanksgiving is typically used as an opportunity to invite all your friends and family and spend the entire day cooking -- that means food costs can balloon quickly! 
-
 
 ### Which stores have the lowest and highest unemployment rate?
 
@@ -221,7 +344,7 @@ It could also be that Walmart's penetration pricing worked *too* well. Walmart i
 
 The positive and negative effects differ depending on the neighborhood that Walmart enters, with this data being a good example of the impacts that Walmart can have. 
 
-It should also be noted that this data comes from 2010 - 2012 -- aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployement was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.^[https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm] 
+It should also be noted that this data comes from 2010 - 2012 -- aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployment was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.^[https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm] 
 
 ### Sample Pearson Correlation 
 
@@ -251,7 +374,9 @@ where $x$ is Weekly_Sales, and $y$ the variable we want to test the correlation 
 The sample Pearson correlation coefficient calculated is:
 
 ```{sql samplepc, eval=FALSE, echo=T, code_folding="Show SQL code"}
--- calculating the Pearson coefficient for weekly sales and unemployment. Replacing the y value (in this case, unemployment) with the other factors would yield the coefficient for that specific factor 
+-- calculating the Pearson coefficient for weekly sales and unemployment. 
+-- Replacing the y value (in this case, unemployment) with the other factors 
+-- would yield the coefficient for that specific factor 
 
 WITH rdata AS (
 SELECT CAST(Unemployment AS decimal) AS Unemployment, CAST(Weekly_Sales AS decimal) AS Weekly_Sales
@@ -259,7 +384,8 @@ FROM WalmartSalesClean
 ),
 
 rawdata AS ( -- calculating expectation 
-SELECT Unemployment AS x, Weekly_Sales AS y, Unemployment*Weekly_Sales AS xy, Unemployment*Unemployment AS xsquared, Weekly_Sales*Weekly_Sales AS ysquared	
+SELECT Unemployment AS x, Weekly_Sales AS y, Unemployment*Weekly_Sales AS xy, Unemployment*Unemployment AS xsquared, 
+Weekly_Sales*Weekly_Sales AS ysquared	
 FROM rdata
 ),
 
@@ -285,7 +411,7 @@ paged_table(pctable)
 
 ```
 
-### Point-biserial Correlation Coefficient
+### Point-Biserial Correlation Coefficient
 
 For Holiday_Flag, we need to use a point-biserial correlation coefficient instead of the Pearson correlation coefficent. This is because Holiday_Flag is a dichotomous variable (values can only be 1 or 0 to symbolize yes/no) compared `Weekly Sales`, which is not a dichotomous variable (values can be any number). 
 
@@ -296,6 +422,7 @@ We will be using the following formula:
 ${r_{pb}={\frac {M_{1}-M_{0}}{s_{n}}}{\sqrt {\frac {n_{1}n_{0}}{n^{2}}}}}$  
 
 where:
+
 $M_1$ = Mean weekly sales when the Holiday_Flag = 1  
 $M_0$ = Mean weekly sales when the Holiday_Flag = 0  
 $s_n$ = Standard deviation of weekly sales  
@@ -343,7 +470,7 @@ FROM joinstdn
 
 ```
 
-which results in an $r_pb$ value of ~ 0.037 -- a slight positive correlation. 
+which results in an $r_{pb}$ value of ~ 0.037 -- a slight positive correlation. 
 
 ```{r, pctablefull}
 #remove dot in title name 
@@ -358,92 +485,6 @@ paged_table(pctable)
 When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction. 
 
 
-### How do Weekly Sales Vary by Store and by Year? 
-
-Let's start by separately analyzing weekly sales. 
-
-First, we can look at which stores are the most profitable. 
-
-```{r, salesstorechart}
-
-salesstore <- data %>%
-  select(Store, Weekly_Sales) %>%
-  group_by(Store) %>%
-  summarize(Weekly_Sales = sum(Weekly_Sales)/1000000) %>%
-  arrange(desc(Weekly_Sales))
-
-salesstorep <- ggplot(data=salesstore, aes(x=Store, y=Weekly_Sales), fill=Store) +
-  geom_bar(stat="identity", fill="#414288", aes(text = paste0(
-    "Store Number: ", Store,
-    "<br>",
-    "Total Sales (Millions): ", round(Weekly_Sales, digits=3)))) + 
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
-  ggtitle("Total Sales per Store") +
-  xlab("Store Number") +
-  ylab("Sales (Millions)") + 
-  theme(
-    plot.title = element_text(vjust=3, size=16), 
-    axis.title.x = element_text(vjust =-3), 
-    axis.title.y = element_text(vjust =5)
-  )  
-ggplotly(salesstorep, tooltip = "text")
-
-```
-
-It seems like store 33, 44, and 5 have the least amount of sales, while store 20, 4, and 14 have the most. 
-
-```{r, mostsales}
-msales <- data %>%
-  group_by(Store) %>%
-  summarize(Weekly_Sales = sum(Weekly_Sales), Temperature = mean(Temperature), Fuel_Price = mean(Fuel_Price), CPI = mean(CPI), Unemployment =  mean(Unemployment)) %>%
-  filter(Store == 5 | Store == 44 | Store == 33) %>% 
-  arrange(desc(Weekly_Sales))
-
-paged_table(msales)
-  
-```
-
-```{r, leastsales}
-lsales <- data %>%
-  group_by(Store) %>%
-  summarize(Weekly_Sales = sum(Weekly_Sales), Temperature = mean(Temperature), Fuel_Price = mean(Fuel_Price), CPI = mean(CPI), Unemployment =  mean(Unemployment)) %>%
-  filter(Store == 20 | Store == 4 | Store == 14) %>% 
-  arrange(Weekly_Sales)
-paged_table(lsales)
-
-## make these side by side 
-```
-
-We can also see how sales varied from month to month. 
-
-```{r, salesyeartable}
-salesyear <- data %>%
-  mutate(Month = substr(Date, 1, 2), Year = substr(Date, 7, 10), Date = paste(Year,"/" ,Month)) %>%
-  select(Date, Weekly_Sales) %>%
-  group_by(Date) %>%
-  summarize(Weekly_Sales = sum(Weekly_Sales))
-
-salesyearp <-ggplot(data=salesyear, aes(x=Date, y=Weekly_Sales/1000000, group=1)) +
-  geom_line(colour = "#414288")+
-  geom_point(aes(text = paste0(
-    "Date: ", Date,
-    "<br>",
-    "Monthly Sales (Millions): ", round(Weekly_Sales/1000000, digits=3)))) + 
-  theme(axis.text.x = element_text(angle = 90)) +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  ggtitle("Total Sales by Month") +
-  xlab("Date") +
-  ylab("Monthly Sales (Millions)") + 
-  theme(
-    plot.title = element_text(vjust=3, size=16), 
-    axis.title.x = element_text(vjust =-2), 
-    axis.title.y = element_text(vjust =4)
-  ) 
-
-ggplotly(salesyearp, tooltip = "text")
-
-```
-There always seems to be a spike in December and a low in January.  
 
 <!--
 
@@ -560,10 +601,7 @@ FROM pdata
 fuel prices affect on economy: https://investopedia.com/financial-edge/0511/how-gas-prices-affect-the-economy.aspx
 
 
-- Which week and which store had the highest/lowest weekly sales? What's the average?  
-- sales by year, sales by store 
   - average weekly sales -> density graph? 
-  - take a look at the most and least successful store 
   - what traits could impact that? take the average of cpi and stuff and see if there's a massive difference? 
   - summary of everything you learned would be very useful! 
 
