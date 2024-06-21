@@ -189,10 +189,49 @@ This graph also emphasizes the cyclic nature of consumer spending. The pattern i
 
 ### Do holidays generate more sales? Which holidays affect weekly sales the most?
 
-Holidays are notorious for driving up sales as Walmart often runs promotional markdown events to incentivize purchases! 
+Holidays are notorious for driving sales since Walmart often runs promotional markdown events to incentivize purchases when consumers are celebrating. Clearly, it works. 
+
+```{sql, eval=FALSE, code_folding="Show SQL code"}
+SELECT Holiday_Flag, avg(Weekly_Sales) AS Weekly_Sales
+FROM WalmartSalesClean
+GROUP BY Holiday_Flag
+```
+
+```{r holidaysales}
+
+holidaysales <- data %>% 
+  select(Weekly_Sales, Holiday_Flag) %>%
+  group_by(Holiday_Flag) %>%
+  summarize(Weekly_Sales = mean(Weekly_Sales/1000000))
+
+holidaysales$Holiday_Flag = c("No Holiday", "Holiday")
+
+holidaysalesp <- ggplot(data=holidaysales, aes(x=Holiday_Flag, y=Weekly_Sales), fill=Holiday_Flag) +
+  geom_bar(stat="identity", fill="#0071CE", aes(text = paste0(
+    "Average Sales (Millions): ", round(Weekly_Sales, digits=3)))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Average Weekly Sales, With and Without Holidays") +
+  ylab("Total Sales (Millions)") + 
+  xlab("") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.y = element_text(vjust =5)
+  ) 
+
+ggplotly(holidaysalesp, tooltip = "text")
+
+
+```
+
+Holidays can be narrowed into a few specific categories. When looking at the data, the below weeks are deemed 'Holiday Weeks'. 
+
+```{sql holidaydate, eval=FALSE, code_folding = "Show SQL code"}
+SELECT Holiday_Flag, avg(CAST(Weekly_Sales AS FLOAT)) AS Weekly_Sales
+FROM WalmartSalesClean
+GROUP BY Holiday_Flag
+```
 
 ```{r, holiday}
-
 holidaydate <- data %>%
   filter(Store == 1 & Holiday_Flag == 1) %>%
   select(Date, Weekly_Sales) 
@@ -223,7 +262,7 @@ GROUP BY Date
 ORDER BY Weekly_Sales DESC;
 ```
 
-```{r, holidayordering}
+```{r, holidayordering, eval}
 holidayordering <- data %>% 
   filter(Holiday_Flag == 1) %>%
   select(Date, Weekly_Sales) %>%
@@ -265,8 +304,6 @@ holidaydisplay <- data %>%
   arrange(desc(Weekly_Sales))
 
 holidaydisplay$Holiday <- c("Super Bowl", "Labor Day", "Thanksgiving", "Christmas")
-paged_table(holidaydisplay)
-
 ```
 \n
 
@@ -279,7 +316,7 @@ holidaypie <- plot_ly(holidaydisplay, labels = ~Holiday, values = ~Weekly_Sales,
                hoverinfo = 'text',
         text = ~paste(Holiday, "\n", round(Weekly_Sales/1000000, digits = 3), ' million sales'), 
         marker = list(colors = c('#0071CE', '#ffc220', '#041f41', '#6cace4'))) %>% 
-  layout(title = list(text='Total Sales by Holiday', xanchor = "center", font = list(size=26)),
+  layout(title = list(text='Total Sales by Holiday', xanchor = "center", font = list(size=24)),
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
         showlegend = F, 
@@ -340,9 +377,9 @@ knitr::kable(head(lowemp), caption = "Lowest Unemployment") %>%
 
 Interestingly, there's not a strong correlation between high unemployment and low weekly sales. I'd expect that places with higher unemployment meant that consumers had less disposable income to spend at Walmart. But, Walmart is known for having super cheap products and consumers could've primarily bought inelastic goods and other necessities. 
 
-It could also be that Walmart's penetration pricing worked *too* well. Walmart is notorious for significantly impacting the local economy of the neighborhood, positively and negatively. On one hand, low prices means that consumers can afford more things in a one-stop location and stores near the Walmart get more business due to the influx of foot traffic. On the other, Walmart is known for hiring many workers and paying minimum wage, as well as displacing small businesses due to their low prices (and subsequently, small profit margins) with their pricing. These margins are things that only large corporations can withstand, while small businesses simply can't afford to compete.  
+It could also be that Walmart's penetration pricing worked *too* well. Walmart is notorious for significantly impacting the local economy of the neighborhood, positively and negatively. On one hand, low prices means that consumers can afford more things in a one-stop location, and stores near the Walmart get more business due to the influx of foot traffic. On the other, Walmart is known for hiring many workers and paying minimum wage, as well as displacing small businesses due to their low prices, and subsequently, low profit margins. Only large corporations could offer these low margins as they have the financial resources to temporarily suffer short-term losses in hopes of long-term gains. Local businesses simply can't afford to compete.  
 
-The positive and negative effects differ depending on the neighborhood that Walmart enters, with this data being a good example of the impacts that Walmart can have. 
+Evidently, the positive and negative effects differ depending on the neighborhood that Walmart enters, with this data being a good example of the impacts that Walmart can have. 
 
 It should also be noted that this data comes from 2010 - 2012 -- aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployment was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.^[https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm] 
 
@@ -484,7 +521,33 @@ paged_table(pctable)
 
 When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction. 
 
+### Temperature and Weekly Sales 
 
+```{r, temperaturesales}
+tempandsales <- data %>% 
+  select(Temperature, Weekly_Sales) %>%
+  group_by(Temperature) %>%
+  summarize(Weekly_Sales = mean(Weekly_Sales/1000000)) %>%
+  arrange(desc(Weekly_Sales))
+
+
+tempsalesp <- ggplot(data=tempandsales, aes(x=Temperature, y=Weekly_Sales)) +
+  geom_point(color="#0071CE", aes(text = paste0(
+    "Average Weekly Sales (Millions): ", round(Weekly_Sales, digits=3)))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Temperature and Average Weekly Sales") +
+  ylab("Total Sales (Millions)") + 
+  xlab("Temperature (Fahrenheit)") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.x = element_text(vjust=-2),
+    axis.title.y = element_text(vjust =5)
+  )
+
+ggplotly(tempsalesp, tooltip="text")
+
+
+```
 
 <!--
 
