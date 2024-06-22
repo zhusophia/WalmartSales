@@ -383,6 +383,47 @@ Evidently, the positive and negative effects differ depending on the neighborhoo
 
 It should also be noted that this data comes from 2010 - 2012 -- aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployment was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.^[https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm] 
 
+### Temperature and Weekly Sales 
+
+Surprisingly, the relationship between temperature and weekly sales in this study contradict recent research papers, as there seems there is no correlation between temperature and sales. 
+
+```{r, temperaturesales}
+tempandsales <- data %>% 
+  select(Temperature, Weekly_Sales) %>%
+  group_by(Temperature) %>%
+  summarize(Weekly_Sales = mean(Weekly_Sales/1000000)) %>%
+  arrange(desc(Weekly_Sales))
+
+
+tempsalesp <- ggplot(data=tempandsales, aes(x=Temperature, y=Weekly_Sales)) +
+  geom_point(color="#0071CE", aes(text = paste0(
+    "Average Weekly Sales (Millions): ", round(Weekly_Sales, digits=3)))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Temperature and Average Weekly Sales") +
+  ylab("Total Sales (Millions)") + 
+  xlab("Temperature (Fahrenheit)") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.x = element_text(vjust=-2),
+    axis.title.y = element_text(vjust =5)
+  )
+
+ggplotly(tempsalesp, tooltip="text")
+
+
+```
+
+Studies done by Muro et. al.^[https://www.ualberta.ca/business/media-library/centres/sor/documents/murrayetal2010-theeffectofweatheronconsumerspending.pdf] show that natural sunlight has a positive correlation with spending by increasing positive affect. Furthemore, Zwebner and Goldenburg^[https://web2-bschool.nus.edu.sg/wp-content/uploads/media_rp/publications/zLb1d1490932501.pdf] say that exposure to physical warmth result in emotional warmth, subsequently increasing product valuation. They also discovered that the 'optimal' temperature for increased spending was 78 degrees Fahrenheit. This misattribution of warmth has been called the 'temperature-premium' effect. 
+
+However, both studies test this against specific products, such as cakes, batteries, M&Ms, Gap T shirts. The discrepancy between research and results could be that the objects that were tested in the studies are not common consumer purchases and would not significantly affect weekly sales. Or, the temperature premium may not apply for all products. Furthermore, the studies always utilized artificial heating tools (thermostats or heating pads) within an indoors location. On the other hand, the Walmart data recorded the outdoors temperature, not the temperature within the store. Lastly, the store atmosphere, influenced by indoors lighting, could potentially play an even larger role in customer purchases than weather or temperature. Mitigating the effect of store atmospheres when conducting studies would be crucial. 
+
+There is lots of further research to be done within this topic. Further research could potentially be conducted in the following topics: 
+
+- Does the temperature-premium effect apply to all products? 
+- Do natural temperature increases have the same effect as artificial temperature increases? 
+- Does temperature affect different types of stores (e.g. grocery stores, superstores, cafes) differently? 
+
+
 ### Sample Pearson Correlation 
 
 We can also use statistics to back up these claims by checking the correlation between weekly sales and other factors. This gives us insight into the relationship between each of the variables. 
@@ -521,33 +562,6 @@ paged_table(pctable)
 
 When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction. 
 
-### Temperature and Weekly Sales 
-
-```{r, temperaturesales}
-tempandsales <- data %>% 
-  select(Temperature, Weekly_Sales) %>%
-  group_by(Temperature) %>%
-  summarize(Weekly_Sales = mean(Weekly_Sales/1000000)) %>%
-  arrange(desc(Weekly_Sales))
-
-
-tempsalesp <- ggplot(data=tempandsales, aes(x=Temperature, y=Weekly_Sales)) +
-  geom_point(color="#0071CE", aes(text = paste0(
-    "Average Weekly Sales (Millions): ", round(Weekly_Sales, digits=3)))) + 
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
-  ggtitle("Temperature and Average Weekly Sales") +
-  ylab("Total Sales (Millions)") + 
-  xlab("Temperature (Fahrenheit)") + 
-  theme(
-    plot.title = element_text(vjust=3, size=16), 
-    axis.title.x = element_text(vjust=-2),
-    axis.title.y = element_text(vjust =5)
-  )
-
-ggplotly(tempsalesp, tooltip="text")
-
-
-```
 
 <!--
 
