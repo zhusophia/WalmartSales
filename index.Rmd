@@ -387,6 +387,13 @@ It should also be noted that this data comes from 2010 - 2012 -- aftermath of th
 
 Surprisingly, the relationship between temperature and weekly sales in this study contradict recent research papers, as there seems there is no correlation between temperature and sales. 
 
+```{sql, temp, eval=FALSE, code_folding="Show SQL code"}
+SELECT Temperature, avg(Weekly_Sales) AS Weekly_Sales
+FROM WalmartSalesClean
+GROUP BY Temperature 
+ORDER BY Weekly_Sales desc
+```
+
 ```{r, temperaturesales}
 tempandsales <- data %>% 
   select(Temperature, Weekly_Sales) %>%
@@ -562,6 +569,21 @@ paged_table(pctable)
 
 When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction. 
 
+### CPI and Weekly Sales 
+
+The Consumer Price Index (CPI) tracks the weighted average of prices of a metaphorical basket of consumer goods. The goods within this basket are specially selected items that represent the goods and services that a typical US consumer would consume. By tracking the prices of this basket, consumers can understand inflation -- the increases of prices resulting in a lack of purchasing power. 
+
+As an example, the 2023 CPI basket contained the following weighted components: 
+
+```{R, cpi}
+
+cpicats <- c("Food", "Shelter", "Household operations, furnishings and equipment", "Clothing and footwear", "Transportation", "Health and personal care", "Recreation, educaiton and reading", "Alcoholic beverages, tobacco products, and recreational cannabis", "Total")
+cpiperc <- c(16.69, 29.15, 13.01, 4.55, 16.90, 5.23, 10.27, 4.20, 100)
+
+knitr::kable(data.frame(Category = c("Food", "Shelter", "Household operations, furnishings and equipment", "Clothing and footwear", "Transportation", "Health and personal care", "Recreation, educaiton and reading", "Alcoholic beverages, tobacco products, and recreational cannabis", "**Total**"),
+             Percentage = c(16.69, 29.15, 13.01, 4.55, 16.90, 5.23, 10.27, 4.20, '**100**')), align="lr")
+
+```
 
 <!--
 
