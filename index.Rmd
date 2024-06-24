@@ -577,13 +577,39 @@ As an example, the 2023 CPI basket contained the following weighted components:
 
 ```{R, cpi}
 
-cpicats <- c("Food", "Shelter", "Household operations, furnishings and equipment", "Clothing and footwear", "Transportation", "Health and personal care", "Recreation, educaiton and reading", "Alcoholic beverages, tobacco products, and recreational cannabis", "Total")
-cpiperc <- c(16.69, 29.15, 13.01, 4.55, 16.90, 5.23, 10.27, 4.20, 100)
-
 knitr::kable(data.frame(Category = c("Food", "Shelter", "Household operations, furnishings and equipment", "Clothing and footwear", "Transportation", "Health and personal care", "Recreation, educaiton and reading", "Alcoholic beverages, tobacco products, and recreational cannabis", "**Total**"),
              Percentage = c(16.69, 29.15, 13.01, 4.55, 16.90, 5.23, 10.27, 4.20, '**100**')), align="lr")
 
 ```
+
+We can also see the seasonally adjusted Canadian CPI^[This CPI score eliminates seasonal movements, such as events caused by climate and holidays.] since 2022. 
+
+```{R, cpimonth}
+
+knitr::kable(data.frame(Date = c("2024/04", "2024/01", "2023/09", "2023/05", "2023/01", "2022/09","2022/05", "2022/01"),
+             CPI = c(160.2, 159.3, 158.6, 156.2, 154.9, 152.8, 151.2, 146.3)), align="lr")
+
+## https://www.bankofcanada.ca/rates/price-indexes/cpi/ taken from here, is there a way to cite this? 
+
+```
+
+There is a clear relationship of the CPI increasing as time goes on -- an indicator of inflation. 
+
+However, we can compare the change in prices in the same time period: 
+
+```{R, cpifuel}
+
+knitr::kable(data.frame(Date = c("2024/04", "2024/01", "2023/09", "2023/05", "2023/01", "2022/09","2022/05", "2022/01"),
+             CPI = c(160.2, 159.3, 158.6, 156.2, 154.9, 152.8, 151.2, 146.3), 
+             "Fuel Prices" =c(169.76, 145.9, 162.45, 160.62, 153.48, 154.09, 183.99, 153.88)), align="lr")
+
+## https://data.ontario.ca/dataset/fuels-price-survey-information/resource/15b54ed9-f711-45c8-bd87-30eb626f7c0a taken from here, is there a way to cite this? 
+
+```
+
+During this time, the average prices of regular unleaded gasoline in Canada do not follow the same pattern of increasing as time goes on. 
+
+This is likely because fuel is an *inelastic* good, meaning that changes in prices do not significantly affect demand. It's a difficult product to substitute -- if you have a car, what else would you fuel it with? -- and is necessary for daily transportation. 
 
 <!--
 
