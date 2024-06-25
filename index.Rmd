@@ -609,7 +609,13 @@ knitr::kable(data.frame(Date = c("2024/04", "2024/01", "2023/09", "2023/05", "20
 
 During this time, the average prices of regular unleaded gasoline in Canada do not follow the same pattern of increasing as time goes on. 
 
-This is likely because fuel is an *inelastic* good, meaning that changes in prices do not significantly affect demand. It's a difficult product to substitute -- if you have a car, what else would you fuel it with? -- and is necessary for daily transportation. 
+This is because of the price elasticity of demand for fuel. Price elasticity is the percentage change in the quantity demanded of a good or service divided by the percentage change in price and shows how sensitive an item's demand is to changes in price. For example, a demand elasticity of -1 would mean that for every 1% increase in price, the demand of a good would fall by 1%. An elasticity of 0 would mean that the demand does not change, even if the price changes. 
+
+Fuel is an inelastic good, meaning that the change in demand is quite small, relative to the change in price. This is because fuel is a  difficult product to substitute -- gas is most likely the only option you have to fuel your car-- and is necessary for daily transportation.  
+
+Although fuel has always been comparatively inelastic good, recent research shows that fuel is more price elastic than we thought. Previously, a widely cited study by Hughes et. al. in 2008 claimed that the price elasticity for gas was between -0.03 and -0.08 -- meaning that demand barely changes when prices increase. However, in 2017, Coglianese et. al. found that the price elasticity of gasoline was -0.37, with their work being corroborated by two other studies. 
+
+The errors in previous studies are likely caused by flawed estimation methods and/or questionable data. However, larger societal shifts may also play a part, where major car companies are pushing more fuel-efficient or electric vehicles and more consumers are using public transit as cities become more urbanized and transit infrastructure improves,^[https://www150.statcan.gc.ca/n1/daily-quotidien/240220/dq240220d-eng.htm] 
 
 <!--
 
