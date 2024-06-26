@@ -397,14 +397,14 @@ ORDER BY Weekly_Sales desc
 ```{r, temperaturesales}
 tempandsales <- data %>% 
   select(Temperature, Weekly_Sales) %>%
-  group_by(Temperature) %>%
+  group_by(Temperature = round(Temperature, digits = 2)) %>%
   summarize(Weekly_Sales = mean(Weekly_Sales/1000000)) %>%
   arrange(desc(Weekly_Sales))
 
 
 tempsalesp <- ggplot(data=tempandsales, aes(x=Temperature, y=Weekly_Sales)) +
   geom_point(color="#0071CE", aes(text = paste0(
-    "Average Weekly Sales (Millions): ", round(Weekly_Sales, digits=3)))) + 
+    "Average Weekly Sales (Millions): ", round(Weekly_Sales, digits=3), "\n", "Temperature: ", Temperature))) + 
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
   ggtitle("Temperature and Average Weekly Sales") +
   ylab("Total Sales (Millions)") + 
@@ -578,7 +578,8 @@ As an example, the 2023 CPI basket contained the following weighted components:
 ```{R, cpi}
 
 knitr::kable(data.frame(Category = c("Food", "Shelter", "Household operations, furnishings and equipment", "Clothing and footwear", "Transportation", "Health and personal care", "Recreation, educaiton and reading", "Alcoholic beverages, tobacco products, and recreational cannabis", "**Total**"),
-             Percentage = c(16.69, 29.15, 13.01, 4.55, 16.90, 5.23, 10.27, 4.20, '**100**')), align="lr")
+             Percentage = c(16.69, 29.15, 13.01, 4.55, 16.90, 5.23, 10.27, 4.20, '**100**')), align="lr") %>%
+  kable_styling(position = "center")
 
 ```
 
@@ -587,7 +588,8 @@ We can also see the seasonally adjusted Canadian CPI^[This CPI score eliminates 
 ```{R, cpimonth}
 
 knitr::kable(data.frame(Date = c("2024/04", "2024/01", "2023/09", "2023/05", "2023/01", "2022/09","2022/05", "2022/01"),
-             CPI = c(160.2, 159.3, 158.6, 156.2, 154.9, 152.8, 151.2, 146.3)), align="lr")
+             CPI = c(160.2, 159.3, 158.6, 156.2, 154.9, 152.8, 151.2, 146.3)), align="lr") %>%
+  kable_styling(position = "center")
 
 ## https://www.bankofcanada.ca/rates/price-indexes/cpi/ taken from here, is there a way to cite this? 
 
@@ -601,7 +603,8 @@ However, we can compare the change in prices in the same time period:
 
 knitr::kable(data.frame(Date = c("2024/04", "2024/01", "2023/09", "2023/05", "2023/01", "2022/09","2022/05", "2022/01"),
              CPI = c(160.2, 159.3, 158.6, 156.2, 154.9, 152.8, 151.2, 146.3), 
-             "Fuel Prices" =c(169.76, 145.9, 162.45, 160.62, 153.48, 154.09, 183.99, 153.88)), align="lr")
+             "Fuel Prices" =c(169.76, 145.9, 162.45, 160.62, 153.48, 154.09, 183.99, 153.88)), align="lcr") %>%
+  kable_styling(position = "center")
 
 ## https://data.ontario.ca/dataset/fuels-price-survey-information/resource/15b54ed9-f711-45c8-bd87-30eb626f7c0a taken from here, is there a way to cite this? 
 
@@ -613,9 +616,63 @@ This is because of the price elasticity of demand for fuel. Price elasticity is 
 
 Fuel is an inelastic good, meaning that the change in demand is quite small, relative to the change in price. This is because fuel is a  difficult product to substitute -- gas is most likely the only option you have to fuel your car-- and is necessary for daily transportation.  
 
-Although fuel has always been comparatively inelastic good, recent research shows that fuel is more price elastic than we thought. Previously, a widely cited study by Hughes et. al. in 2008 claimed that the price elasticity for gas was between -0.03 and -0.08 -- meaning that demand barely changes when prices increase. However, in 2017, Coglianese et. al. found that the price elasticity of gasoline was -0.37, with their work being corroborated by two other studies. 
+Although fuel has always been comparatively inelastic good, recent research shows that fuel is more price elastic than we thought. Previously, a widely cited study by Hughes et. al. in 2008 claimed that the price elasticity for gas was between -0.03 and -0.08, meaning that demand barely changes when prices increase. However, in 2017, Coglianese et. al. found that the price elasticity of gasoline was -0.37, with their findings being corroborated by two other studies. 
 
-The errors in previous studies are likely caused by flawed estimation methods and/or questionable data. However, larger societal shifts may also play a part, where major car companies are pushing more fuel-efficient or electric vehicles and more consumers are using public transit as cities become more urbanized and transit infrastructure improves,^[https://www150.statcan.gc.ca/n1/daily-quotidien/240220/dq240220d-eng.htm] 
+The errors in previous studies are likely caused by flawed estimation methods and/or questionable data. However, larger societal shifts may also play a part, where major car companies are pushing more fuel-efficient or electric vehicles and more consumers are using public transit as cities become more urbanized and transit infrastructure improves.^[https://www150.statcan.gc.ca/n1/daily-quotidien/240220/dq240220d-eng.htm] 
+
+In regard to this data set, the following relationships are found. 
+
+```{r, cpi table and chart}
+
+cpit <- data %>% 
+  select(Weekly_Sales, CPI) %>%
+  group_by(CPI = round(CPI, digits = 2)) %>%
+  summarize(Weekly_Sales = mean(Weekly_Sales/1000000))
+
+
+cpic <- ggplot(data=cpit, aes(x=CPI, y=Weekly_Sales), fill=CPI) +
+  geom_point(color="#0071CE", aes(text = paste0(
+    "Average Sales (Millions): ", round(Weekly_Sales, digits=3), "\n", "CPI: ", CPI))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Average Weekly Sales by CPI") +
+  ylab("Total Sales (Millions)") + 
+  xlab("CPI") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16),
+    axis.title.x = element_text(vjust=-2),
+    axis.title.y = element_text(vjust =6)
+  ) 
+
+ggplotly(cpic, tooltip = "text")
+
+
+```
+
+```{r, fuel price table and chart}
+
+tpit <- data %>% 
+  select(Weekly_Sales, Fuel_Price) %>%
+  group_by(Fuel_Price = round(Fuel_Price, digits = 3)) %>%
+  summarize(Weekly_Sales = mean(Weekly_Sales/1000000))
+
+
+tpic <- ggplot(data=tpit, aes(x=Fuel_Price, y=Weekly_Sales), fill=Fuel_Price) +
+  geom_point(color="#0071CE", aes(text = paste0(
+    "Average Sales (Millions): ", round(Weekly_Sales, digits=3), "\n", "Fuel Price: ", Fuel_Price))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Average Weekly Sales by Fuel Price") +
+  ylab("Total Sales (Millions)") + 
+  xlab("Fuel Price") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16),
+    axis.title.y = element_text(vjust =6)
+  ) 
+
+ggplotly(tpic, tooltip = "text")
+
+
+
+```
 
 <!--
 
