@@ -397,14 +397,14 @@ ORDER BY Weekly_Sales desc
 ```{r, temperaturesales}
 tempandsales <- data %>% 
   select(Temperature, Weekly_Sales) %>%
-  group_by(Temperature = round(Temperature, digits = 2)) %>%
+  group_by(Temperature = round(Temperature, digits = 1)) %>%
   summarize(Weekly_Sales = mean(Weekly_Sales/1000000)) %>%
   arrange(desc(Weekly_Sales))
 
 
 tempsalesp <- ggplot(data=tempandsales, aes(x=Temperature, y=Weekly_Sales)) +
   geom_point(color="#0071CE", aes(text = paste0(
-    "Average Weekly Sales (Millions): ", round(Weekly_Sales, digits=3), "\n", "Temperature: ", Temperature))) + 
+    "Average Weekly Sales (Millions): ", round(Weekly_Sales, digits=2), "\n", "Temperature: ", Temperature))) + 
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
   ggtitle("Temperature and Average Weekly Sales") +
   ylab("Total Sales (Millions)") + 
@@ -430,6 +430,134 @@ There is lots of further research to be done within this topic. Further research
 - Do natural temperature increases have the same effect as artificial temperature increases? 
 - Does temperature affect different types of stores (e.g. grocery stores, superstores, cafes) differently? 
 
+### CPI and Weekly Sales 
+
+The Consumer Price Index (CPI) tracks the weighted average of prices of a metaphorical basket of consumer goods. The goods within this basket are specially selected items that represent the goods and services that a typical US consumer would consume. By tracking the prices of this basket, consumers can understand inflation -- the increases of prices resulting in a lack of purchasing power. 
+
+As an example, the 2023 CPI basket contained the following weighted components: 
+
+```{R, cpi}
+
+knitr::kable(data.frame(Category = c("Food", "Shelter", "Household operations, furnishings and equipment", "Clothing and footwear", "Transportation", "Health and personal care", "Recreation, educaiton and reading", "Alcoholic beverages, tobacco products, and recreational cannabis", "**Total**"),
+             Percentage = c(16.69, 29.15, 13.01, 4.55, 16.90, 5.23, 10.27, 4.20, '**100**')), align="lr") %>%
+  kable_styling(position = "center")
+
+```
+
+We can also see the seasonally adjusted Canadian CPI^[This CPI score eliminates seasonal movements, such as events caused by climate and holidays.] since 2022. 
+
+```{R, cpimonth}
+
+knitr::kable(data.frame(Date = c("2024/04", "2024/01", "2023/09", "2023/05", "2023/01", "2022/09","2022/05", "2022/01"),
+             CPI = c(160.2, 159.3, 158.6, 156.2, 154.9, 152.8, 151.2, 146.3)), align="lr") %>%
+  kable_styling(position = "center")
+
+## https://www.bankofcanada.ca/rates/price-indexes/cpi/ taken from here, is there a way to cite this? 
+
+```
+
+There is a clear relationship of the CPI increasing as time goes on -- an indicator of inflation. 
+
+However, we can compare the change in prices in the same time period: 
+
+```{R, cpifuel}
+
+cpifuel <- data.frame(Date = c("2024/04", "2024/01", "2023/09", "2023/05", "2023/01", "2022/09","2022/05", "2022/01"),
+             CPI = c(160.2, 159.3, 158.6, 156.2, 154.9, 152.8, 151.2, 146.3), 
+             "Fuel Prices (¢/Litre)" =c(169.76, 145.9, 162.45, 160.62, 153.48, 154.09, 183.99, 153.88))
+colnames(cpifuel) <- (c("Date", "CPI", "Fuel Prices (¢/Litre)"))
+
+knitr::kable(cpifuel, align="lcr") %>%
+  kable_styling(position = "center")
+
+
+
+
+## https://data.ontario.ca/dataset/fuels-price-survey-information/resource/15b54ed9-f711-45c8-bd87-30eb626f7c0a taken from here, is there a way to cite this? 
+
+```
+
+During this time, the average prices of regular unleaded gasoline in Canada do not follow the same pattern of increasing as time goes on. 
+
+This is because of the price elasticity of demand for fuel. Price elasticity is the percentage change in the quantity demanded of a good or service divided by the percentage change in price and shows how sensitive an item's demand is to changes in price. For example, a demand elasticity of -1 would mean that for every 1% increase in price, the demand of a good would fall by 1%. An elasticity of 0 would mean that the demand does not change, even if the price changes. 
+
+Fuel is an inelastic good, meaning that the change in demand is quite small, relative to the change in price. This is because fuel is a  difficult product to substitute -- gas is most likely the only option you have to fuel your car-- and is necessary for daily transportation.  
+
+Although fuel has always been comparatively inelastic good, recent research shows that fuel is more price elastic than we thought. Previously, a widely cited study by Hughes et. al. in 2008 claimed that the price elasticity for gas was between -0.03 and -0.08, meaning that demand barely changes when prices increase. However, in 2017, Coglianese et. al. found that the price elasticity of gasoline was -0.37, with their findings being corroborated by two other studies. 
+
+The errors in previous studies are likely caused by flawed estimation methods and/or questionable data. However, larger societal shifts may also play a part, where major car companies are pushing more fuel-efficient or electric vehicles and more consumers are using public transit as cities become more urbanized and transit infrastructure improves.^[https://www150.statcan.gc.ca/n1/daily-quotidien/240220/dq240220d-eng.htm] 
+
+Hence, one may conclude that an increase in CPI and fuel prices could result in more Walmart sales. With inflation reducing consumer purchasing power, consumers tend to spend less as their necessities have increased in price. Subsequently, they would be likely to go to Walmart -- a store known for having low prices -- to shop, attempting to keep their spending low, resulting in increased sales for Walmart. A similar effect could occur with the rise of fuel prices. Since fuel has inelastic demand, consumers would need to spend more money on fuel, resulting in less money being spent on other necessities. Hence, consumers would likely opt for cheaper products and shop at Walmart compared to more expensive stores.   
+
+However, in regard to this data set, the following relationships are found. 
+
+```{r, cpi table and chart}
+
+cpit <- data %>% 
+  select(Weekly_Sales, CPI) %>%
+  group_by(CPI = round(CPI, digits = 2)) %>%
+  summarize(Weekly_Sales = mean(Weekly_Sales/1000000))
+
+
+cpic <- ggplot(data=cpit, aes(x=CPI, y=Weekly_Sales), fill=CPI) +
+  geom_point(color="#0071CE", aes(text = paste0(
+    "Average Sales (Millions): ", round(Weekly_Sales, digits=3), "\n", "CPI: ", CPI))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Average Weekly Sales by CPI") +
+  ylab("Average Sales (Millions)") + 
+  xlab("CPI") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16),
+    axis.title.x = element_text(vjust=-2),
+    axis.title.y = element_text(vjust =6)
+  ) 
+
+ggplotly(cpic, tooltip = "text")
+
+
+```
+
+This data set does not contain CPI values between ~143 to ~ 180. It is likely because the CPI of stores were never in this range, however, the possibility of having missing data should be considered. 
+
+CPI also seems to be separated into 4 main clusters: 
+
+- 125 to 143, which have average sales of 1.1 million. 
+- 180 to 190, which have average sales of 1.5 million. 
+- 189 to 200, which have average sales of 0.9 million.
+- 200 and above, with average sales generally being scattered around 1 million.
+
+Although there doesn't seem to be a correlation between CPI and weekly sales, it seems like stores with the same CPI tend to perform similarly. 
+
+
+```{r, fuel price table and chart}
+
+tpit <- data %>% 
+  select(Weekly_Sales, Fuel_Price) %>%
+  group_by(Fuel_Price = round(Fuel_Price, digits = 3)) %>%
+  summarize(Weekly_Sales = mean(Weekly_Sales/1000000))
+
+
+tpic <- ggplot(data=tpit, aes(x=Fuel_Price, y=Weekly_Sales), fill=Fuel_Price) +
+  geom_point(color="#0071CE", aes(text = paste0(
+    "Average Sales (Millions): ", round(Weekly_Sales, digits=3), "\n", "Fuel Price: ", Fuel_Price))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Average Weekly Sales by Fuel Price") +
+  ylab("Average Sales (Millions)") + 
+  xlab("Fuel Price (Dollars / Litre)") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16),
+    axis.title.y = element_text(vjust =6)
+  ) 
+
+ggplotly(tpic, tooltip = "text")
+
+
+
+```
+
+There is also no correlation between fuel price and total sales. However, this graph does have a strange divide, where stores either make ~0.5 million, or ~0.7 million and above. The cause of this discrepancy is unknown, as it happens a various fuel price points.  
+
+It's clear that the trends do not follow the hypothesized positive relationship between these variables and weekly sales. The most probable answer to this is discrepancy is that the economic changes were not enough to shift consumer spending behavior. For example, consumers may not switch to a different store because it's more convenient for them to go (or not go) to Walmart. Furthermore, economics assumes that all consumers are rational as given a large enough sample, the macro trends of consumer spending will gravitate towards rational behavior. However, the sample within this data set may be too small to observe rational trends. A further extension could be diving into behavioral economics and how it affects this data set. 
 
 ### Sample Pearson Correlation 
 
@@ -567,112 +695,11 @@ paged_table(pctable)
 
 ```
 
-When analyzing these relationships, it seems like only Holiday and Unemployment follow the expected prediction. 
+The correlation coefficient matches with the data observed within the tables in charts. 
 
-### CPI and Weekly Sales 
+### Geographic Data
 
-The Consumer Price Index (CPI) tracks the weighted average of prices of a metaphorical basket of consumer goods. The goods within this basket are specially selected items that represent the goods and services that a typical US consumer would consume. By tracking the prices of this basket, consumers can understand inflation -- the increases of prices resulting in a lack of purchasing power. 
-
-As an example, the 2023 CPI basket contained the following weighted components: 
-
-```{R, cpi}
-
-knitr::kable(data.frame(Category = c("Food", "Shelter", "Household operations, furnishings and equipment", "Clothing and footwear", "Transportation", "Health and personal care", "Recreation, educaiton and reading", "Alcoholic beverages, tobacco products, and recreational cannabis", "**Total**"),
-             Percentage = c(16.69, 29.15, 13.01, 4.55, 16.90, 5.23, 10.27, 4.20, '**100**')), align="lr") %>%
-  kable_styling(position = "center")
-
-```
-
-We can also see the seasonally adjusted Canadian CPI^[This CPI score eliminates seasonal movements, such as events caused by climate and holidays.] since 2022. 
-
-```{R, cpimonth}
-
-knitr::kable(data.frame(Date = c("2024/04", "2024/01", "2023/09", "2023/05", "2023/01", "2022/09","2022/05", "2022/01"),
-             CPI = c(160.2, 159.3, 158.6, 156.2, 154.9, 152.8, 151.2, 146.3)), align="lr") %>%
-  kable_styling(position = "center")
-
-## https://www.bankofcanada.ca/rates/price-indexes/cpi/ taken from here, is there a way to cite this? 
-
-```
-
-There is a clear relationship of the CPI increasing as time goes on -- an indicator of inflation. 
-
-However, we can compare the change in prices in the same time period: 
-
-```{R, cpifuel}
-
-knitr::kable(data.frame(Date = c("2024/04", "2024/01", "2023/09", "2023/05", "2023/01", "2022/09","2022/05", "2022/01"),
-             CPI = c(160.2, 159.3, 158.6, 156.2, 154.9, 152.8, 151.2, 146.3), 
-             "Fuel Prices" =c(169.76, 145.9, 162.45, 160.62, 153.48, 154.09, 183.99, 153.88)), align="lcr") %>%
-  kable_styling(position = "center")
-
-## https://data.ontario.ca/dataset/fuels-price-survey-information/resource/15b54ed9-f711-45c8-bd87-30eb626f7c0a taken from here, is there a way to cite this? 
-
-```
-
-During this time, the average prices of regular unleaded gasoline in Canada do not follow the same pattern of increasing as time goes on. 
-
-This is because of the price elasticity of demand for fuel. Price elasticity is the percentage change in the quantity demanded of a good or service divided by the percentage change in price and shows how sensitive an item's demand is to changes in price. For example, a demand elasticity of -1 would mean that for every 1% increase in price, the demand of a good would fall by 1%. An elasticity of 0 would mean that the demand does not change, even if the price changes. 
-
-Fuel is an inelastic good, meaning that the change in demand is quite small, relative to the change in price. This is because fuel is a  difficult product to substitute -- gas is most likely the only option you have to fuel your car-- and is necessary for daily transportation.  
-
-Although fuel has always been comparatively inelastic good, recent research shows that fuel is more price elastic than we thought. Previously, a widely cited study by Hughes et. al. in 2008 claimed that the price elasticity for gas was between -0.03 and -0.08, meaning that demand barely changes when prices increase. However, in 2017, Coglianese et. al. found that the price elasticity of gasoline was -0.37, with their findings being corroborated by two other studies. 
-
-The errors in previous studies are likely caused by flawed estimation methods and/or questionable data. However, larger societal shifts may also play a part, where major car companies are pushing more fuel-efficient or electric vehicles and more consumers are using public transit as cities become more urbanized and transit infrastructure improves.^[https://www150.statcan.gc.ca/n1/daily-quotidien/240220/dq240220d-eng.htm] 
-
-In regard to this data set, the following relationships are found. 
-
-```{r, cpi table and chart}
-
-cpit <- data %>% 
-  select(Weekly_Sales, CPI) %>%
-  group_by(CPI = round(CPI, digits = 2)) %>%
-  summarize(Weekly_Sales = mean(Weekly_Sales/1000000))
-
-
-cpic <- ggplot(data=cpit, aes(x=CPI, y=Weekly_Sales), fill=CPI) +
-  geom_point(color="#0071CE", aes(text = paste0(
-    "Average Sales (Millions): ", round(Weekly_Sales, digits=3), "\n", "CPI: ", CPI))) + 
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
-  ggtitle("Average Weekly Sales by CPI") +
-  ylab("Total Sales (Millions)") + 
-  xlab("CPI") + 
-  theme(
-    plot.title = element_text(vjust=3, size=16),
-    axis.title.x = element_text(vjust=-2),
-    axis.title.y = element_text(vjust =6)
-  ) 
-
-ggplotly(cpic, tooltip = "text")
-
-
-```
-
-```{r, fuel price table and chart}
-
-tpit <- data %>% 
-  select(Weekly_Sales, Fuel_Price) %>%
-  group_by(Fuel_Price = round(Fuel_Price, digits = 3)) %>%
-  summarize(Weekly_Sales = mean(Weekly_Sales/1000000))
-
-
-tpic <- ggplot(data=tpit, aes(x=Fuel_Price, y=Weekly_Sales), fill=Fuel_Price) +
-  geom_point(color="#0071CE", aes(text = paste0(
-    "Average Sales (Millions): ", round(Weekly_Sales, digits=3), "\n", "Fuel Price: ", Fuel_Price))) + 
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
-  ggtitle("Average Weekly Sales by Fuel Price") +
-  ylab("Total Sales (Millions)") + 
-  xlab("Fuel Price") + 
-  theme(
-    plot.title = element_text(vjust=3, size=16),
-    axis.title.y = element_text(vjust =6)
-  ) 
-
-ggplotly(tpic, tooltip = "text")
-
-
-
-```
+Using the information in the data set, it may be possible to trace the geographic locations of the stores. 
 
 <!--
 
