@@ -701,6 +701,19 @@ The correlation coefficient matches with the data observed within the tables in 
 
 Using the information in the data set, it may be possible to trace the geographic locations of the stores. 
 
+```{r}
+
+data %>%
+  select(Store, Unemployment, CPI) %>%
+  group_by(Store) %>%
+  summarize(Unemployment = mean(Unemployment), mean(CPI)) %>%
+  arrange(Unemployment)
+
+
+
+```
+
+
 <!--
 
 However, 
