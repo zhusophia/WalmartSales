@@ -699,22 +699,73 @@ The correlation coefficient matches with the data observed within the tables in 
 
 ### Geographic Data
 
-Using the information in the data set, it may be possible to trace the geographic locations of the stores. 
+Using the information in the data set, it may be possible to make educated guesses regarding the geographic region of the stores. 
 
-```{r}
+In 2010, Walmart was open in the following countries: 
 
-data %>%
-  select(Store, Unemployment, CPI) %>%
+- US
+- Mexico 
+- Canada 
+- UK 
+- China 
+- South Africa
+- Argentina
+- Brazil
+
+Hence, the unemployment rate data for each store could be corroborated against country-wide unemployment data from the Organisation for Economic Co-operation and Development (OECD) and World Bank Group to determine which region the store could likely fall into. 
+
+According to past records: 
+
+```{r, unemploy by country}
+
+unempcountry <-  data.frame(Country = c("US", "Mexico", "Canada", "UK", "China", "South Africa", "Argentina", "Brazil"), Unemployment = c(9.61, 5.38, 8.175, 7.87, 4.5, 45.5, 7.7, 8.4))
+
+unempcountry <- unempcountry %>%
+  arrange(desc(Unemployment))
+
+kable(unempcountry)
+  
+
+```
+
+
+
+```{r, unemploymentbar}
+
+empbar <- data %>%
+  mutate(Year = substr(Date, 7, 10)) %>%
+  filter(Year == 2010) %>%
+  select(Store, Unemployment, Date) %>%
   group_by(Store) %>%
-  summarize(Unemployment = mean(Unemployment), mean(CPI)) %>%
+  summarize(Unemployment = round(mean(Unemployment), digits = 2)) %>%
   arrange(Unemployment)
 
+
+empbarp <- ggplot(data=empbar, aes(x=reorder(Store, Unemployment), y=Unemployment), fill=Unemployment) +
+  geom_bar(stat="identity", fill="#0071CE", aes(text = paste0(
+    "Store Number: ", Store, "\n", 
+    "Unemployment Rate: ", Unemployment))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Unemployment Rate of Stores, Lowest to Highest") +
+  ylab("Unemployment Rate") + 
+  xlab("") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.y = element_text(vjust =5), 
+    axis.text.x=element_blank()
+  ) 
+
+ggplotly(empbarp, tooltip = "text")
 
 
 ```
 
 
 <!--
+
+https://forum.posit.co/t/setting-colours-in-ggplot-conditional-on-value/8328/2
+
+https://data-explorer.oecd.org/vis?lc=en&df[ds]=DisseminateArchiveDMZ&df[id]=DF_DP_LIVE&df[ag]=OECD&av=true&pd=2010%2C2010&dq=ITA%2BAUS%2BAUT%2BBEL%2BCAN%2BCHL%2BCOL%2BCRI%2BCZE%2BDNK%2BEST%2BFIN%2BFRA%2BDEU%2BGRC%2BHUN%2BISL%2BIRL%2BISR%2BJPN%2BKOR%2BLVA%2BLTU%2BLUX%2BMEX%2BNLD%2BNZL%2BNOR%2BPOL%2BPRT%2BSVK%2BSVN%2BESP%2BSWE%2BCHE%2BTUR%2BGBR%2BUSA%2BOAVG%2BOECD.HUR...A&to[TIME_PERIOD]=false&vw=tb&lb=bt
 
 However, 
 
