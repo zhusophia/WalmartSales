@@ -737,23 +737,35 @@ empbar <- data %>%
   filter(Year == 2010) %>%
   select(Store, Unemployment, Date) %>%
   group_by(Store) %>%
-  summarize(Unemployment = round(mean(Unemployment), digits = 2)) %>%
+  summarize(Unemployment = round(mean(Unemployment), digits = 2)) %>% 
+  mutate(Store = as.factor(Store), 
+        geographic = cut(Unemployment, 
+                          breaks = c(-Inf, 5.38, 7.7, 7.87, 8.17, 8.4, 9.6, 45.5, Inf), 
+                          labels = c("China", "Mexico", "Argentina", "UK", "Canada", "Brazil", "US", "South Africa"), 
+                          rights = TRUE)) %>%
   arrange(Unemployment)
 
 
-empbarp <- ggplot(data=empbar, aes(x=reorder(Store, Unemployment), y=Unemployment), fill=Unemployment) +
-  geom_bar(stat="identity", fill="#0071CE", aes(text = paste0(
+pal <-  c("#004c91", "#007dc6", "#78b9e7", "#f47321", "#ffc220", "#222222","#76C143", "green", "#222222")
+
+empbarp <- ggplot(data=empbar, aes(x=reorder(Store, Unemployment), y=Unemployment, fill=geographic)) +
+  geom_col(aes(text = paste0(
     "Store Number: ", Store, "\n", 
     "Unemployment Rate: ", Unemployment))) + 
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
   ggtitle("Unemployment Rate of Stores, Lowest to Highest") +
   ylab("Unemployment Rate") + 
-  xlab("") + 
+  xlab("")+
   theme(
     plot.title = element_text(vjust=3, size=16), 
     axis.title.y = element_text(vjust =5), 
-    axis.text.x=element_blank()
-  ) 
+    axis.text.x=element_blank(), 
+  ) + 
+  scale_fill_manual("Country", 
+    values = pal,
+    limits = names(pal)
+  )
+
 
 ggplotly(empbarp, tooltip = "text")
 
@@ -762,6 +774,9 @@ ggplotly(empbarp, tooltip = "text")
 
 
 <!--
+
+https://www.worldatlas.com/articles/walmart-locations-by-country.html
+
 
 https://forum.posit.co/t/setting-colours-in-ggplot-conditional-on-value/8328/2
 
