@@ -555,9 +555,94 @@ ggplotly(tpic, tooltip = "text")
 
 ```
 
-There is also no correlation between fuel price and total sales. However, this graph does have a strange divide, where stores either make ~0.5 million, or ~0.7 million and above. The cause of this discrepancy is unknown, as it happens a various fuel price points.  
+There is also no correlation between fuel price and total sales. However, this graph does have a strange divide, where stores either make ~0.5 million or ~0.7 million and above. The cause of this discrepancy is unknown, as it happens a various fuel price points.  
 
 It's clear that the trends do not follow the hypothesized positive relationship between these variables and weekly sales. The most probable answer to this is discrepancy is that the economic changes were not enough to shift consumer spending behavior. For example, consumers may not switch to a different store because it's more convenient for them to go (or not go) to Walmart. Furthermore, economics assumes that all consumers are rational as given a large enough sample, the macro trends of consumer spending will gravitate towards rational behavior. However, the sample within this data set may be too small to observe rational trends. A further extension could be diving into behavioral economics and how it affects this data set. 
+
+### Geographic Data
+
+Using the information in the data set, it may be possible to make educated guesses regarding the geographic region of the stores. 
+
+In 2010, Walmart was open in the following countries: 
+
+- US
+- Mexico 
+- Canada 
+- UK 
+- China 
+- Argentina
+- Brazil
+- Costa Rica
+- El Salvador
+- Guatemala
+- Honduras
+- Nicaragua
+- India
+- Chile
+
+Hence, the unemployment rate data for each store could be corroborated against country-wide unemployment data from the Organisation for Economic Co-operation and Development (OECD) and World Bank Group to determine which region the store could likely fall into. 
+
+According to past records: 
+
+```{r, unemploy by country}
+
+unempcountry <-  data.frame(Country = c("US", "Mexico", "Canada", "UK", "China", "Argentina", "Brazil", "Costa Rica", "El Salvador", "Guatemala", "Honduras", "Nicaragua", "India", "Chile"), Unemployment = c(9.61, 5.38, 8.175, 7.87, 4.5, 7.7, 8.4, 7.2, 4.9, 3.5, 4.1, 7.8, 5.5, 8.5))
+
+unempcountry <- unempcountry %>%
+  arrange(desc(Unemployment))
+
+knitr::kable(unempcountry) %>%
+  kable_styling(position = "center")  
+
+```
+
+This can be graphed like so: 
+
+
+```{r, unemploymentbar}
+
+empbar <- data %>%
+  mutate(Year = substr(Date, 7, 10)) %>%
+  filter(Year == 2010) %>%
+  select(Store, Unemployment, Date) %>%
+  group_by(Store) %>%
+  summarize(Unemployment = round(mean(Unemployment), digits = 2)) %>% 
+  mutate(Store = as.factor(Store), 
+        geographic = cut(Unemployment, 
+                          breaks = c(-Inf, 4.1, 4.5, 4.9, 5.38, 5.5, 7.2, 7.7, 7.8, 7.87, 8.17, 8.4, 8.5, 9.61, 10.5, Inf), 
+                          labels = c("Guatemala", "Honduras", "China", "El Salvador", "Mexico", "India", "Costa Rica", "Argentina", "Nicaragua", "UK", "Canada", "Brazil",  "Chile", "US", "Unknown"), 
+                          rights = TRUE)) %>%
+  arrange(Unemployment)
+
+
+pal <-  c("#004c91", "#007dc6", "#78b9e7", "#f47321", "#ffc220", "#367c2b","#76C143", "#222222", "#F2F8FD", "#004c91", "#007dc6", "blue", "purple", "yellow", "orange")
+
+empbarp <- ggplot(data=empbar, aes(x=reorder(Store, Unemployment), y=Unemployment, fill=geographic)) +
+  geom_col(aes(text = paste0(
+    "Store Number: ", Store, "\n",
+    "Country: ", geographic, "\n",
+    "Unemployment Rate: ", Unemployment))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Unemployment Rate of Stores, Lowest to Highest") +
+  ylab("Unemployment Rate") + 
+  xlab("")+
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.y = element_text(vjust =5), 
+    axis.text.x=element_blank(), 
+  ) + 
+  scale_fill_manual("Country", 
+    values = pal,
+    limits = names(pal)
+  )
+
+
+ggplotly(empbarp, tooltip = "text")
+
+
+```
+
+The plot highlights the different parts of the world each store may be located. It seems like the most data was obtained from Chile and India, while the least amount of data was obtained from Mexico, Argentina, and Nicaragua. 
 
 ### Sample Pearson Correlation 
 
@@ -697,90 +782,30 @@ paged_table(pctable)
 
 The correlation coefficient matches with the data observed within the tables in charts. 
 
-### Geographic Data
-
-Using the information in the data set, it may be possible to make educated guesses regarding the geographic region of the stores. 
-
-In 2010, Walmart was open in the following countries: 
-
-- US
-- Mexico 
-- Canada 
-- UK 
-- China 
-- South Africa
-- Argentina
-- Brazil
-
-Hence, the unemployment rate data for each store could be corroborated against country-wide unemployment data from the Organisation for Economic Co-operation and Development (OECD) and World Bank Group to determine which region the store could likely fall into. 
-
-According to past records: 
-
-```{r, unemploy by country}
-
-unempcountry <-  data.frame(Country = c("US", "Mexico", "Canada", "UK", "China", "South Africa", "Argentina", "Brazil"), Unemployment = c(9.61, 5.38, 8.175, 7.87, 4.5, 45.5, 7.7, 8.4))
-
-unempcountry <- unempcountry %>%
-  arrange(desc(Unemployment))
-
-kable(unempcountry)
-  
-
-```
-
-
-
-```{r, unemploymentbar}
-
-empbar <- data %>%
-  mutate(Year = substr(Date, 7, 10)) %>%
-  filter(Year == 2010) %>%
-  select(Store, Unemployment, Date) %>%
-  group_by(Store) %>%
-  summarize(Unemployment = round(mean(Unemployment), digits = 2)) %>% 
-  mutate(Store = as.factor(Store), 
-        geographic = cut(Unemployment, 
-                          breaks = c(-Inf, 5.38, 7.7, 7.87, 8.17, 8.4, 9.6, 45.5, Inf), 
-                          labels = c("China", "Mexico", "Argentina", "UK", "Canada", "Brazil", "US", "South Africa"), 
-                          rights = TRUE)) %>%
-  arrange(Unemployment)
-
-
-pal <-  c("#004c91", "#007dc6", "#78b9e7", "#f47321", "#ffc220", "#222222","#76C143", "green", "#222222")
-
-empbarp <- ggplot(data=empbar, aes(x=reorder(Store, Unemployment), y=Unemployment, fill=geographic)) +
-  geom_col(aes(text = paste0(
-    "Store Number: ", Store, "\n", 
-    "Unemployment Rate: ", Unemployment))) + 
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
-  ggtitle("Unemployment Rate of Stores, Lowest to Highest") +
-  ylab("Unemployment Rate") + 
-  xlab("")+
-  theme(
-    plot.title = element_text(vjust=3, size=16), 
-    axis.title.y = element_text(vjust =5), 
-    axis.text.x=element_blank(), 
-  ) + 
-  scale_fill_manual("Country", 
-    values = pal,
-    limits = names(pal)
-  )
-
-
-ggplotly(empbarp, tooltip = "text")
-
-
-```
-
-
 <!--
 
-https://www.worldatlas.com/articles/walmart-locations-by-country.html
+## Table of Contents
+
+Introduction 
+Analysis 
+* How do weekly sales vary by store and by year?
+* How do holidays impact sales? 
+* How does unemployment rate impact sales? 
+* How does temperature impact sales? 
+* How does CPI impact sales? 
+* Where was the data obtained from? 
+Statistical Correlation 
+Summary
+
+## Summary
+
+There are many external factors that can impact Walmart sales. In particular, 
+
+These conclusions were supported by the Pearson and Point-Biserial correlation coefficents. 
+
+Potential extensions of this data could include.
 
 
-https://forum.posit.co/t/setting-colours-in-ggplot-conditional-on-value/8328/2
-
-https://data-explorer.oecd.org/vis?lc=en&df[ds]=DisseminateArchiveDMZ&df[id]=DF_DP_LIVE&df[ag]=OECD&av=true&pd=2010%2C2010&dq=ITA%2BAUS%2BAUT%2BBEL%2BCAN%2BCHL%2BCOL%2BCRI%2BCZE%2BDNK%2BEST%2BFIN%2BFRA%2BDEU%2BGRC%2BHUN%2BISL%2BIRL%2BISR%2BJPN%2BKOR%2BLVA%2BLTU%2BLUX%2BMEX%2BNLD%2BNZL%2BNOR%2BPOL%2BPRT%2BSVK%2BSVN%2BESP%2BSWE%2BCHE%2BTUR%2BGBR%2BUSA%2BOAVG%2BOECD.HUR...A&to[TIME_PERIOD]=false&vw=tb&lb=bt
 
 However, 
 
