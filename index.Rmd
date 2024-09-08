@@ -27,13 +27,36 @@ library(RColorBrewer)
 
 ## Welcome     
 
-This project is currently being re-written. There are major changes in progress. First, I am looking to include more statistical analysis on how sales correlate with every factor, which means that the code and analysis of insights will be updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables may not be the main priority. Please proceed with this in mind. 
+This project is currently being re-written. There are major changes in progress. First, I am looking to include more statistical analysis on how sales correlate with every variable, which means that the code and analysis of insights will be updated on a daily basis. Second, I am changing the format of this report to be more similar to a business case study. Thus, sections are being reorganized and contain imperfect writing. Third, because of the following changes, the beautification of charts and tables may not be the main priority. Please proceed with this in mind. 
 
 For a more polished (but less relevant and more informal case study) to showcase my data analysis skills and interest in psychology, please [click here](https://zhusophia.github.io/bigfive/intro.html)! 
 
-## Introduction
+## Contents
 
-This project focuses on analyzing raw data from [this dataset](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download), which tracks the weekly sales of 45 Walmart stores over 2 years! It also tracks external factors like whether the week contained a holiday, the CPI, and the unemployment rate of the region.
+[Introduction](#intro)
+
+Impact of Variables on Weekly Sales 
+  
+- [Store and Sales](#store)
+- [Month and Sales](#month)
+- [Holidays and Sales](#holiday)
+- [Unemployment Rate and Sales](#unemp) 
+- [CPI and sales](#cpi)
+- [Fuel Price and Sales](#fuel)
+- [Temperature and Sales](#temp)
+
+
+[Geographical Data](#geo) 
+
+[Statistical Correlation](#stat)
+
+[Takeaways]
+
+[Conclusion]
+
+## Introduction <a name="intro"></a>
+
+This project focuses on analyzing raw data from [this dataset](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download), which tracks the weekly sales of 45 Walmart stores over 2 years. It also records external variables like whether the week contained a holiday, the CPI, and the unemployment rate of the region.        
 
 First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values. 
 
@@ -71,12 +94,12 @@ paged_table(head(data))
 
 ```
 
-## Analysis
+## Impact on Weekly Sales
 Now that the data has been cleaned, we can use SQL and R to explore this data.
 
-### How do weekly sales vary by store and by year? 
+### Stores 20, 4, and 14 have the most amount of sales<a name="store"></a> 
 
-First, weekly sales data is analyzed without taking the other factors into consideration.
+First, weekly sales data is analyzed without taking the other variables(e.g. holidays, unemployment) into consideration.
 
 We can identify the stores with the highest sales: 
 
@@ -152,7 +175,9 @@ ORDER BY Weekly_Sales desc
   kable(caption = "Lowest Unemployment", lsales) %>% kable_styling()
 ```
 
-However, there doesn't seem to be an easily identifiable correlation between sales and the factors (e.g. unemployment, temperature, etc.). Further analysis must be conducted to determine the relationship between these variables.  
+However, there doesn't seem to be an easily identifiable correlation between sales and the variables (e.g. unemployment, temperature, etc.). Further analysis must be conducted to determine the relationship between these variables.  
+
+### Sales peak in December and fall in January<a name="month"></a> 
 
 We can also see how Walmart sales varied from month to month. 
 
@@ -187,7 +212,7 @@ There always seems to be a spike in December and a low in January. The high in D
 
 This graph also emphasizes the cyclic nature of consumer spending. The pattern is very consistent across the two years. 
 
-### Do holidays generate more sales? Which holidays affect weekly sales the most?
+### Super Bowl Week generates the most amount of sales<a name="holiday"></a>
 
 Holidays are notorious for driving sales since Walmart often runs promotional markdown events to incentivize purchases when consumers are celebrating. Clearly, it works. 
 
@@ -236,7 +261,7 @@ holidaydate <- data %>%
   filter(Store == 1 & Holiday_Flag == 1) %>%
   select(Date, Weekly_Sales) 
 
-paged_table(holidaydate)
+  kable(caption = "Weeks including a holiday", holidaydate) %>% kable_styling()
 ```
 
 The (repeating) holidays that appear in this data are: 
@@ -262,14 +287,14 @@ GROUP BY Date
 ORDER BY Weekly_Sales DESC;
 ```
 
-```{r, holidayordering, eval}
+```{r}
 holidayordering <- data %>% 
   filter(Holiday_Flag == 1) %>%
   select(Date, Weekly_Sales) %>%
   group_by(Date) %>%
   arrange(desc(Weekly_Sales))
 
-paged_table(holidayordering)
+  kable(caption = "Holiday weeks with the most amount of sales", head(holidayordering)) %>% kable_styling()
 
 
 ```
@@ -328,7 +353,7 @@ holidaypie
 
 Despite Thanksgiving dominating the upper echelons of highest individual store profit, it seems like people spend the most on the Super Bowl! This could be caused by the cultural significance of Thanksgiving, where it "symbolizes intercultural peace, America's opportunity for newcomers, and the sanctity of home and family".^[https://www.britannica.com/topic/Thanksgiving-Day] However, I am more inclined to believe that Thanksgiving is typically used as an opportunity to invite all your friends and family and spend the entire day cooking -- that means food costs can balloon quickly! 
 
-### Which stores have the lowest and highest unemployment rate?
+### Stores 12, 28, and 38 have the highest unemployment rate<a name="unemp"></a>
 
 ```{sql test2, eval=FALSE, echo=T, code_folding="Show SQL code"}
 -- highest unemployment rate 
@@ -383,54 +408,7 @@ Evidently, the positive and negative effects differ depending on the neighborhoo
 
 It should also be noted that this data comes from 2010 - 2012 -- aftermath of the Great Recession. Pre-recession, unemployment was at 4.7% in America. However, between 2010 - 2012, unemployment was at a high of 9.8% in January of 2009 and decreased until reaching a low of 7.7% in November 2012.^[https://www.bls.gov/charts/employment-situation/civilian-unemployment-rate.htm] 
 
-### Temperature and Weekly Sales 
-
-Surprisingly, the relationship between temperature and weekly sales in this study contradict recent research papers, as there seems there is no correlation between temperature and sales. 
-
-```{sql, temp, eval=FALSE, code_folding="Show SQL code"}
-SELECT Temperature, avg(Weekly_Sales) AS Weekly_Sales
-FROM WalmartSalesClean
-GROUP BY Temperature 
-ORDER BY Weekly_Sales desc
-```
-
-```{r, temperaturesales}
-tempandsales <- data %>% 
-  select(Temperature, Weekly_Sales) %>%
-  group_by(Temperature = round(Temperature, digits = 1)) %>%
-  summarize(Weekly_Sales = mean(Weekly_Sales/1000000)) %>%
-  arrange(desc(Weekly_Sales))
-
-
-tempsalesp <- ggplot(data=tempandsales, aes(x=Temperature, y=Weekly_Sales)) +
-  geom_point(color="#0071CE", aes(text = paste0(
-    "Average Weekly Sales (Millions): ", round(Weekly_Sales, digits=2), "\n", "Temperature: ", Temperature))) + 
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
-  ggtitle("Temperature and Average Weekly Sales") +
-  ylab("Total Sales (Millions)") + 
-  xlab("Temperature (Fahrenheit)") + 
-  theme(
-    plot.title = element_text(vjust=3, size=16), 
-    axis.title.x = element_text(vjust=-2),
-    axis.title.y = element_text(vjust =5)
-  )
-
-ggplotly(tempsalesp, tooltip="text")
-
-
-```
-
-Studies done by Muro et. al.^[https://www.ualberta.ca/business/media-library/centres/sor/documents/murrayetal2010-theeffectofweatheronconsumerspending.pdf] show that natural sunlight has a positive correlation with spending by increasing positive affect. Furthemore, Zwebner and Goldenburg^[https://web2-bschool.nus.edu.sg/wp-content/uploads/media_rp/publications/zLb1d1490932501.pdf] say that exposure to physical warmth result in emotional warmth, subsequently increasing product valuation. They also discovered that the 'optimal' temperature for increased spending was 78 degrees Fahrenheit. This misattribution of warmth has been called the 'temperature-premium' effect. 
-
-However, both studies test this against specific products, such as cakes, batteries, M&Ms, Gap T shirts. The discrepancy between research and results could be that the objects that were tested in the studies are not common consumer purchases and would not significantly affect weekly sales. Or, the temperature premium may not apply for all products. Furthermore, the studies always utilized artificial heating tools (thermostats or heating pads) within an indoors location. On the other hand, the Walmart data recorded the outdoors temperature, not the temperature within the store. Lastly, the store atmosphere, influenced by indoors lighting, could potentially play an even larger role in customer purchases than weather or temperature. Mitigating the effect of store atmospheres when conducting studies would be crucial. 
-
-There is lots of further research to be done within this topic. Further research could potentially be conducted in the following topics: 
-
-- Does the temperature-premium effect apply to all products? 
-- Do natural temperature increases have the same effect as artificial temperature increases? 
-- Does temperature affect different types of stores (e.g. grocery stores, superstores, cafes) differently? 
-
-### CPI and Weekly Sales 
+### No correlation between CPI and average weekly sales<a name="cpi"></a> 
 
 The Consumer Price Index (CPI) tracks the weighted average of prices of a metaphorical basket of consumer goods. The goods within this basket are specially selected items that represent the goods and services that a typical US consumer would consume. By tracking the prices of this basket, consumers can understand inflation -- the increases of prices resulting in a lack of purchasing power. 
 
@@ -528,6 +506,8 @@ CPI also seems to be separated into 4 main clusters:
 
 Although there doesn't seem to be a correlation between CPI and weekly sales, it seems like stores with the same CPI tend to perform similarly. 
 
+### No correlation between fuel price and average weekly sales <a name="fuel"></a>
+
 
 ```{r, fuel price table and chart}
 
@@ -559,7 +539,54 @@ There is also no correlation between fuel price and total sales. However, this g
 
 It's clear that the trends do not follow the hypothesized positive relationship between these variables and weekly sales. The most probable answer to this is discrepancy is that the economic changes were not enough to shift consumer spending behavior. For example, consumers may not switch to a different store because it's more convenient for them to go (or not go) to Walmart. Furthermore, economics assumes that all consumers are rational as given a large enough sample, the macro trends of consumer spending will gravitate towards rational behavior. However, the sample within this data set may be too small to observe rational trends. A further extension could be diving into behavioral economics and how it affects this data set. 
 
-### Geographic Data
+### No correlation between temperature and average weekly sales<a name="temp"></a> 
+
+Surprisingly, the relationship between temperature and weekly sales in this study contradict recent research papers, as there seems there is no correlation between temperature and sales. 
+
+```{sql, temp, eval=FALSE, code_folding="Show SQL code"}
+SELECT Temperature, avg(Weekly_Sales) AS Weekly_Sales
+FROM WalmartSalesClean
+GROUP BY Temperature 
+ORDER BY Weekly_Sales desc
+```
+
+```{r, temperaturesales}
+tempandsales <- data %>% 
+  select(Temperature, Weekly_Sales) %>%
+  group_by(Temperature = round(Temperature, digits = 1)) %>%
+  summarize(Weekly_Sales = mean(Weekly_Sales/1000000)) %>%
+  arrange(desc(Weekly_Sales))
+
+
+tempsalesp <- ggplot(data=tempandsales, aes(x=Temperature, y=Weekly_Sales)) +
+  geom_point(color="#0071CE", aes(text = paste0(
+    "Average Weekly Sales (Millions): ", round(Weekly_Sales, digits=2), "\n", "Temperature: ", Temperature))) + 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) + 
+  ggtitle("Temperature and Average Weekly Sales") +
+  ylab("Total Sales (Millions)") + 
+  xlab("Temperature (Fahrenheit)") + 
+  theme(
+    plot.title = element_text(vjust=3, size=16), 
+    axis.title.x = element_text(vjust=-2),
+    axis.title.y = element_text(vjust =5)
+  )
+
+ggplotly(tempsalesp, tooltip="text")
+
+
+```
+
+Studies done by Muro et. al.^[https://www.ualberta.ca/business/media-library/centres/sor/documents/murrayetal2010-theeffectofweatheronconsumerspending.pdf] show that natural sunlight has a positive correlation with spending by increasing positive affect. Furthemore, Zwebner and Goldenburg^[https://web2-bschool.nus.edu.sg/wp-content/uploads/media_rp/publications/zLb1d1490932501.pdf] say that exposure to physical warmth result in emotional warmth, subsequently increasing product valuation. They also discovered that the 'optimal' temperature for increased spending was 78 degrees Fahrenheit. This misattribution of warmth has been called the 'temperature-premium' effect. 
+
+However, both studies test this against specific products, such as cakes, batteries, M&Ms, Gap T shirts. The discrepancy between research and results could be that the objects that were tested in the studies are not common consumer purchases and would not significantly affect weekly sales. Or, the temperature premium may not apply for all products. Furthermore, the studies always utilized artificial heating tools (thermostats or heating pads) within an indoors location. On the other hand, the Walmart data recorded the outdoors temperature, not the temperature within the store. Lastly, the store atmosphere, influenced by indoors lighting, could potentially play an even larger role in customer purchases than weather or temperature. Mitigating the effect of store atmospheres when conducting studies would be crucial. 
+
+There is lots of further research to be done within this topic. Further research could potentially be conducted in the following topics: 
+
+- Does the temperature-premium effect apply to all products? 
+- Do natural temperature increases have the same effect as artificial temperature increases? 
+- Does temperature affect different types of stores (e.g. grocery stores, superstores, cafes) differently? 
+
+### This dataset contains stores from 11 different countries<a name="geo"></a>
 
 Using the information in the data set, it may be possible to make educated guesses regarding the geographic region of the stores. 
 
@@ -644,24 +671,26 @@ ggplotly(empbarp, tooltip = "text")
 
 The plot highlights the different parts of the world each store may be located. It seems like the most data was obtained from Chile and India, while the least amount of data was obtained from Mexico, Argentina, and Nicaragua. 
 
-### Sample Pearson Correlation 
+### Sample Pearson correlation coefficient supports previous analysis<a name="stat"></a>
 
-We can also use statistics to back up these claims by checking the correlation between weekly sales and other factors. This gives us insight into the relationship between each of the variables. 
+We can also use statistics to back up these claims by checking the correlation between weekly sales and other variables. This gives us insight into the relationship between each of the variables. 
 
 The sample Pearson correlation coefficient was used to determine whether there was a linear correlation between the two sets of data. The coefficient ranges from $-1$ $\le$ $r_{X,Y}$ $\le$ $1$, where $-1$ means a perfect negative linear relationship (as weekly sales go up, the other variable goes down) and $1$ means a perfect positive linear relationship (as weekly sales go up, the other variable goes up.) 
 
 Subsequently:
 
-- if $r_{X,Y}$ $\ge$ $0$, the variables have a positive relationship.  
-- $r_{X,Y}$ $\le$ $0$, the variables have a negative relationship. 
+- If $r_{X,Y}$ $\ge$ $0$, the variables have a positive relationship.  
+- If $r_{X,Y}$ $\le$ $0$, the variables have a negative relationship. 
+- If $r_{X,Y}$ $=$ $0$, the variables have no relationship. 
+
 
 Based on the above analysis, the following relationships are predicted: 
 
 - Weekly sales and holiday: $r_{X,Y}$ $\ge$ $0$ 
 - Weekly sales and unemployment: $r_{X,Y}$ $\le$ $0$
-- Weekly sales and CPI: $r_{X,Y}$ $\ge$ $0$
-- Weekly sales and fuel price: $r_{X,Y}$ $\ge$ $0$
-- Weekly sales and temperature: $r_{X,Y}$ $\ge$ $0$ 
+- Weekly sales and CPI: $r_{X,Y}$ $=$ $0$
+- Weekly sales and fuel price: $r_{X,Y}$ $=$ $0$
+- Weekly sales and temperature: $r_{X,Y}$ $=$ $0$ 
 
 The following formula will be used:  
 
@@ -673,8 +702,8 @@ The sample Pearson correlation coefficient calculated is:
 
 ```{sql samplepc, eval=FALSE, echo=T, code_folding="Show SQL code"}
 -- calculating the Pearson coefficient for weekly sales and unemployment. 
--- Replacing the y value (in this case, unemployment) with the other factors 
--- would yield the coefficient for that specific factor 
+-- Replacing the y value (in this case, unemployment) with the other variables 
+-- would yield the coefficient for that specific variable 
 
 WITH rdata AS (
 SELECT CAST(Unemployment AS decimal) AS Unemployment, CAST(Weekly_Sales AS decimal) AS Weekly_Sales
@@ -705,11 +734,11 @@ pctable <- data.frame(Variable = c("Unemploymment", "CPI", "Fuel Prices", "Tempe
 colnames(pctable) <- c("Variable", "Correlation Coefficient")
 
 
-paged_table(pctable)
+  kable(caption = "Calculated pearson correlation coefficient values", pctable) %>% kable_styling()
 
 ```
 
-### Point-Biserial Correlation Coefficient
+### Point-Biserial correlation coefficient supports previous analysis
 
 For Holiday_Flag, we need to use a point-biserial correlation coefficient instead of the Pearson correlation coefficent. This is because Holiday_Flag is a dichotomous variable (values can only be 1 or 0 to symbolize yes/no) compared `Weekly Sales`, which is not a dichotomous variable (values can be any number). 
 
@@ -776,30 +805,19 @@ which results in an $r_{pb}$ value of ~ 0.037 -- a slight positive correlation.
 pctable <- data.frame(Variable = c("Holiday", "Unemploymment", "CPI", "Fuel Prices", "Temperature"), "Correlation Coefficient" = c(0.0368880993675271, -0.101436981393985, -0.0724959823775918, -0.00646895141525588,-0.0637688579328555))
 
 colnames(pctable) <- c("Variable", "Correlation Coefficient")
-paged_table(pctable)
+  kable(caption = "Pearson and Point-Biserial Correlation Values", pctable) %>% kable_styling()
 
 ```
 
-The correlation coefficient matches with the data observed within the tables in charts. 
+The correlation coefficient does not match with the data observed within the tables in charts, as there is a notable increase in sales due to holidays. 
+
 
 <!--
 
-## Table of Contents
-
-Introduction 
-Analysis 
-* How do weekly sales vary by store and by year?
-* How do holidays impact sales? 
-* How does unemployment rate impact sales? 
-* How does temperature impact sales? 
-* How does CPI impact sales? 
-* Where was the data obtained from? 
-Statistical Correlation 
-Summary
 
 ## Summary
 
-There are many external factors that can impact Walmart sales. In particular, 
+There are many external variables that can impact Walmart sales. In particular, 
 
 These conclusions were supported by the Pearson and Point-Biserial correlation coefficents. 
 
