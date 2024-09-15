@@ -53,7 +53,7 @@ Impact of Variables on Weekly Sales
 
 ## Introduction <a name="intro"></a>
 
-The conventional theory of the firm states that the principal objective of any business is to maximize profits. Internally, this is something the firm can attempt to control through increasing revenue or decreasing costs. However, since firms do not exist within a closed ecosystem, their profits are always at the mercy of the external environment. All firms can do is align their internal strategy with the external environmental conditions.  
+The conventional theory of the firm states that the principal objective of any business is to maximize profits. Internally, the firm can attempt to control this through increasing revenue or decreasing costs. However, since firms do not exist within a closed ecosystem, their profits are always at the mercy of the external environment. All firms can do is align their internal strategy with the external environmental conditions.  
 
 Between January 2010 and December 2012, [the Walmart Sales data set](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download) tracks weekly Walmart sales of 45 stores, alongside 5 external variables: Holiday_Flag, unemployment rate, CPI, fuel price, and temperature. This case study will compare Walmart’s experimental data with traditional literature to highlight the negligible impact of these 5 external variables on Walmart’s weekly sales. 
 
