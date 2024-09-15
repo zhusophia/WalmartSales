@@ -50,15 +50,14 @@ Impact of Variables on Weekly Sales
 
 [Statistical Correlation](#stat)
 
-[Takeaways]
-
-[Conclusion]
 
 ## Introduction <a name="intro"></a>
 
-This project focuses on analyzing raw data from [this dataset](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download), which tracks the weekly sales of 45 Walmart stores over 2 years. It also records external variables like whether the week contained a holiday, the CPI, and the unemployment rate of the region.        
+The conventional theory of the firm states that the principal objective of any business is to maximize profits. Internally, this is something the firm can attempt to control through increasing revenue or decreasing costs. However, since firms do not exist within a closed ecosystem, their profits are always at the mercy of the external environment. All firms can do is align their internal strategy with the external environmental conditions.  
 
-First, the data is cleaned using pandas as we want to make sure that this data is easy to deal with. The primary goal of cleaning is to standardize the data by rounding values and removing missing values. 
+Between January 2010 and December 2012, [the Walmart Sales data set](https://www.kaggle.com/datasets/mikhail1681/walmart-sales?resource=download) tracks weekly Walmart sales of 45 stores, alongside 5 external variables: Holiday_Flag, unemployment rate, CPI, fuel price, and temperature. This case study will compare Walmart’s experimental data with traditional literature to highlight the negligible impact of these 5 external variables on Walmart’s weekly sales. 
+
+First, the data is prepared by rounding values and removing missing values. 
 
 ```{python cleaning, eval=FALSE, echo=T, code_folding="Show Python code"}
 #import 
@@ -82,9 +81,6 @@ df.to_csv('./WalmartSalesClean.csv')
 
 ```
 
-
-After cleaning, the data appears like so: 
-
 ```{r load data2}
 data <- read.csv("WalmartSalesClean.csv")
 ```
@@ -93,9 +89,6 @@ data <- read.csv("WalmartSalesClean.csv")
 paged_table(head(data))
 
 ```
-
-## Impact on Weekly Sales
-Now that the data has been cleaned, we can use SQL and R to explore this data.
 
 ### Stores 20, 4, and 14 have the most amount of sales<a name="store"></a> 
 
@@ -729,7 +722,7 @@ FROM pdata
 ```{r, pctable}
 #remove dot in title name 
 
-pctable <- data.frame(Variable = c("Unemploymment", "CPI", "Fuel Prices", "Temperature"), "Correlation Coefficient" = c(-0.101436981393985, -0.0724959823775918, -0.00646895141525588,-0.0637688579328555))
+pctable <- data.frame(Variable = c("Unemployment", "CPI", "Fuel Prices", "Temperature"), "Correlation Coefficient" = c(-0.101436981393985, -0.0724959823775918, -0.00646895141525588,-0.0637688579328555))
 
 colnames(pctable) <- c("Variable", "Correlation Coefficient")
 
@@ -738,7 +731,7 @@ colnames(pctable) <- c("Variable", "Correlation Coefficient")
 
 ```
 
-### Point-Biserial correlation coefficient supports previous analysis
+### Point-Biserial correlation coefficient does not support previous analysis
 
 For Holiday_Flag, we need to use a point-biserial correlation coefficient instead of the Pearson correlation coefficent. This is because Holiday_Flag is a dichotomous variable (values can only be 1 or 0 to symbolize yes/no) compared `Weekly Sales`, which is not a dichotomous variable (values can be any number). 
 
@@ -825,117 +818,7 @@ Potential extensions of this data could include.
 
 
 
-However, 
 
-```{r}
-
-emp23 <- data %>% 
-  filter(Store == 23) %>% 
-  mutate(Month = substr(Date, 1, 2), Year = substr(Date, 7, 10), Date = paste(Year,"/" ,Month)) %>%
-  select(Date, Unemployment) %>%
-  group_by(Date) %>%
-  summarize(Unemployment = mean(Unemployment))
-
-emp23
-  
-
-ggplot(data=emp23, aes(x=Date, y=Unemployment, group=1)) +
-  geom_line()+
-  geom_point() + 
-  theme(axis.text.x = element_text(angle = 90)) 
-
-```
-
-potentially uerope? 
-- https://w3.unece.org/PXWeb2015/pxweb/en/STAT/STAT__20-ME__3-MELF/40_en_MEUnRateY_r.px/table/tableViewLayout1/
-- https://www150.statcan.gc.ca/n1/pub/75-001-x/2010104/charts-graphiques/11148/c-g000k-eng.htm
-- https://data.oecd.org/unemp/unemployment-rate.htm
-
-We can compare it to OECD data -- 
-
-Countries it's located in 
-- US, Mexico, Canada, UK, China, South Africa, Argentina, Brazil	
-
-https://www.thestreet.com/markets/history-of-walmart-15092339
-https://grocerynews.org/research-rankings/globalization-food-sales
-- https://flowingdata.com/2010/04/07/watching-the-growth-of-walmart-now-with-100-more-sams-club/
-
-mention the economy in 2010 - 2012. is this the avg unemployment rate? what was happenign that could've influecned this? 
-- how does cpi, temprature, fuel prices affect the data as well? psyhcology? 
-
-Where are these stores located? 
-
-Psychology of Temperature and Buying 
-```{r}
-tempandsales <- data %>% 
-  select(Temperature, Weekly_Sales) %>%
-  group_by(Temperature) %>%
-  summarize(Weekly_Sales = mean(Weekly_Sales)) %>%
-  arrange(desc(Weekly_Sales))
-
-ggplot(data=tempandsales, aes(x=Temperature, y = Weekly_Sales)) +
-  geom_bar(stat="identity")
-
-```
-- https://www.psychologytoday.com/ca/blog/consumed/201312/warm-and-fuzzy-temperature-and-consumer-behavior
-- change labels, make it easier to understand (ex. axis labels, numbers, etc.)
-box plot of temperature maybe?
-```{r}
-
-```
-
-Pearson's correlation
-
-```{sql test3, eval=FALSE, echo=T}
-rawdata AS (
-SELECT Unemployment AS x, Weekly_Sales AS y, Unemployment*Weekly_Sales AS xy, Unemployment*Unemployment AS xsquared, Weekly_Sales*Weekly_Sales AS ysquared	
-FROM corrdata
-),
-
-pdata AS (
-SELECT SUM(x) AS sumx, SUM(y) AS sumy, SUM(xy) as sumxy, SUM(xsquared) as sumx2, SUM(ysquared) as sumy2, COUNT(x) as n
-FROM rawdata
-)
-
-SELECT (n*sumxy - sumx * sumy) / (sqrt((n*sumx2 - sumx*sumx)*(n*sumy2 - sumy*sumy))) AS "Pearson's Correlation"
-FROM pdata
-
-```
-
-3. Is there any correlation between CPI and Weekly Sales?  How does the correlation differ when the Holiday Flag is 0 versus when the Holiday Flag is 1?
-```{sql test4, eval=FALSE, echo=T}
-WITH rdata AS (
-SELECT CAST(ROUND(CPI, 0) AS INT) AS CPI, CAST(Weekly_Sales AS decimal) AS Weekly_Sales
-FROM WalmartSalesClean
-WHERE Holiday_Flag = 0
-),
-
-corrdata AS(
-SELECT CPI, AVG(Weekly_Sales) AS Weekly_Sales
-FROM rdata
-GROUP BY CPI
-/*ORDER BY CPI ASC*/
-),
-
-```
-
-```{sql test5, eval=FALSE, echo=T}
-rawdata AS (
-SELECT CPI AS x, Weekly_Sales AS y, CPI*Weekly_Sales AS xy, CPI*CPI AS xsquared, Weekly_Sales*Weekly_Sales AS ysquared	
-FROM corrdata
-),
-
-pdata AS (
-SELECT SUM(x) AS sumx, SUM(y) AS sumy, SUM(xy) as sumxy, SUM(xsquared) as sumx2, SUM(ysquared) as sumy2, COUNT(x) as n
-FROM rawdata
-)
-
-SELECT (n*sumxy - sumx * sumy) / (sqrt((n*sumx2 - sumx*sumx)*(n*sumy2 - sumy*sumy))) AS "Pearson's Correlation"
-FROM pdata
-
-```
-
-fuel prices affect on economy: https://investopedia.com/financial-edge/0511/how-gas-prices-affect-the-economy.aspx
 
 
   - average weekly sales -> density graph? 
@@ -947,5 +830,9 @@ https://www.kaggle.com/code/phuvd1609/walmart-sales-forecasting
 https://docs.google.com/spreadsheets/d/1JNzGqUo9HEn5WOKftEgcm94JddOK6G3_QW-UI4sFNUY/edit#gid=0
 
 https://coolors.co/d8dbe2-a9bcd0-58a4b0-373f51-1b1b1e
+
+[Takeaways]
+
+[Conclusion]
 
 -->
